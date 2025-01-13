@@ -1,0 +1,52 @@
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# IIS/ASP.NET specific files
+*.vs
+*.config
+AppData/
+
+# Visual Studio folders
+.vs/
+
+# Resharper/JetBrains files
+_ReSharper*/
+*.DotSettings.user
+
+# Rider files
+.idea/
+
+# Dependency directories
+node_modules/
+
+# Publish output
+wwwroot/
+
+# Environment variables
+.env
+.env.*
+
+# Docker files
+docker-compose.override.yml
+.dockerignore
+
+# Backup & system files
+*.bak
+*.swp
+*.tmp
+*.DS_Store
+Thumbs.db
+
+# Test results
+TestResults/

@@ -1,0 +1,34 @@
+
+services:
+  # SQL Server section
+  sqlserverdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserverdb
+    restart: always
+    volumes:
+      - sqlserver_data:/var/lib/sqlserver/data
+    ports:
+      - "1435:1433"
+  
+  # MySQL section
+  mysqldb:
+    image: mysql
+    container_name: mysqldb
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+# Network section
+networks:
+  default:
+    name: microservices
+    driver: bridge
+
+# Volumes section
+volumes:
+  sqlserver_data:
+    name: sqlserver_data
+  mysql_data:
+    name: mysql_data
