@@ -5,6 +5,7 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F549AE41-EE56-4183-91AE-CEC4E83068CE}"
 	ProjectSection(SolutionItems) = preProject
+		architecture.jpg = architecture.jpg
 		docker-compose.override.yml = docker-compose.override.yml
 		docker-compose.yml = docker-compose.yml
 		global.json = global.json

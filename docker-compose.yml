@@ -1,24 +1,37 @@
 
 services:
-  # SQL Server section
-  sqlserverdb:
+  # Database section
+  orderdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserverdb
-    restart: always
-    volumes:
-      - sqlserver_data:/var/lib/sqlserver/data
-    ports:
-      - "1435:1433"
-  
+
   # MySQL section
-  mysqldb:
-    image: mysql
-    container_name: mysqldb
-    restart: always
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
+  productdb:
+    image: mysql:latest
+
+  customerdb:
+    image: postgres:alpine
+
+  basketdb:
+    image: redis:alpine
+
+  inventorydb:
+    image: mongo
+
+  # Infrastructure section
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
+  pgadmin:
+    image: dpage/pgadmin4
+
+  portainer:
+    image: portainer/portainer-ce
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.2
 
 # Network section
 networks:
@@ -32,3 +45,15 @@ volumes:
     name: sqlserver_data
   mysql_data:
     name: mysql_data
+  postgres_data:
+    name: postgres_data
+  portainer_data:
+    name: portainer_data
+  elasticsearch_data:
+    name: elasticsearch_data
+  jaeger_data:
+    name: jaeger_data
+  mongo_data:
+    name: mongo_data
+  pgadmin_data:
+    name: pgadmin_data
