@@ -5,6 +5,7 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F549AE41-EE56-4183-91AE-CEC4E83068CE}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
 		architecture.jpg = architecture.jpg
 		docker-compose.override.yml = docker-compose.override.yml
 		docker-compose.yml = docker-compose.yml
@@ -58,9 +59,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "src\BuildingBl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\BuildingBlocks\Infrastructure\Infrastructure.csproj", "{7B97A1E0-9D1E-4174-BDBE-C063B7A4E5CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\BuildingBlocks\Shared\Shared.csproj", "{3E7D3C2F-F680-4FBD-8B5B-5FFB2F535BA6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OcelotApiGw", "src\ApiGateways\OcelotApiGw\OcelotApiGw.csproj", "{6A73CB31-5016-4555-9306-488C66736697}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\BuildingBlocks\Shared\Shared.csproj", "{2C899B38-9600-4CD2-88F3-958A3642138B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,14 +113,14 @@ Global
 		{7B97A1E0-9D1E-4174-BDBE-C063B7A4E5CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B97A1E0-9D1E-4174-BDBE-C063B7A4E5CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B97A1E0-9D1E-4174-BDBE-C063B7A4E5CA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E7D3C2F-F680-4FBD-8B5B-5FFB2F535BA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E7D3C2F-F680-4FBD-8B5B-5FFB2F535BA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E7D3C2F-F680-4FBD-8B5B-5FFB2F535BA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E7D3C2F-F680-4FBD-8B5B-5FFB2F535BA6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A73CB31-5016-4555-9306-488C66736697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A73CB31-5016-4555-9306-488C66736697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A73CB31-5016-4555-9306-488C66736697}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A73CB31-5016-4555-9306-488C66736697}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C899B38-9600-4CD2-88F3-958A3642138B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C899B38-9600-4CD2-88F3-958A3642138B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C899B38-9600-4CD2-88F3-958A3642138B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C899B38-9600-4CD2-88F3-958A3642138B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,7 +147,7 @@ Global
 		{257FC96F-C7B0-4CFA-80EF-AC8A6E7B3824} = {1605E5A4-2C7D-4202-AE15-1FD8DEB723BC}
 		{43EA3A53-D55F-4341-8DB6-9567004F2D0A} = {B54557F7-D931-47A8-882A-9C2880889779}
 		{7B97A1E0-9D1E-4174-BDBE-C063B7A4E5CA} = {B54557F7-D931-47A8-882A-9C2880889779}
-		{3E7D3C2F-F680-4FBD-8B5B-5FFB2F535BA6} = {B54557F7-D931-47A8-882A-9C2880889779}
 		{6A73CB31-5016-4555-9306-488C66736697} = {93963677-79BC-4212-B585-2F81BFE3C85F}
+		{2C899B38-9600-4CD2-88F3-958A3642138B} = {B54557F7-D931-47A8-882A-9C2880889779}
 	EndGlobalSection
 EndGlobal

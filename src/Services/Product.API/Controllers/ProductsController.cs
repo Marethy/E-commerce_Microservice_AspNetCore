@@ -22,6 +22,23 @@ namespace Product.API.Controllers
             var result = _mapper.Map<List<ProductDto>>(products);
             return Ok(result);
         }
+        [HttpGet("get-product-by-no/{productNo}")]
+        public async Task<IActionResult> GetProductByNo([Required] string productNo)
+        {
+            if (string.IsNullOrWhiteSpace(productNo))
+            {
+                return BadRequest("Product No is required.");
+            }
+
+            var product = await _repository.GetProductByNo(productNo);
+            if (product == null)
+            {
+                return NotFound($"Product with No '{productNo}' not found.");
+            }
+
+            var result = _mapper.Map<ProductDto>(product);
+            return Ok(result);
+        }
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetProductById([Required] long id)
@@ -43,9 +60,10 @@ namespace Product.API.Controllers
                 return BadRequest("Product data is required.");
             }
 
-            if (!ModelState.IsValid)
+            var productEntity = await _repository.GetProductByNo(productDto.No);
+            if (productEntity != null)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new { error = $"Product No: {productDto.No} is existed." });
             }
 
             var product = _mapper.Map<CatalogProduct>(productDto);
@@ -53,7 +71,7 @@ namespace Product.API.Controllers
             await _repository.SaveChangesAsync();
 
             var result = _mapper.Map<ProductDto>(product);
-            return CreatedAtAction(nameof(GetProductById), new { id = result.Id }, result);
+            return Ok(result);
         }
 
         [HttpPut("{id:long}")]
