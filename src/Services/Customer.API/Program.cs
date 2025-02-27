@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Customer.API.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
-
 builder.Host.UseSerilog(SeriLogger.Configure);
 Log.Information("Starting Customer.API");
 try
