@@ -25,7 +25,12 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Host terminated unexpectedly");
+    string type = ex.GetType().Name;
+    if (type.Equals("StopTheHostException", StringComparison.Ordinal))
+    { 
+        throw;
+    }
+    Log.Fatal(ex, $"Unhandel exception: {ex.Message}");
 }
 finally
 {
