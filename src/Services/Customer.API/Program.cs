@@ -1,6 +1,7 @@
-using Serilog;
+﻿using Serilog;
 using Common.Logging;
-
+using Microsoft.EntityFrameworkCore;
+using Customer.API.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,12 +9,16 @@ builder.Host.UseSerilog(SeriLogger.Configure);
 Log.Information("Starting Customer.API");
 try
 {
-
     // Add services to the container.
     builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    builder.Services.AddDbContext<CustomerContext>(options =>
+    {
+        options.UseNpgsql(connectionString);
+    });
 
     var app = builder.Build();
 
@@ -25,15 +30,23 @@ try
     }
 
     app.UseHttpsRedirection();
-
     app.UseAuthorization();
-
     app.MapControllers();
-    app.Run();
+
+    // Gọi SeedCustomerDataAsync trước khi chạy ứng dụng
+    await app.SeedCustomerDataAsync();
+
+    // Chạy ứng dụng
+    await app.RunAsync();
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Host terminated unexpectedly");
+    string type = ex.GetType().Name;
+    if (type.Equals("StopTheHostException", StringComparison.Ordinal))
+    {
+        throw;
+    }
+    Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 }
 finally
 {
