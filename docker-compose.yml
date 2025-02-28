@@ -39,6 +39,12 @@ services:
     build:
       context: .
       dockerfile: src/Services/Product.API/Dockerfile
+  customerapi:
+    image: ${DOCKER_REGISTRY-}customerapi:latest
+    build:
+      context: .
+      dockerfile: src/Services/Customer.API/Dockerfile
+
   
 # Network section
 networks:
