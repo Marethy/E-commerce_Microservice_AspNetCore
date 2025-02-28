@@ -5,14 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Customer.API.Services
 {
-    public class CustomerService : ICustomerService
+    public class CustomerService(ICustomerRepository customerRepository) : ICustomerService
     {
-        private readonly ICustomerRepository _customerRepository;
-
-        public CustomerService(ICustomerRepository customerRepository)
-        {
-            _customerRepository = customerRepository;
-        }
+        private readonly ICustomerRepository _customerRepository = customerRepository;
 
         public async Task<IResult> GetCustomerByUserNameAsync(string username)
         {
@@ -22,6 +17,11 @@ namespace Customer.API.Services
                 return Results.NotFound($"Customer with username {username} not found.");
             }
             return Results.Ok(customer);
+        }
+
+        public async Task<IResult> GetCustomersAsync()
+        {
+            return Results.Ok(await _customerRepository.GetCustomersAsync());
         }
     }
 }

@@ -6,15 +6,20 @@ using System.Threading.Tasks;
 
 namespace Customer.API.Repositories.Interfaces
 {
-    public class CustomerRepository : RepositoryBaseAsync<Entities.Customer, int, CustomerContext>, ICustomerRepository
+    public class CustomerRepository : RepositoryQueryBase<Entities.Customer, int, CustomerContext>, ICustomerRepository
     {
-        public CustomerRepository(CustomerContext dbContext, IUnitOfWork<CustomerContext> unitOfWork) : base(dbContext, unitOfWork)
+        public CustomerRepository(CustomerContext dbContext) : base(dbContext)
         {
         }
 
         public async Task<Entities.Customer> GetCustomerByUserNameAsync(string username)
         {
             return await FindByCondition(x => x.UserName == username).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Entities.Customer>> GetCustomersAsync()
+        {
+            return await FindAll().ToListAsync();
         }
     }
 }
