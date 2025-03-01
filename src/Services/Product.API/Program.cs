@@ -5,7 +5,7 @@ using Product.API.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Information("Starting Product.API");
+Log.Information($"Starting {builder.Environment.ApplicationName} ");
 try
 {
     builder.Host.UseSerilog(SeriLogger.Configure);
@@ -34,7 +34,7 @@ catch (Exception ex)
 }
 finally
 {
-    Log.Information("Stopping Product.API");
+    Log.Information($"Starting {builder.Environment.ApplicationName} ");
     Log.CloseAndFlush();
 }
 
