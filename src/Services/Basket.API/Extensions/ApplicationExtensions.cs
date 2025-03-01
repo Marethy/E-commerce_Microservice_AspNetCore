@@ -4,16 +4,17 @@
     {
         public static void UseInfrastructure(this WebApplication app)
         {
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+          //  if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
-            // Uncomment if you want to use HTTPS redirection
-            // app.UseHttpsRedirection();
+            // Middleware chuẩn trong ASP.NET Core
+            // app.UseHttpsRedirection(); // Bật nếu dùng HTTPS
+            app.UseRouting(); // Bắt buộc trước Authorization
 
+            app.UseAuthentication();  // Gọi Authentication trước Authorization
             app.UseAuthorization();
 
             app.MapControllers();
