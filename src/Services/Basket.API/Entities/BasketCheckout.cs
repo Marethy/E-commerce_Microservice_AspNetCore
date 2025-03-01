@@ -4,8 +4,7 @@ namespace Basket.API.Entities
 {
     public class BasketCheckout
     {
-        [Required]
-        public string Username { get; set; }
+        public required string Username { get; set; }
 
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = "Total price must be greater than 0.")]
@@ -13,15 +12,15 @@ namespace Basket.API.Entities
 
         [Required]
         [StringLength(250)]
-        public string FirstName { get; set; }
+        public required  string rFirstName { get; set; }
 
         [Required]
         [StringLength(250)]
-        public string LastName { get; set; }
+        public required  string LastName { get; set; }
 
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public required string Email { get; set; }
     }
 }
 

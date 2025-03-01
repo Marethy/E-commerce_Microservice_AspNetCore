@@ -12,10 +12,9 @@ try
     builder.AddAppConfigurations();
 
     builder.Services.AddInfrastructure(builder.Configuration);
-
+    Console.WriteLine("!23");
     var app = builder.Build();
     app.UseInfrastructure();
-
     // Migrate database and seed data
     app.MigrateDatabase<ProductContext>((context, services) =>
     {
