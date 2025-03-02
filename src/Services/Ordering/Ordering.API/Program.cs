@@ -1,14 +1,15 @@
 using Serilog;
 using Common.Logging;
-
+using Ordering.Infrastructure;
+using Ordering.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog(SeriLogger.Configure);
-Log.Information("Starting Oredering.API");
+Log.Information($"Starting {builder.Environment.ApplicationName} ");
 try
 {
-
+    builder.Services.AddInfrastructure(builder.Configuration);
     // Add services to the container.
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -16,6 +17,9 @@ try
     builder.Services.AddSwaggerGen();
 
     var app = builder.Build();
+
+    // Seed the database
+    await app.SeedOrderDataAsync();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
@@ -33,10 +37,16 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Host terminated unexpectedly");
+    string type = ex.GetType().Name;
+    if (type.Equals("StopTheHostException", StringComparison.Ordinal))
+    {
+        throw;
+    }
+    Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 }
 finally
 {
-    Log.Information("Stopping Ordering.API");
+    Log.Information($"Stopping {builder.Environment.ApplicationName}");
     Log.CloseAndFlush();
 }
+

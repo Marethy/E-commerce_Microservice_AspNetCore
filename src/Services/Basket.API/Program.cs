@@ -47,6 +47,6 @@ catch (Exception ex)
 }
 finally
 {
-    Log.Information("Stopping Basket.API");
+    Log.Information($"Stopping {builder.Environment.ApplicationName}");
     Log.CloseAndFlush();
 }
