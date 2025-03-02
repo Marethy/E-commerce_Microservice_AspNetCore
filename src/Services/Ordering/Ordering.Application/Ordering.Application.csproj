@@ -14,7 +14,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
     <ProjectReference Include="..\Ordering.Domain\Ordering.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\V1\Orders\Commands\" />
+    <Folder Include="Features\V1\Orders\EventHandlers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="ConfigureServices.cs" />
   </ItemGroup>
 
 </Project>
