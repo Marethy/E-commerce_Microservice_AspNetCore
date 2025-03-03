@@ -1,4 +1,6 @@
 ﻿using Common.Logging;
+using Microsoft.AspNetCore.Builder;
+using Ordering.API.Extensions;
 using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
@@ -13,6 +15,8 @@ Log.Information($"Starting {builder.Environment.ApplicationName}");
 try
 {
     ConfigureServices(builder);
+    builder.AddAppConfigurations();
+
     var app = builder.Build();
 
     await ConfigureMiddleware(app);
@@ -21,10 +25,13 @@ try
 catch (Exception ex) when (ex.GetType().Name != "StopTheHostException")
 {
     Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
+    Console.WriteLine($"Unhandled exception: {ex.Message}");
+
 }
 finally
 {
     Log.Information($"Stopping {builder.Environment.ApplicationName}");
+    Console.WriteLine($"Stopping {builder.Environment.ApplicationName}");
     Log.CloseAndFlush();
 }
 
@@ -34,7 +41,8 @@ finally
 static void ConfigureServices(WebApplicationBuilder builder)
 {
     var services = builder.Services;
-    services.AddApplicationServices(); // ✅ Thêm dòng này để đăng ký MediatR
+    services.AddEmailSettings(builder.Configuration);
+    services.AddApplicationServices(); 
     services.AddInfrastructure(builder.Configuration);
     services.AddControllers();
     services.AddEndpointsApiExplorer();
@@ -50,7 +58,7 @@ static async Task ConfigureMiddleware(WebApplication app)
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Order API v1"));
     }
 
     app.UseHttpsRedirection();
