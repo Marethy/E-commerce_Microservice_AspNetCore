@@ -1,47 +1,25 @@
-using Serilog;
-using Common.Logging;
+﻿using Common.Logging;
+using Ordering.Application;
 using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cấu hình Serilog
 builder.Host.UseSerilog(SeriLogger.Configure);
-Log.Information($"Starting {builder.Environment.ApplicationName} ");
+Log.Information($"Starting {builder.Environment.ApplicationName}");
+
 try
 {
-    builder.Services.AddInfrastructure(builder.Configuration);
-    // Add services to the container.
-    builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-
+    ConfigureServices(builder);
     var app = builder.Build();
 
-    // Seed the database
-    await app.SeedOrderDataAsync();
-
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
-    app.UseHttpsRedirection();
-
-    app.UseAuthorization();
-
-    app.MapControllers();
-    app.Run();
+    await ConfigureMiddleware(app);
+    await app.RunAsync();
 }
-catch (Exception ex)
+catch (Exception ex) when (ex.GetType().Name != "StopTheHostException")
 {
-    string type = ex.GetType().Name;
-    if (type.Equals("StopTheHostException", StringComparison.Ordinal))
-    {
-        throw;
-    }
     Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 }
 finally
@@ -50,3 +28,35 @@ finally
     Log.CloseAndFlush();
 }
 
+/// <summary>
+/// Đăng ký các services vào DI container
+/// </summary>
+static void ConfigureServices(WebApplicationBuilder builder)
+{
+    var services = builder.Services;
+    services.AddApplicationServices(); // ✅ Thêm dòng này để đăng ký MediatR
+    services.AddInfrastructure(builder.Configuration);
+    services.AddControllers();
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
+}
+
+
+/// <summary>
+/// Cấu hình middleware và seed database
+/// </summary>
+static async Task ConfigureMiddleware(WebApplication app)
+{
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
+
+    // Seed database
+    await app.SeedOrderDataAsync();
+}
