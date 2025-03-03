@@ -1,9 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-
-namespace Product.API.Extensions
+﻿namespace Ordering.API.Extensions
 {
-    public static class ConfigureHostExtensions
+    public static  class HostExtensions
     {
         public static void AddAppConfigurations(this WebApplicationBuilder builder)
         {
