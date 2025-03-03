@@ -44,6 +44,11 @@ services:
     build:
       context: .
       dockerfile: src/Services/Customer.API/Dockerfile
+  basket:
+    image: ${DOCKER_REGISTRY-}basketapi:latest
+    build:
+      context: .
+      dockerfile: src/Services/Basket.API/Dockerfile
 
   
 # Network section

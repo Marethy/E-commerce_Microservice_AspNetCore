@@ -11,7 +11,7 @@ using Customer.API.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(SeriLogger.Configure);
-Log.Information("Starting Customer.API");
+Log.Information($"Starting {builder.Environment.ApplicationName} ");
 try
 {
     // Add services to the container.
@@ -64,6 +64,6 @@ catch (Exception ex)
 }
 finally
 {
-    Log.Information("Stopping Customer.API");
+    Log.Information($"Starting {builder.Environment.ApplicationName} ");
     Log.CloseAndFlush();
 }
