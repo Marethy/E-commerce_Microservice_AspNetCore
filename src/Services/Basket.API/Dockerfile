@@ -11,7 +11,7 @@ EXPOSE 8081
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
+WORKDIR /microservices
 COPY ["src/Services/Basket.API/Basket.API.csproj", "src/Services/Basket.API/"]
 COPY ["src/BuildingBlocks/Common.Logging/Common.Logging.csproj", "src/BuildingBlocks/Common.Logging/"]
 COPY ["src/BuildingBlocks/Contracts/Contracts.csproj", "src/BuildingBlocks/Contracts/"]
@@ -19,7 +19,7 @@ COPY ["src/BuildingBlocks/Infrastructure/Infrastructure.csproj", "src/BuildingBl
 COPY ["src/BuildingBlocks/Shared/Shared.csproj", "src/BuildingBlocks/Shared/"]
 RUN dotnet restore "./src/Services/Basket.API/Basket.API.csproj"
 COPY . .
-WORKDIR "/src/src/Services/Basket.API"
+WORKDIR "/microservices/src/Services/Basket.API"
 RUN dotnet build "./Basket.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

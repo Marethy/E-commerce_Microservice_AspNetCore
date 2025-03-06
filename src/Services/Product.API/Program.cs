@@ -33,7 +33,7 @@ catch (Exception ex)
 }
 finally
 {
-    Log.Information($"Starting {builder.Environment.ApplicationName} ");
+    Log.Information($"Stopping {builder.Environment.ApplicationName} ");
     Log.CloseAndFlush();
 }
 

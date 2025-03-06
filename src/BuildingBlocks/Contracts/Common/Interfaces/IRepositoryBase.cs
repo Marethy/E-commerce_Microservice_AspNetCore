@@ -21,4 +21,18 @@ namespace Contracts.Common.Interfaces
         Task EndTransactionAsync();
         Task RollbackTransactionAsync();
     }
+    public interface IRepositoryBase<T, K> : IRepositoryQueryBase<T, K>
+       where T : EntityBase<K>
+    {
+        Task<K> CreateAsync(T entity);
+        Task<List<K>> CreateListAsync(IEnumerable<T> entities);
+        Task AddAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
+        Task<int> SaveChangesAsync();
+
+        Task<IDbContextTransaction> BeginTransactionAsync();
+        Task EndTransactionAsync();
+        Task RollbackTransactionAsync();
+    }
 }
