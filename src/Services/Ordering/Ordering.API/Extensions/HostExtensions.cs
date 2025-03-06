@@ -2,6 +2,7 @@
 {
     public static  class HostExtensions
     {
+
         public static void AddAppConfigurations(this WebApplicationBuilder builder)
         {
             var env = builder.Environment;
