@@ -34,21 +34,26 @@ services:
     image: docker.elastic.co/kibana/kibana:7.17.2
   
 #microsesrvice api section
-  productapi:
-    image: ${DOCKER_REGISTRY-}productapi:latest
+  product-api:
+    image: ${DOCKER_REGISTRY-}product-api:latest
     build:
       context: .
       dockerfile: src/Services/Product.API/Dockerfile
-  customerapi:
-    image: ${DOCKER_REGISTRY-}customerapi:latest
+  customer-api:
+    image: ${DOCKER_REGISTRY-}customer-api:latest
     build:
       context: .
       dockerfile: src/Services/Customer.API/Dockerfile
-  basket:
-    image: ${DOCKER_REGISTRY-}basketapi:latest
+  basket-api:
+    image: ${DOCKER_REGISTRY-}basket-api:latest
     build:
       context: .
       dockerfile: src/Services/Basket.API/Dockerfile
+  order-api:
+    image: ${DOCKER_REGISTRY-}order-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Ordering/Ordering.API/Dockerfile
 
   
 # Network section
