@@ -14,5 +14,7 @@ namespace Ordering.Application.Features.V1.Orders.Queries.GetOrders
         {
             UserName = userName ?? throw new ArgumentNullException(nameof(userName));
         }
+   
+       
     }
 }
