@@ -35,4 +35,5 @@ namespace Contracts.Common.Interfaces
         Task EndTransactionAsync();
         Task RollbackTransactionAsync();
     }
+
 }

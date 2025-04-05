@@ -38,7 +38,6 @@ wwwroot/
 .env.*
 
 # Docker files
-docker-compose.override.yml
 .dockerignore
 
 # Backup & system files
