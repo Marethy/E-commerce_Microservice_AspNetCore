@@ -1,4 +1,8 @@
 ﻿using Common.Logging;
+using Contracts.Common.Interfaces;
+using Contracts.Messages;
+using Infrastructure.Common;
+using Infrastructure.Messages;
 using Microsoft.AspNetCore.Builder;
 using Ordering.API.Extensions;
 using Ordering.Application;
@@ -47,6 +51,8 @@ static void ConfigureServices(WebApplicationBuilder builder)
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
+    services.AddScoped<IMessageProducer, RabbitMQProducer>();  
+    services.AddScoped<ISerializeService, SerializeService>();
 }
 
 

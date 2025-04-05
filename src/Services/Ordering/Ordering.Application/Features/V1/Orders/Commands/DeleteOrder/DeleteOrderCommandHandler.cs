@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Ordering.Application.Common.Interfaces;
-using Ordering.Application.Contracts.Persistence;
 using Shared.SeedWork;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,13 +20,13 @@ namespace Ordering.Application.Features.V1.Orders.Commands.DeleteOrder
             var order = await _orderRepository.GetOrderAsync(request.Id);
             if (order == null)
             {
-                return ApiResult<long>.Failure("Order not found.");
+                return new ApiErrorResult<long>("Order not found.");
             }
 
             await _orderRepository.DeleteOrderAsync(request.Id);
-            await _orderRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+   //         await _orderRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-            return ApiResult<long>.Success(request.Id);
+            return new ApiSuccessResult<long>(request.Id);
         }
     }
 }
