@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ordering.Application.Features.V1.Orders.Commands.UpdateOrder
+namespace Contracts.Messages
 {
-    public class UpdateOrderCommand
+    public interface IMessageProducer    
     {
+        Task SendMessageAsync<T>(T message);
     }
 }

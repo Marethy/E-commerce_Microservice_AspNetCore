@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Ordering.Application.Features.V1.Orders.Commands.DeleteOrder
 {
-    public class DeleteOrderCommand : IRequest<ApiResult<bool>>
+    public class DeleteOrderCommand : IRequest<ApiResult<long>>
     {
         [Required(ErrorMessage = "Order ID is required.")]
         public long Id { get; }

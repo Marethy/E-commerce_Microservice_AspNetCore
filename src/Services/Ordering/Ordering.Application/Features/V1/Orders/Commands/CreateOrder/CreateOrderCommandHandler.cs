@@ -41,7 +41,7 @@ namespace Ordering.Application.Features.V1.Orders.Commands.CreateOrder
                 await _orderRepository.CreateOrderAsync(order);
 
                 // Lưu thay đổi vào database
-                await _orderRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+                await _orderRepository.SaveChangesAsync();
 
                 _logger.LogInformation("END: {HandlerName} - Order created successfully with ID: {OrderId}",
                     nameof(CreateOrderCommandHandler), order.Id);
