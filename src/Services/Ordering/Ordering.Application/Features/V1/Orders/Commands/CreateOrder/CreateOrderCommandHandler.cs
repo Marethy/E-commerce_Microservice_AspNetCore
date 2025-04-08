@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Ordering.Application.Features.V1.Orders.Commands.CreateOrder
+namespace Ordering.Application.Features.V1.Orders
 {
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, ApiResult<long>>
     {

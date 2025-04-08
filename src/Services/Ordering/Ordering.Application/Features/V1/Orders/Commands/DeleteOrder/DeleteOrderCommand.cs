@@ -1,17 +1,14 @@
-﻿using MediatR;
-using Shared.SeedWork;
-using System.ComponentModel.DataAnnotations;
+﻿
+using MediatR;
 
-namespace Ordering.Application.Features.V1.Orders.Commands.DeleteOrder
+namespace Ordering.Application.Features.V1.Orders;
+
+public class DeleteOrderCommand : IRequest
 {
-    public class DeleteOrderCommand : IRequest<ApiResult<long>>
-    {
-        [Required(ErrorMessage = "Order ID is required.")]
-        public long Id { get; }
+    public long Id { get; private set; }
 
-        public DeleteOrderCommand(long id)
-        {
-            Id = id <= 0 ? throw new ArgumentException("Order ID must be greater than zero", nameof(id)) : id;
-        }
+    public DeleteOrderCommand(long id)
+    {
+        Id = id;
     }
 }
