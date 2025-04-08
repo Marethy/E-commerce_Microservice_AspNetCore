@@ -83,7 +83,6 @@ namespace Basket.API.Controllers
             return deleted ? Ok() : NotFound();
         }
 
-        [Route("checkout")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

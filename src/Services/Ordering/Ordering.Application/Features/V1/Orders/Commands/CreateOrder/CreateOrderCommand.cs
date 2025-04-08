@@ -6,7 +6,7 @@ using Shared.SeedWork;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Ordering.Application.Features.V1.Orders.Commands.CreateOrder
+namespace Ordering.Application.Features.V1.Orders
 {
     public class CreateOrderCommand : IRequest<ApiResult<long>>
     {

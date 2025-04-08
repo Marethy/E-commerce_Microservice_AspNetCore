@@ -1,5 +1,4 @@
-﻿
-using EventBus.Messages;
+﻿using EventBus.Messages;
 
 namespace EventBus.MessageComponents.Consumers.Basket;
 
