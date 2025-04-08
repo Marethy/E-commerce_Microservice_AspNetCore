@@ -12,7 +12,7 @@ namespace Basket.API.Entities
 
         [Required]
         [StringLength(250)]
-        public required  string rFirstName { get; set; }
+        public required  string FirstName { get; set; }
 
         [Required]
         [StringLength(250)]

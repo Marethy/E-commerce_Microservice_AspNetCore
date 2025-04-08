@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace EventBus.Messages;
 
-namespace EventBus.Messages.Interfaces
+public interface IBasketCheckoutEvent : IIntegrationEvent
 {
-    internal interface IBasketCheckoutEvent
-    {
-    }
+    string UserName { get; set; }
+    decimal TotalPrice { get; set; }
+    string FirstName { get; set; }
+    string LastName { get; set; }
+    string EmailAddress { get; set; }
+    string ShippingAddress { get; set; }
+    string InvoiceAddress { get; set; }
 }
