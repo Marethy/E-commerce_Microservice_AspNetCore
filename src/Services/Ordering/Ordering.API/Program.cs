@@ -53,6 +53,10 @@ static void ConfigureServices(WebApplicationBuilder builder)
     services.AddSwaggerGen();
     services.AddScoped<IMessageProducer, RabbitMQProducer>();  
     services.AddScoped<ISerializeService, SerializeService>();
+    services
+    .AddConfigurationSettings(builder.Configuration)
+    .ConfiguraMassTransit(builder.Configuration);
+
 }
 
 
