@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ordering.Application.Features.V1.Orders.Commands.DeleteOrder
+namespace Ordering.Application.Features.V1.Orders
 {
     internal class DeleteOrderCommandValidator
     {

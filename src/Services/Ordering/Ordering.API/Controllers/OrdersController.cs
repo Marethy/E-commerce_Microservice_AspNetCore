@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders;
+using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
 using Shared.SeedWork;
 using System.Net;
 
@@ -60,7 +61,7 @@ public class OrdersController : ControllerBase
     [HttpPut("{id:long}", Name = RouteNames.UpdateOrder)]
     public async Task<ActionResult<ApiResult<OrderDto>>> UpdateOrder(long id, UpdateOrderCommand command)
     {
-       // command.SetId(id);
+        command.SetId(id);
         var result = await _mediator.Send(command);
         return Ok(result);
     }
