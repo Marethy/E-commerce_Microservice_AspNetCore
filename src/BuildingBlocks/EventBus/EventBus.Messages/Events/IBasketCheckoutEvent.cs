@@ -1,4 +1,4 @@
-﻿namespace EventBus.Messages;
+﻿namespace EventBus.Messages.Events;
 
 public interface IBasketCheckoutEvent : IIntegrationEvent
 {
@@ -7,6 +7,4 @@ public interface IBasketCheckoutEvent : IIntegrationEvent
     string FirstName { get; set; }
     string LastName { get; set; }
     string EmailAddress { get; set; }
-    string ShippingAddress { get; set; }
-    string InvoiceAddress { get; set; }
 }

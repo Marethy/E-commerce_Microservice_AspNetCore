@@ -48,7 +48,7 @@ namespace Basket.API.Controllers
         /// </summary>
         /// <param name="cart"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost()]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Cart>> UpdateBasket([FromBody] Cart cart)
@@ -83,7 +83,7 @@ namespace Basket.API.Controllers
             return deleted ? Ok() : NotFound();
         }
 
-        [HttpPost]
+        [HttpPost("checkout")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Checkout([FromBody] BasketCheckout basketCheckout)
@@ -108,7 +108,7 @@ namespace Basket.API.Controllers
             // Clear the basket after publishing the event
             await _repository.DeleteBasketByUserName(basketCheckout.Username);
 
-            return Ok("Checkout event has been published.");
+            return Accepted("Checkout event has been published.");
         }
     }
 }
