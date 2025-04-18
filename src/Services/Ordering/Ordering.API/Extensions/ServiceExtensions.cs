@@ -26,7 +26,7 @@ namespace Ordering.API.Extensions
             return services;
         }
 
-        public static void ConfiguraMassTransit(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureMassTransit(this IServiceCollection services, IConfiguration configuration)
         {
             var settings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>();
 

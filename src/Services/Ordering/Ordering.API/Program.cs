@@ -3,6 +3,7 @@ using Contracts.Common.Interfaces;
 using Contracts.Messages;
 using Infrastructure.Common;
 using Infrastructure.Messages;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Ordering.API.Extensions;
 using Ordering.Application;
@@ -45,17 +46,19 @@ finally
 static void ConfigureServices(WebApplicationBuilder builder)
 {
     var services = builder.Services;
-    services.AddEmailSettings(builder.Configuration);
+    var configuration = builder.Configuration;
+  //  services.AddEmailSettings(builder.Configuration);
     services.AddApplicationServices(); 
-    services.AddInfrastructure(builder.Configuration);
+    services.AddInfrastructure(configuration);
+    services
+   .AddConfigurationSettings(configuration)
+   .ConfigureMassTransit(configuration);
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
     services.AddScoped<IMessageProducer, RabbitMQProducer>();  
     services.AddScoped<ISerializeService, SerializeService>();
-    services
-    .AddConfigurationSettings(builder.Configuration)
-    .ConfiguraMassTransit(builder.Configuration);
+   
 
 }
 

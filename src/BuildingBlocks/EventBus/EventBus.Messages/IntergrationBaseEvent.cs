@@ -1,4 +1,5 @@
-﻿namespace EventBus.Messages;
+﻿
+namespace EventBus.Messages;
 
 public record IntegrationBaseEvent : IIntegrationEvent
 {

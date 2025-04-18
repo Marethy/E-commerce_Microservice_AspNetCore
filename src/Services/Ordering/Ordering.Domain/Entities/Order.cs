@@ -14,9 +14,12 @@ namespace Ordering.Domain.Entities
     {
         [Required]
         public required string UserName { get; set; }
+        public Guid DocumentNo { get; set; } = Guid.NewGuid();
 
         [Range(0.01, double.MaxValue, ErrorMessage = "Total price must be greater than zero.")]
         [Column(TypeName = "decimal(18,4)")]
+       
+
         public decimal TotalPrice { get; set; }
 
         [Required]
@@ -39,5 +42,6 @@ namespace Ordering.Domain.Entities
         [StringLength(100)]
         public required string InvoiceAddress { get; set; }
         public   EOrderStatus Status { get; set; }
+
     }
 }

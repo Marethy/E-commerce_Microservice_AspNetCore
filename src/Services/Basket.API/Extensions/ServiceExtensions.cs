@@ -5,7 +5,7 @@ using Infrastructure.Common;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shared.Configurations;
 using MassTransit;
-using EventBus.Messages;
+using EventBus.Messages.Events;
 
 namespace Basket.API.Extensions
 {
@@ -73,13 +73,18 @@ namespace Basket.API.Extensions
             services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
             services.AddMassTransit(config =>
             {
+                config.SetKebabCaseEndpointNameFormatter(); // Đồng bộ với Ordering.API
+
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
-                    cfg.Host(mqConnection);
+                    cfg.Host(new Uri(eventBusSettings.HostAddress));
+                    cfg.ConfigureEndpoints(ctx);
                 });
 
-                config.AddRequestClient<IBasketCheckoutEvent>();
+                config.AddPublishMessageScheduler(); // Optional nếu dùng Delay
+        
             });
+
         }
     }
 }

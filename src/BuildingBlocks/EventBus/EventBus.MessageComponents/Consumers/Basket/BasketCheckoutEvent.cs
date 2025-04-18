@@ -1,7 +1,7 @@
 ﻿using EventBus.Messages;
+using EventBus.Messages.Events;
 
 namespace EventBus.MessageComponents.Consumers.Basket;
-
 public record class BasketCheckoutEvent : IntegrationBaseEvent, IBasketCheckoutEvent
 {
     public string UserName { get; set; }

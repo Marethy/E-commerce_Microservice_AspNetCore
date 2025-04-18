@@ -12,7 +12,7 @@ using Ordering.Infrastructure.Persistence;
 namespace Ordering.Infrastructure.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20250302120322_init")]
+    [Migration("20250418173136_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -35,6 +35,9 @@ namespace Ordering.Infrastructure.Migrations
 
                     b.Property<DateTimeOffset>("CreatedDate")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("DocumentNo")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -62,6 +65,11 @@ namespace Ordering.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,4)");

@@ -4,23 +4,23 @@ namespace Basket.API.Entities
 {
     public class BasketCheckout
     {
-        public required string Username { get; set; }
-
         [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Total price must be greater than 0.")]
+        public string Username { get; set; }
         public decimal TotalPrice { get; set; }
-
         [Required]
-        [StringLength(250)]
-        public required  string FirstName { get; set; }
-
+        public string FirstName { get; set; }
         [Required]
-        [StringLength(250)]
-        public required  string LastName { get; set; }
-
+        public string LastName { get; set; }
         [Required]
         [EmailAddress]
-        public required string Email { get; set; }
+        public string EmailAddress { get; set; }
+        [Required]
+        public string ShippingAddress { get; set; }
+        private string _invoiceAddress;
+        public string? InvoiceAddress
+        {
+            get => _invoiceAddress;
+            set => _invoiceAddress = value ?? ShippingAddress;
+        }
     }
 }
-
