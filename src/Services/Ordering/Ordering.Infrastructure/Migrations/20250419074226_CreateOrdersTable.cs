@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Ordering.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class CreateOrdersTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,7 +22,7 @@ namespace Ordering.Infrastructure.Migrations
                     TotalPrice = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     InvoiceAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),

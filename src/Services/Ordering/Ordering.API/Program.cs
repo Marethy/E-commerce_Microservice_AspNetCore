@@ -19,19 +19,25 @@ Log.Information($"Starting {builder.Environment.ApplicationName}");
 
 try
 {
+    // Đăng ký service
     ConfigureServices(builder);
+
+    // Load cấu hình tùy chỉnh
     builder.AddAppConfigurations();
 
     var app = builder.Build();
 
-    await ConfigureMiddleware(app);
-    await app.RunAsync();
+    // Chỉ chạy middleware và host khi không phải EF tool
+    if (!Environment.CommandLine.Contains("ef"))
+    {
+        await ConfigureMiddleware(app);
+        await app.RunAsync();
+    }
 }
 catch (Exception ex) when (ex.GetType().Name != "StopTheHostException")
 {
     Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
     Console.WriteLine($"Unhandled exception: {ex.Message}");
-
 }
 finally
 {
@@ -47,21 +53,20 @@ static void ConfigureServices(WebApplicationBuilder builder)
 {
     var services = builder.Services;
     var configuration = builder.Configuration;
-  //  services.AddEmailSettings(builder.Configuration);
-    services.AddApplicationServices(); 
+
+    services.AddApplicationServices();
     services.AddInfrastructure(configuration);
     services
-   .AddConfigurationSettings(configuration)
-   .ConfigureMassTransit(configuration);
+        .AddConfigurationSettings(configuration)
+        .ConfigureMassTransit(configuration);
+
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
-    services.AddScoped<IMessageProducer, RabbitMQProducer>();  
+
+    services.AddScoped<IMessageProducer, RabbitMQProducer>();
     services.AddScoped<ISerializeService, SerializeService>();
-   
-
 }
-
 
 /// <summary>
 /// Cấu hình middleware và seed database
