@@ -20,6 +20,8 @@ COPY ["src/BuildingBlocks/Infrastructure/Infrastructure.csproj", "src/BuildingBl
 COPY ["src/Services/Ordering/Ordering.Application/Ordering.Application.csproj", "src/Services/Ordering/Ordering.Application/"]
 COPY ["src/Services/Ordering/Ordering.Domain/Ordering.Domain.csproj", "src/Services/Ordering/Ordering.Domain/"]
 COPY ["src/Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj", "src/Services/Ordering/Ordering.Infrastructure/"]
+COPY ["src/BuildingBlocks/EventBus/EventBus.Messages/EventBus.Messages.csproj", "src/BuildingBlocks/EventBus/EventBus.Messages/"]
+
 RUN dotnet restore "src/Services/Ordering/Ordering.API/Ordering.API.csproj"
 COPY . .
 WORKDIR "/microservices/src/Services/Ordering/Ordering.API"

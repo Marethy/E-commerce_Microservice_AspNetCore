@@ -17,7 +17,7 @@ namespace Ordering.Application.Common.Models
         public decimal TotalPrice { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
+        public string EmailAddress { get; set; }
         //Adress
         public string ShippingAddress { get; set; }
         public string InvoiceAddress { get; set; }

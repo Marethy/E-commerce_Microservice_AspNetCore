@@ -1,12 +1,7 @@
-﻿
-using Contracts.Messages;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders;
-using Ordering.Application.Features.V1.Orders.Commands.CreateOrder;
-using Ordering.Application.Features.V1.Orders.Commands.DeleteOrder;
-using Ordering.Application.Features.V1.Orders.Commands.UpdateOrder;
 using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
 using Shared.SeedWork;
 using System.Net;
@@ -18,13 +13,10 @@ namespace Ordering.API.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IMessageProducer _messageProducer;
 
-    public OrdersController(IMediator mediator,IMessageProducer messageProducer)
+    public OrdersController(IMediator mediator)
     {
         _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-        _messageProducer = messageProducer ?? throw new ArgumentNullException(nameof(messageProducer));
-
     }
 
     private static class RouteNames
@@ -55,7 +47,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost(Name = RouteNames.CreateOrder)]
-    public async Task<ActionResult<ApiResult<long>>> CreateOrder(CreateOrderCommand command)
+    public async Task<ActionResult<ApiResult<long>>> CreateOrder([FromBody] CreateOrderCommand command)
     {
         var result = await _mediator.Send(command);
         return Ok(result);
@@ -64,7 +56,7 @@ public class OrdersController : ControllerBase
     [HttpPut("{id:long}", Name = RouteNames.UpdateOrder)]
     public async Task<ActionResult<ApiResult<OrderDto>>> UpdateOrder(long id, UpdateOrderCommand command)
     {
-       // command.SetId(id);
+        command.SetId(id);
         var result = await _mediator.Send(command);
         return Ok(result);
     }

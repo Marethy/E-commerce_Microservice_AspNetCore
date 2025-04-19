@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Ordering.Application.Features.V1.Orders.Commands.CreateOrder
+namespace Ordering.Application.Features.V1.Orders
 {
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, ApiResult<long>>
     {
@@ -33,15 +33,15 @@ namespace Ordering.Application.Features.V1.Orders.Commands.CreateOrder
 
             try
             {
-                // Map command sang entity Order
                 var order = _mapper.Map<Order>(request);
                 order.CreatedDate = DateTime.UtcNow;
 
-                // Tạo đơn hàng bằng phương thức CreateOrderAsync của repository
-                await _orderRepository.CreateOrderAsync(order);
-
-                // Lưu thay đổi vào database
+                _orderRepository.CreateOrder(order);
+                order.AddedOrder();
                 await _orderRepository.SaveChangesAsync();
+                
+                 
+
 
                 _logger.LogInformation("END: {HandlerName} - Order created successfully with ID: {OrderId}",
                     nameof(CreateOrderCommandHandler), order.Id);

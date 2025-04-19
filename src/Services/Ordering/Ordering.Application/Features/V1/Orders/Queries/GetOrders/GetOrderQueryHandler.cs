@@ -28,7 +28,7 @@ namespace Ordering.Application.Features.V1.Orders.Queries.GetOrders
         {
             _logger.LogInformation($"BEGIN {nameof(GetOrderQueryHandler.Handle)} - Username: {request.UserName}");
 
-            var orders = await _orderRepository.GetOrdersByUsernameAsync(request.UserName);
+            var orders = await _orderRepository.GetOrdersByUserName(request.UserName);
 
             if (!orders?.Any() ?? true)
             {
