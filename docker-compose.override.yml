@@ -185,7 +185,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - "CacheSettings__ConnectionString=basketdb:6379"
-      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
     depends_on:
       - basketdb
       - rabbitmq
@@ -204,7 +204,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - "ConnectionStrings__DefaultConnection=Server=orderdb,1433;Database=OrderDb;User Id=sa;Password=Marethyu2004!;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True"
-      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
 
     depends_on:
       - orderdb
