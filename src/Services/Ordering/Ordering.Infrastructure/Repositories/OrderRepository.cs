@@ -4,50 +4,37 @@ using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Common.Interfaces;
 using Ordering.Domain.Entities;
 using Ordering.Infrastructure.Persistence;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Ordering.Infrastructure.Repositories
+namespace Ordering.Infrastructure.Repositories;
+
+public class OrderRepository : RepositoryBase<Order, long, OrderContext>, IOrderRepository
 {
-    internal class OrderRepository : RepositoryBase<Order, long, OrderContext>, IOrderRepository
+    public OrderRepository(OrderContext dbContext, IUnitOfWork<OrderContext> unitOfWork) : base(dbContext, unitOfWork)
     {
-        public OrderRepository(OrderContext context, IUnitOfWork<OrderContext> unitOfWork)
-            : base(context, unitOfWork) { }
-
-        public async Task CreateOrderAsync(Order order)
-        {
-            await AddAsync(order);
-        }
-
-        public async Task DeleteOrderAsync(long id)
-        {
-            var order = await GetByIdAsync(id);
-            if (order != null)
-            {
-                await DeleteAsync(order);
-            }
-        }
-
-        public async Task<Order> GetOrderAsync(long id)
-        {
-            return await GetByIdAsync(id);
-        }
-
-        public async Task<IEnumerable<Order>> GetOrdersByUsernameAsync(string username)
-        {
-            return await FindByCondition(o => o.UserName == username)
-                .ToListAsync();
-        }
-
-
-        public async Task UpdateOrderAsync(Order order)
-        {
-            await UpdateAsync(order);
-        }
     }
+
+    public async Task<IEnumerable<Order>> GetOrdersByUserName(string userName)
+    {
+        return await FindByCondition(x => x.UserName.Equals(userName)).ToListAsync();
+    }
+
+    public async Task<long> CreateOrderAsync(Order order)
+    {
+        return await CreateAsync(order);
+    }
+
+    public async Task<Order> UpdateOrderAsync(Order order)
+    {
+        await UpdateAsync(order);
+        return order;
+    }
+
+    public async Task DeleteOrderAsync(Order order)
+    {
+        await DeleteAsync(order);
+    }
+
+    public void CreateOrder(Order order) => CreateAsync(order);
+
+    public void DeleteOrder(Order order) => DeleteAsync(order);
 }
-
-
-
-

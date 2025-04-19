@@ -2,9 +2,10 @@
 using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Interfaces;
 using Infrastructure.Common;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Shared.Configurations;
+using MassTransit;
+using EventBus.Messages.Events;
 
 namespace Basket.API.Extensions
 {
@@ -20,40 +21,70 @@ namespace Basket.API.Extensions
             services.AddAuthorization();
             services.AddLogging();
 
+            services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddTransient<ISerializeService, SerializeService>();
             services.AddSingleton<ILogger<BasketRepository>, Logger<BasketRepository>>();
 
+            // Thêm các cấu hình hệ thống
+            services.AddConfigurationSettings(configuration);
             services.ConfigureRedis(configuration);
+            services.ConfigureMassTransit(configuration);
 
             return services;
         }
 
-        public static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
+        private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
         {
-            var redisConnectionString = configuration.GetSection("CacheSettings:ConnectionString").Value;
-            var loggerFactory = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
-            var logger = loggerFactory.CreateLogger("RedisLogger");
+            var eventBusSettings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>();
+            services.AddSingleton(eventBusSettings);
 
-            if (!string.IsNullOrEmpty(redisConnectionString))
+            var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
+            services.AddSingleton(cacheSettings);
+
+          // var urlSettings = configuration.GetSection(nameof(UrlSettings)).Get<UrlSettings>();
+           // services.AddSingleton(urlSettings);
+        }
+
+        private static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
+        {
+            var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
+            if (cacheSettings == null || string.IsNullOrEmpty(cacheSettings.ConnectionString))
             {
-                try
-                {
-                    services.AddStackExchangeRedisCache(options =>
-                    {
-                        options.Configuration = redisConnectionString;
-                    });
-                    logger.LogInformation($"Redis connected successfully: {redisConnectionString}");
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError($"Redis connection error: {ex.Message}");
-                }
+                throw new ArgumentException("Redis ConnectionString is not configured!");
             }
-            else
+
+            services.AddStackExchangeRedisCache(options =>
             {
-                logger.LogWarning("Redis ConnectionString is empty or not configured.");
+                options.Configuration = cacheSettings.ConnectionString;
+            });
+        }
+
+        private static void ConfigureMassTransit(this IServiceCollection services, IConfiguration configuration)
+        {
+            var eventBusSettings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>();
+            if (eventBusSettings == null || string.IsNullOrEmpty(eventBusSettings.HostAddress))
+            {
+                throw new ArgumentException("EventBusSettings is not configured!");
             }
+
+            var mqConnection = new Uri(eventBusSettings.HostAddress);
+
+            services.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
+            services.AddMassTransit(config =>
+            {
+                config.SetKebabCaseEndpointNameFormatter(); // Đồng bộ với Ordering.API
+
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(new Uri(eventBusSettings.HostAddress));
+                    cfg.ConfigureEndpoints(ctx);
+                });
+
+                config.AddPublishMessageScheduler(); // Optional nếu dùng Delay
+        
+            });
+
         }
     }
 }
