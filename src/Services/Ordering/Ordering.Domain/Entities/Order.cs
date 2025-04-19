@@ -44,6 +44,7 @@ namespace Ordering.Domain.Entities
         [StringLength(100)]
         public required string InvoiceAddress { get; set; }
         public   EOrderStatus Status { get; set; }
+
         [NotMapped]
         public string FullName => FirstName + " " + LastName;
 
