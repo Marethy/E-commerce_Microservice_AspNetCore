@@ -3,10 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Ordering.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Ordering.Infrastructure.Persistence
 {
@@ -36,7 +32,7 @@ namespace Ordering.Infrastructure.Persistence
                             TotalPrice = 150.00m,
                             FirstName = "John",
                             LastName = "Doe",
-                            Email = "john.doe@example.com",
+                            EmailAddress = "john.doe@example.com",
                             ShippingAddress = "123 Main St, Anytown, USA",
                             InvoiceAddress = "123 Main St, Anytown, USA",
                             CreatedDate = DateTimeOffset.UtcNow
@@ -47,7 +43,7 @@ namespace Ordering.Infrastructure.Persistence
                             TotalPrice = 250.00m,
                             FirstName = "Jane",
                             LastName = "Smith",
-                            Email = "jane.smith@example.com",
+                            EmailAddress = "jane.smith@example.com",
                             ShippingAddress = "456 Elm St, Othertown, USA",
                             InvoiceAddress = "456 Elm St, Othertown, USA",
                             CreatedDate = DateTimeOffset.UtcNow
@@ -58,7 +54,7 @@ namespace Ordering.Infrastructure.Persistence
                             TotalPrice = 350.00m,
                             FirstName = "Bob",
                             LastName = "Johnson",
-                            Email = "bob.johnson@example.com",
+                            EmailAddress = "bob.johnson@example.com",
                             ShippingAddress = "789 Oak St, Sometown, USA",
                             InvoiceAddress = "789 Oak St, Sometown, USA",
                             CreatedDate = DateTimeOffset.UtcNow

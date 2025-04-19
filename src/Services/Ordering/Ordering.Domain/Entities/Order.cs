@@ -32,7 +32,7 @@ namespace Ordering.Domain.Entities
 
         [Required]
         [EmailAddress]
-        public required string Email { get; set; }
+        public required string EmailAddress { get; set; }
 
         [Required]
         [StringLength(100)]

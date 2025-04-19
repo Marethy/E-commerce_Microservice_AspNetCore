@@ -28,6 +28,12 @@ namespace Ordering.API.Extensions
 
         public static void ConfigureMassTransit(this IServiceCollection services, IConfiguration configuration)
         {
+            if (AppDomain.CurrentDomain.FriendlyName.Contains("ef") || Environment.CommandLine.ToLower().Contains("ef"))
+            {
+                Console.WriteLine("Skipping MassTransit configuration because EF migration is running.");
+                return;  // Bỏ qua MassTransit khi chạy EF migration
+            }
+
             var settings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>();
 
             if (settings == null || string.IsNullOrEmpty(settings.HostAddress))
