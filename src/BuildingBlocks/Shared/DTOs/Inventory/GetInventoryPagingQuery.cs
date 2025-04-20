@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Shared.SeedWork;
 
-namespace Shared.DTOs.Inventory
+namespace Shared.DTOs.Inventory;
+
+public class GetInventoryPagingQuery : RequestParameters
 {
-    internal class GetInventoryPagingQuery
-    {
-    }
+    private string _itemNo;
+    public string? SearchTerm { get; set; }
+
+    public string GetItemNo() => _itemNo;
+
+    public void SetItemNo(string itemNo) => _itemNo = itemNo;
 }
