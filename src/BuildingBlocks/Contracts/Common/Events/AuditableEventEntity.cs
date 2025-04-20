@@ -1,5 +1,4 @@
-﻿
-using Contracts.Domains.Interfaces;
+﻿using Contracts.Domains.Interfaces;
 
 namespace Contracts.Common.Events;
 
