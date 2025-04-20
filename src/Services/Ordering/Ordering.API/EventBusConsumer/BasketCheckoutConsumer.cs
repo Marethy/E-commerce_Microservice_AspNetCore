@@ -1,7 +1,5 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using EventBus.MessageComponents.Consumers.Basket;
-using EventBus.Messages;
 using MassTransit;
 using MediatR;
 using Ordering.Application.Features.V1.Orders;

@@ -1,5 +1,4 @@
-﻿
-using Contracts.Common.Events;
+﻿using Contracts.Common.Events;
 using Contracts.Common.Interfaces;
 using Contracts.Domains.Interfaces;
 using Infrastructure.Extensions;
@@ -79,7 +78,7 @@ public class OrderContext : DbContext
         }
 
         var result = await base.SaveChangesAsync(cancellationToken);
-        
+
         await _mediator.DispatchDomainEventAsync(_baseEvents, _logger);
 
         return result;

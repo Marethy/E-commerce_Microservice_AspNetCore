@@ -1,7 +1,7 @@
-using Serilog;
 using Common.Logging;
 using Product.API.Extensions;
 using Product.API.Persistence;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +26,7 @@ catch (Exception ex)
 {
     string type = ex.GetType().Name;
     if (type.Equals("StopTheHostException", StringComparison.Ordinal))
-    { 
+    {
         throw;
     }
     Log.Fatal(ex, $"Unhandel exception: {ex.Message}");
@@ -36,5 +36,3 @@ finally
     Log.Information($"Stopping {builder.Environment.ApplicationName} ");
     Log.CloseAndFlush();
 }
-
-

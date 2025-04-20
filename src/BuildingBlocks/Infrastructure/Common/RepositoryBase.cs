@@ -1,8 +1,8 @@
 ﻿using Contracts.Common.Interfaces;
 using Contracts.Domains;
 using Infrastructure.Common;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 public class RepositoryBase<T, K, TContext> : RepositoryQueryBase<T, K, TContext>, IRepositoryBase<T, K, TContext>
     where T : EntityBase<K>

@@ -1,6 +1,4 @@
-﻿    using AutoMapper;
-using System;
-using System.Linq;
+﻿using AutoMapper;
 using System.Reflection;
 
 namespace Ordering.Application.Common.Mappings
@@ -30,4 +28,3 @@ namespace Ordering.Application.Common.Mappings
         }
     }
 }
-

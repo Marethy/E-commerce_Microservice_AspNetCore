@@ -1,14 +1,10 @@
-﻿using Contracts.Configurations;
-using Contracts.Services;
+﻿using Contracts.Services;
 using Infrastructure.Configurations;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using Shared.Services.Email;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 public class SMTPEmailService : ISMTPEmailService
 {

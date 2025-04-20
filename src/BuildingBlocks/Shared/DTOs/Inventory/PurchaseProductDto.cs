@@ -3,4 +3,4 @@
 namespace Shared.DTOs.Inventory;
 
 public record PurchaseProductDto(int Quantity,
-                                 EDocumentType DocumentType = EDocumentType.Purchase);
+                                 DocumentType DocumentType = DocumentType.Purchase);

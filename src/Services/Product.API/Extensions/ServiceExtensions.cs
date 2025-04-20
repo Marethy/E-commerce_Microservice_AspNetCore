@@ -32,16 +32,16 @@ namespace Product.API.Extensions
 
             services.AddDbContext<ProductContext>(options =>
             {
-                options.UseMySql(builder.ConnectionString,ServerVersion.AutoDetect(builder.ConnectionString), e =>
+                options.UseMySql(builder.ConnectionString, ServerVersion.AutoDetect(builder.ConnectionString), e =>
                 {
                     e.MigrationsAssembly("Product.API");
                     e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
                 });
-
             });
 
             return services;
         }
+
         private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             return services
@@ -49,6 +49,5 @@ namespace Product.API.Extensions
                 .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
                 .AddScoped<IProductRepository, ProductRepository>();
         }
-
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ordering.Application.Common.Exceptions
+﻿namespace Ordering.Application.Common.Exceptions
 {
     public class NotFoundException : ApplicationException
     {
@@ -24,5 +22,3 @@ namespace Ordering.Application.Common.Exceptions
         }
     }
 }
-
-

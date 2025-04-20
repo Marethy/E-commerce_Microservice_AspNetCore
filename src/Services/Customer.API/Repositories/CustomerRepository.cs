@@ -1,8 +1,6 @@
-﻿using Contracts.Common.Interfaces;
-using Customer.API.Persistence;
+﻿using Customer.API.Persistence;
 using Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Customer.API.Repositories.Interfaces
 {

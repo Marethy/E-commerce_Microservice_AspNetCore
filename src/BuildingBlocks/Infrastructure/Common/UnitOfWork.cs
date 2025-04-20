@@ -1,6 +1,5 @@
 ﻿using Contracts.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Common
 {
@@ -15,4 +14,3 @@ namespace Infrastructure.Common
         public void Dispose() => _context.Dispose();
     }
 }
-    

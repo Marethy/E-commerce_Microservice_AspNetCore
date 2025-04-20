@@ -11,6 +11,5 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasDefaultValue(EOrderStatus.New) // Giá trị mặc định cho trạng thái đơn hàng
             .IsRequired()
             .HasSentinel(EOrderStatus.New);
-
     }
 }

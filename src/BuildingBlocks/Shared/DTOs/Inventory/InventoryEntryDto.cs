@@ -4,7 +4,7 @@ namespace Shared.DTOs.Inventory;
 
 public record InventoryEntryDto(
     string Id,
-    EDocumentType DocumentType,
+    DocumentType DocumentType,
     string DocumentNo,
     string ItemNo,
     int Quantity,

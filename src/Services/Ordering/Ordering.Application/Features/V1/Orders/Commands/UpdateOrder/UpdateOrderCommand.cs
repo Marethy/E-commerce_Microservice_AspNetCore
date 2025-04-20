@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Infrastructure.Extensions;
 using Infrastructure.Mappings;
 using MediatR;
 using Ordering.Application.Common.Mappings;

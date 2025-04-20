@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Shared.SeedWork
+﻿namespace Shared.SeedWork
 {
     public class PagedList<T> : List<T>
     {

@@ -2,10 +2,9 @@
 using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Interfaces;
 using Infrastructure.Common;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shared.Configurations;
-using MassTransit;
-using EventBus.Messages.Events;
 
 namespace Basket.API.Extensions
 {
@@ -42,8 +41,8 @@ namespace Basket.API.Extensions
             var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
             services.AddSingleton(cacheSettings);
 
-          // var urlSettings = configuration.GetSection(nameof(UrlSettings)).Get<UrlSettings>();
-           // services.AddSingleton(urlSettings);
+            // var urlSettings = configuration.GetSection(nameof(UrlSettings)).Get<UrlSettings>();
+            // services.AddSingleton(urlSettings);
         }
 
         private static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
@@ -82,9 +81,7 @@ namespace Basket.API.Extensions
                 });
 
                 config.AddPublishMessageScheduler(); // Optional nếu dùng Delay
-        
             });
-
         }
     }
 }

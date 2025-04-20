@@ -6,9 +6,9 @@ namespace Basket.API.Repositories.Interfaces
     public interface IBasketRepository
     {
         Task<Cart?> GetBasketByUserName(string username);
-        Task<Cart> UpdateBasket(Cart cart, DistributedCacheEntryOptions options=null);
+
+        Task<Cart> UpdateBasket(Cart cart, DistributedCacheEntryOptions options = null);
+
         Task<bool> DeleteBasketByUserName(string username);
-
-
     }
 }
