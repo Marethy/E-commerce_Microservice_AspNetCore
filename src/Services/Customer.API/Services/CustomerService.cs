@@ -1,7 +1,5 @@
 ﻿using Customer.API.Repositories.Interfaces;
 using Customer.API.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Customer.API.Services
 {

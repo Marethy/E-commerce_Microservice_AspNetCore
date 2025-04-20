@@ -4,7 +4,7 @@ namespace Shared.DTOs.Inventory;
 
 public record SalesProductDto(string ExternalDocumentNo, int Quantity)
 {
-    public EDocumentType DocumentType = EDocumentType.Sale;
+    public DocumentType DocumentType = DocumentType.Sale;
 
     public string ItemNo { get; set; }
     public void SetItemNo(string itemNo)

@@ -1,8 +1,5 @@
 ﻿using Contracts.Common.Interfaces;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-
 
 namespace Infrastructure.Common
 {
@@ -22,11 +19,10 @@ namespace Infrastructure.Common
         {
             return JsonConvert.SerializeObject(obj, type, new JsonSerializerSettings());
         }
+
         public T Deserialize<T>(string json)
         {
             return JsonConvert.DeserializeObject<T>(json);
         }
-
-
     }
 }

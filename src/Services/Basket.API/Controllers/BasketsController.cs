@@ -3,13 +3,12 @@ using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
 using EventBus.MessageComponents.Consumers.Basket;
 using MassTransit;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Basket.API.Controllers
 {
-   [ApiController]
+    [ApiController]
     [Route("api/[controller]")]
     public class BasketsController : ControllerBase
     {
@@ -17,7 +16,7 @@ namespace Basket.API.Controllers
         private readonly ILogger<BasketsController> _logger;
         private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
-        public BasketsController(IBasketRepository repository, ILogger<BasketsController> logger,IMapper mapper, IPublishEndpoint publishEndpoint)
+        public BasketsController(IBasketRepository repository, ILogger<BasketsController> logger, IMapper mapper, IPublishEndpoint publishEndpoint)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -66,7 +65,6 @@ namespace Basket.API.Controllers
 
             var updatedBasket = await _repository.UpdateBasket(cart, options);
             return Ok(updatedBasket);
-
         }
 
         /// <summary>
@@ -112,5 +110,3 @@ namespace Basket.API.Controllers
         }
     }
 }
-
-

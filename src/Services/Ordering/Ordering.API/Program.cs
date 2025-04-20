@@ -3,8 +3,6 @@ using Contracts.Common.Interfaces;
 using Contracts.Messages;
 using Infrastructure.Common;
 using Infrastructure.Messages;
-using MassTransit;
-using Microsoft.AspNetCore.Builder;
 using Ordering.API.Extensions;
 using Ordering.Application;
 using Ordering.Infrastructure;
@@ -13,21 +11,17 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Cấu hình Serilog
 builder.Host.UseSerilog(SeriLogger.Configure);
 Log.Information($"Starting {builder.Environment.ApplicationName}");
 
 try
 {
-    // Đăng ký service
     ConfigureServices(builder);
 
-    // Load cấu hình tùy chỉnh
     builder.AddAppConfigurations();
 
     var app = builder.Build();
 
-    // Chỉ chạy middleware và host khi không phải EF tool
     if (!Environment.CommandLine.Contains("ef"))
     {
         await ConfigureMiddleware(app);
@@ -37,12 +31,10 @@ try
 catch (Exception ex) when (ex.GetType().Name != "StopTheHostException")
 {
     Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
-    Console.WriteLine($"Unhandled exception: {ex.Message}");
 }
 finally
 {
     Log.Information($"Stopping {builder.Environment.ApplicationName}");
-    Console.WriteLine($"Stopping {builder.Environment.ApplicationName}");
     Log.CloseAndFlush();
 }
 

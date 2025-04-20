@@ -4,9 +4,6 @@ using Microsoft.Extensions.Logging;
 using Ordering.Application.Common.Interfaces;
 using Ordering.Domain.Entities;
 using Shared.SeedWork;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.V1.Orders
 {
@@ -39,9 +36,6 @@ namespace Ordering.Application.Features.V1.Orders
                 _orderRepository.CreateOrder(order);
                 order.AddedOrder();
                 await _orderRepository.SaveChangesAsync();
-                
-                 
-
 
                 _logger.LogInformation("END: {HandlerName} - Order created successfully with ID: {OrderId}",
                     nameof(CreateOrderCommandHandler), order.Id);

@@ -3,9 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Product.API.Entities
 {
-    public class CatalogProduct:EntityAuditBase<long>
+    public class CatalogProduct : EntityAuditBase<long>
     {
-
         [Required]
         [StringLength(100)]
         public string No { get; set; } = string.Empty;
@@ -22,7 +21,6 @@ namespace Product.API.Entities
         [Range(0, double.MaxValue)]
         public decimal Price { get; set; }
 
-   //     public int StockQuanlitity { get; set; }    
+        //     public int StockQuanlitity { get; set; }
     }
 }
-

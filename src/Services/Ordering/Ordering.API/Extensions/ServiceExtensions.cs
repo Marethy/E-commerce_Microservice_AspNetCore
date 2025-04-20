@@ -1,7 +1,4 @@
-﻿using Contracts.Configurations;
-using EventBus.MessageComponents.Consumers.Basket;
-using Infrastructure.Configurations;
-using Infrastructure.Extensions;
+﻿using Infrastructure.Configurations;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Ordering.API.EventBusConsumer;

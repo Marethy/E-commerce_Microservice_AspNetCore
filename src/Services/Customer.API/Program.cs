@@ -1,13 +1,13 @@
-﻿using Serilog;
-using Common.Logging;
-using Microsoft.EntityFrameworkCore;
+﻿using Common.Logging;
+using Contracts.Common.Interfaces;
+using Customer.API.Controllers;
 using Customer.API.Persistence;
 using Customer.API.Repositories.Interfaces;
 using Customer.API.Services;
-using Contracts.Common.Interfaces;
-using Infrastructure.Common;
 using Customer.API.Services.Interfaces;
-using Customer.API.Controllers;
+using Infrastructure.Common;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(SeriLogger.Configure);
@@ -38,7 +38,8 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
-        app.UseSwaggerUI(c => {
+        app.UseSwaggerUI(c =>
+        {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Customer Minimal API V1");
         });
     }

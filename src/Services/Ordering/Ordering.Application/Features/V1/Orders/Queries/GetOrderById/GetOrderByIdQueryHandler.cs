@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Ordering.Application.Common.Interfaces;
 using Ordering.Application.Common.Models;

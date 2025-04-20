@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Shared.SeedWork
+﻿namespace Shared.SeedWork
 {
     public class ApiResult<T>
     {
@@ -9,7 +7,8 @@ namespace Shared.SeedWork
         public string Message { get; set; }
 
         // Default constructor for creating an empty result
-        public ApiResult() { }
+        public ApiResult()
+        { }
 
         // Constructor for success or failure with an optional message
         public ApiResult(bool isSuccess, string message = null) : this(isSuccess, default, message) { }

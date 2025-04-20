@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-
-namespace Basket.API.Extensions
+﻿namespace Basket.API.Extensions
 {
     public static class ConfigureHostExtensions
     {

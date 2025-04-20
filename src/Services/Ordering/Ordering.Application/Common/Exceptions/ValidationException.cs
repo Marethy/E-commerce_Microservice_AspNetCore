@@ -1,7 +1,4 @@
 ﻿using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Ordering.Application.Common.Exceptions
 {
@@ -24,5 +21,3 @@ namespace Ordering.Application.Common.Exceptions
         }
     }
 }
-
-

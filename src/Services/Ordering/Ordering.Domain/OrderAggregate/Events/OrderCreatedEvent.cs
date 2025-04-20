@@ -2,7 +2,7 @@
 
 namespace Ordering.Domain.OrderAggregate.Events
 {
-    public class  OrderCreatedEvent : BaseEvent
+    public class OrderCreatedEvent : BaseEvent
     {
         public long Id { get; private set; }
         public string UserName { get; private set; }
