@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders;
 using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
-using Shared.SeedWork;
+using Shared.SeedWork.ApiResult;
 using System.Net;
 
 namespace Ordering.API.Controllers;

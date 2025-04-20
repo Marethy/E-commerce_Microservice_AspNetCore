@@ -1,4 +1,4 @@
-﻿namespace Shared.SeedWork
+﻿namespace Shared.SeedWork.ApiResult
 {
     public class ApiSuccessResult<T> : ApiResult<T>
     {
