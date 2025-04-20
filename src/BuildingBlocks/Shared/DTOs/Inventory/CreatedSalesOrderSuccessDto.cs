@@ -1,12 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Shared.DTOs.Inventory;
 
-namespace Shared.DTOs.Inventory
-{
-    internal class CreatedSalesOrderSuccessDto
-    {
-    }
-}
+public record CreatedSalesOrderSuccessDto(string DocumentNo);
