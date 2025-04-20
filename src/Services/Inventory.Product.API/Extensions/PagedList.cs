@@ -1,4 +1,7 @@
-﻿namespace Shared.SeedWork
+﻿using Inventory.Product.API.Entities;
+using Shared.SeedWork.Paging;
+
+namespace Inventory.Product.API.Extensions
 {
     public class PagedList<T> : List<T>
     {
@@ -16,11 +19,13 @@
             AddRange(items);
         }
 
-        public static PagedList<T> ToPagedList(IQueryable<T> source, int pageNumber, int pageSize)
+        public static PagedList<T> ToPagedList(MongoDB.Driver.IMongoCollection<InventoryEntry> collection, IQueryable<T> source, int pageNumber, int pageSize)
         {
             var totalItems = source.Count();
             var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
             return new PagedList<T>(items, totalItems, pageNumber, pageSize);
         }
+
+       
     }
 }
