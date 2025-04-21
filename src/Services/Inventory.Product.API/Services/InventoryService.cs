@@ -31,7 +31,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
 
     public async Task<PagedList<InventoryEntryDto>> GetAllByItemNoPagingAsync(GetInventoryPagingQuery query)
     {
-        var filterItemNo = Builders<InventoryEntry>.Filter.Eq(s => s.ItemNo, query.ItemNo);
+        var filterItemNo = Builders<InventoryEntry>.Filter.Eq(s => s.ItemNo, query.GetItemNo());
 
         var filterSearchTerm = Builders<InventoryEntry>.Filter.Empty;
         if (!string.IsNullOrEmpty(query.SearchTerm))

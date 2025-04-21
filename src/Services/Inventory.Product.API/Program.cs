@@ -4,6 +4,7 @@ using Inventory.Product.API.Extensions;
 using Inventory.Product.API.Persistence;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(SeriLogger.Configure);
@@ -15,11 +16,20 @@ try
     // Add services to the container.
     builder.Services.AddConfigurationSettings(builder.Configuration);
     builder.Services.AddScoped<InventoryDbSeed>();
+    builder.Services.AddRouting(options =>
+    {
+        options.LowercaseUrls = true;
+    });
+
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-    builder.Services.ConfigureMongoDbClient();
+    builder.Services.AddSwaggerGen(options =>
+    {
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        options.IncludeXmlComments(xmlPath);
+    }); builder.Services.ConfigureMongoDbClient();
     builder.Services.AddInfrastructureServices();
    // builder.Services.ConfigureHealthChecks();
 
