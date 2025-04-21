@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System.Data;
 
 namespace Contracts.Domains;
 
@@ -16,5 +17,5 @@ public abstract class MongoEntity
 
     [BsonElement("lastModifiedDate")]
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
-    public DateTime? LastModifiedDate { get; set; }
+    public DateTime? LastModifiedDate { get; set; } = DateTime.UtcNow;
 }

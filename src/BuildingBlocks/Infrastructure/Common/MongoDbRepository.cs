@@ -23,10 +23,8 @@ public class MongoDbRepository<T> : IMongoDbRepositoryBase<T> where T : MongoEnt
                         .GetCollection<T>(GetCollectionName());
     }
 
-    public Task CreateAsync(T entity)
-    {
-        return Collection.InsertOneAsync(entity);
-    }
+    public Task CreateAsync(T entity)=> Collection.InsertOneAsync(entity);
+
 
     public Task UpdateAsync(T entity)
     {
@@ -39,12 +37,9 @@ public class MongoDbRepository<T> : IMongoDbRepositoryBase<T> where T : MongoEnt
         return Collection.ReplaceOneAsync(filter, entity);
     }
 
-    public Task DeleteAsync(string id)
-    {
-        return Collection.DeleteOneAsync(x => x.Id.Equals(id));
-    }
+    public Task DeleteAsync(string id) => Collection.DeleteOneAsync(x=> x.Id.Equals(id));
 
-    private static string GetCollectionName()
+    private static string? GetCollectionName()
     {
         return (typeof(T).GetCustomAttributes(typeof(BsonCollectionAttribute), true).FirstOrDefault() as BsonCollectionAttribute)?.CollectionName;
     }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Infrastructure.Extensions;
 
-namespace Infrastructure.Extensions
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public class BsonCollectionAttribute(string collectionName) : Attribute
 {
-    internal class BsonCollectionAttribute
-    {
-    }
+    public string CollectionName { get; } = collectionName;
 }

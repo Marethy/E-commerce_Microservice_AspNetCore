@@ -2,7 +2,7 @@
 
 public class RequestParameters
 {
-    private const int maxPageSize = 50;
+    private const int MaxPageSize = 50;
     private int _pageIndex = 1;
     private int _pageSize = 10;
 
@@ -14,10 +14,10 @@ public class RequestParameters
 
     public int PageSize
     {
-        get => _pageSize;
+        get => _pageSize; 
         set
         {
-            if (value > 0) _pageSize = value > maxPageSize ? maxPageSize : value;
+            if (value > 0) _pageSize = value > MaxPageSize ? MaxPageSize : value;
         }
     }
 }
