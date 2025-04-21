@@ -29,13 +29,13 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
         return result;
     }
 
-    public async Task<INumerable<InventoryEntryDto>> GetAllByItemNoPagingAsync(GetInventoryPagingQuery query)
+    public async Task<PagedList<InventoryEntryDto>> GetAllByItemNoPagingAsync(GetInventoryPagingQuery query)
     {
-        var filterItemNo = Builders<InventoryEntry>.Filter.Eq(s => s.ItemNo, query.GetItemNo());
+        var filterItemNo = Builders<InventoryEntry>.Filter.Eq(s => s.ItemNo, query.ItemNo);
 
         var filterSearchTerm = Builders<InventoryEntry>.Filter.Empty;
         if (!string.IsNullOrEmpty(query.SearchTerm))
-        {
+        { 
             filterSearchTerm = Builders<InventoryEntry>.Filter.Eq(s => s.DocumentNo, query.SearchTerm);
         }
 
@@ -43,7 +43,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
 
         var pagedList = await PagedList<InventoryEntry>.ToPagedList(Collection, andFilter, query.PageIndex, query.PageSize);
         var items = _mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
-        var result = new PagedList<InventoryEntryDto>(items.ToList(), pagedList.GetMetaData().TotalItems, query.PageIndex, query.PageSize);
+        var result = new PagedList<InventoryEntryDto>(items, pagedList.GetMetaData().TotalItems, query.PageIndex, query.PageSize);
         return result;
     }
 

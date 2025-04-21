@@ -1,31 +1,37 @@
-﻿using Inventory.Product.API.Entities;
+﻿using MongoDB.Driver;
 using Shared.SeedWork.Paging;
 
-namespace Inventory.Product.API.Extensions
+namespace Inventory.Product.API.Extensions;
+
+public class PagedList<T> : List<T>
 {
-    public class PagedList<T> : List<T>
+    private MetaData MetaData { get; }
+
+    public MetaData GetMetaData() => MetaData;
+
+    public PagedList(IEnumerable<T> items, long totalItems, int pageIndex, int pageSize)
     {
-        public MetaData MetaData { get; set; }
-
-        public PagedList(List<T> items, int totalItems, int pageNumber, int pageSize)
+        MetaData = new MetaData
         {
-            MetaData = new MetaData
-            {
-                TotalItems = totalItems,
-                PageSize = pageSize,
-                CurrentPage = pageNumber,
-                TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize)
-            };
-            AddRange(items);
-        }
+            TotalItems = totalItems,
+            PageSize = pageSize,
+            CurrentPage = pageIndex,
+            TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize),
+        };
+        AddRange(items);
+    }
 
-        public static PagedList<T> ToPagedList(MongoDB.Driver.IMongoCollection<InventoryEntry> collection, IQueryable<T> source, int pageNumber, int pageSize)
-        {
-            var totalItems = source.Count();
-            var items = source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
-            return new PagedList<T>(items, totalItems, pageNumber, pageSize);
-        }
+    public static async Task<PagedList<T>> ToPagedList(IMongoCollection<T> source,
+                                                       FilterDefinition<T> filter,
+                                                       int pageIndex,
+                                                       int pageSize)
+    {
+        var count = await source.Find(filter).CountDocumentsAsync();
+        var items = await source.Find(filter)
+            .Skip((pageIndex - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync();
 
-       
+        return new PagedList<T>(items, count, pageIndex, pageSize);
     }
 }
