@@ -4,8 +4,11 @@ namespace Shared.DTOs.Inventory;
 
 public class GetInventoryPagingQuery : RequestParameters
 {
-    public string ItemNo { get; init; } = string.Empty;
+    private string _itemNo = string.Empty;
 
     public string? SearchTerm { get; set; }
+
+    public void SetItemNo(string itemNo) => _itemNo = itemNo;
+    public string GetItemNo() => _itemNo;
 
 }
