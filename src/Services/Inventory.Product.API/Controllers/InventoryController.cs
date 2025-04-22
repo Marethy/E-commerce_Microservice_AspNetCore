@@ -12,6 +12,8 @@ public class InventoryController(ILogger<InventoryController> _logger, IInventor
     /// <summary>
     /// Get all inventory entries by item number
     /// </summary>
+    /// <param name="itemNo"></param>
+    /// <returns></returns>
     [HttpGet("items/{itemNo}", Name = "GetAllByItemNo")]
     [ProducesResponseType(typeof(IEnumerable<InventoryEntryDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
