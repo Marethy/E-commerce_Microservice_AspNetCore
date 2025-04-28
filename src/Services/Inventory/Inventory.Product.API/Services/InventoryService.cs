@@ -10,21 +10,15 @@ using Shared.DTOs.Inventory;
 
 namespace Inventory.Product.API.Services;
 
-public class InventoryService : MongoDbRepository<InventoryEntry>, IInventoryService
+public class InventoryService(IMongoClient client, MongoDbSettings settings, IMapper mapper) : MongoDbRepository<InventoryEntry>(client, settings), IInventoryService
 {
-    private readonly IMapper _mapper;
-
-    public InventoryService(IMongoClient client, MongoDbSettings settings, IMapper mapper) : base(client, settings)
-    {
-        _mapper = mapper;
-    }
 
     public async Task<IEnumerable<InventoryEntryDto>> GetAllByItemNoAsync(string itemNo)
     {
         var entities = await FindAll()
             .Find(x => x.ItemNo.Equals(itemNo))
             .ToListAsync();
-        var result = _mapper.Map<IEnumerable<InventoryEntryDto>>(entities);
+        var result = mapper.Map<IEnumerable<InventoryEntryDto>>(entities);
 
         return result;
     }
@@ -42,7 +36,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
         var andFilter = filterItemNo & filterSearchTerm;
 
         var pagedList = await PagedList<InventoryEntry>.ToPagedList(Collection, andFilter, query.PageIndex, query.PageSize);
-        var items = _mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
+        var items = mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
         var result = new PagedList<InventoryEntryDto>(items, pagedList.GetMetaData().TotalItems, query.PageIndex, query.PageSize);
         return result;
     }
@@ -52,7 +46,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
         var entity = await FindAll()
             .Find(x => x.Id.Equals(id))
             .FirstOrDefaultAsync();
-        var result = _mapper.Map<InventoryEntryDto>(entity);
+        var result = mapper.Map<InventoryEntryDto>(entity);
 
         return result;
     }
@@ -66,7 +60,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
             DocumentType = model.DocumentType
         };
         await CreateAsync(itemToAdd);
-        var result = _mapper.Map<InventoryEntryDto>(itemToAdd);
+        var result = mapper.Map<InventoryEntryDto>(itemToAdd);
         return result;
     }
 
@@ -81,7 +75,7 @@ public class InventoryService : MongoDbRepository<InventoryEntry>, IInventorySer
 
         };
         await CreateAsync(itemToAdd);
-        var result = _mapper.Map<InventoryEntryDto>(itemToAdd);
+        var result = mapper.Map<InventoryEntryDto>(itemToAdd);
         return result;
     }
 

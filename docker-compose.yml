@@ -54,6 +54,11 @@ services:
     build:
       context: .
       dockerfile: src/Services/Ordering/Ordering.API/Dockerfile
+  inventory-product-api:
+    image: ${DOCKER_REGISTRY-}inventory-product-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Inventory/Inventory.Product.API/Dockerfile
 
   
 # Network section
