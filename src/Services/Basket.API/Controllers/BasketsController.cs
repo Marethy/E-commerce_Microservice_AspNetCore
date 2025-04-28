@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Basket.API.Entities;
+using Basket.API.GrpcServices;
 using Basket.API.Repositories.Interfaces;
 using EventBus.MessageComponents.Consumers.Basket;
 using MassTransit;
@@ -10,20 +11,8 @@ namespace Basket.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BasketsController : ControllerBase
+    public class BasketsController(IBasketRepository repository, ILogger<BasketsController> logger, IMapper mapper, IPublishEndpoint publishEndpoint, StockItemGrpcService stockItemGrpcService) : ControllerBase
     {
-        private readonly IBasketRepository _repository;
-        private readonly ILogger<BasketsController> _logger;
-        private readonly IMapper _mapper;
-        private readonly IPublishEndpoint _publishEndpoint;
-        public BasketsController(IBasketRepository repository, ILogger<BasketsController> logger, IMapper mapper, IPublishEndpoint publishEndpoint)
-        {
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
-        }
-
         /// <summary>
         /// Get the basket by username
         /// </summary>
@@ -34,7 +23,7 @@ namespace Basket.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Cart>> GetBasketByUserName(string username)
         {
-            var basket = await _repository.GetBasketByUserName(username);
+            var basket = await repository.GetBasketByUserName(username);
             if (basket == null)
             {
                 return NotFound();
@@ -52,18 +41,23 @@ namespace Basket.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Cart>> UpdateBasket([FromBody] Cart cart)
         {
+            foreach (var item in cart.Items)
+            {
+                var stock = await stockItemGrpcService.GetStock(item.ItemNo);
+                item.AvailableQuanlity= stock.Quantity;
+            }
             if (cart == null || string.IsNullOrEmpty(cart.Username))
             {
                 return BadRequest("Invalid cart data.");
             }
-
+             
             var options = new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(2), // Hard limit: 2 days max
                 SlidingExpiration = TimeSpan.FromDays(1) // Refresh cache on each update
             };
 
-            var updatedBasket = await _repository.UpdateBasket(cart, options);
+            var updatedBasket = await repository.UpdateBasket(cart, options);
             return Ok(updatedBasket);
         }
 
@@ -77,7 +71,7 @@ namespace Basket.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteBasket(string username)
         {
-            var deleted = await _repository.DeleteBasketByUserName(username);
+            var deleted = await repository.DeleteBasketByUserName(username);
             return deleted ? Ok() : NotFound();
         }
 
@@ -91,20 +85,20 @@ namespace Basket.API.Controllers
                 return BadRequest("Invalid checkout data.");
             }
 
-            var basket = await _repository.GetBasketByUserName(basketCheckout.Username);
+            var basket = await repository.GetBasketByUserName(basketCheckout.Username);
             if (basket == null)
             {
                 return NotFound("Basket not found.");
             }
 
-            var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
+            var eventMessage = mapper.Map<BasketCheckoutEvent>(basketCheckout);
             eventMessage.TotalPrice = basket.TotalPrice;
 
             // Publish event to RabbitMQ
-            await _publishEndpoint.Publish(eventMessage);
+            await publishEndpoint.Publish(eventMessage);
 
             // Clear the basket after publishing the event
-            await _repository.DeleteBasketByUserName(basketCheckout.Username);
+            await repository.DeleteBasketByUserName(basketCheckout.Username);
 
             return Accepted("Checkout event has been published.");
         }

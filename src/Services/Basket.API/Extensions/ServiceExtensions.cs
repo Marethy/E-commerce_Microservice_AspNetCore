@@ -1,10 +1,14 @@
-﻿using Basket.API.Repositories;
+﻿using Basket.API.GrpcServices;
+using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Interfaces;
 using Infrastructure.Common;
+using Infrastructure.Extensions;
+using Inventory.Grpc.Protos;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shared.Configurations;
+using System.Runtime;
 
 namespace Basket.API.Extensions
 {
@@ -29,6 +33,7 @@ namespace Basket.API.Extensions
             services.AddConfigurationSettings(configuration);
             services.ConfigureRedis(configuration);
             services.ConfigureMassTransit(configuration);
+            services.ConfigureGrpcService();
 
             return services;
         }
@@ -40,6 +45,9 @@ namespace Basket.API.Extensions
 
             var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
             services.AddSingleton(cacheSettings);
+
+            var grpcSettings =configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>();
+            services.AddSingleton(grpcSettings);
 
             // var urlSettings = configuration.GetSection(nameof(UrlSettings)).Get<UrlSettings>();
             // services.AddSingleton(urlSettings);
@@ -83,5 +91,12 @@ namespace Basket.API.Extensions
                 config.AddPublishMessageScheduler(); // Optional nếu dùng Delay
             });
         }
+        private static void ConfigureGrpcService(this IServiceCollection services)
+        {
+            var settings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings));
+            services.AddGrpcClient<StockProtoService.StockProtoServiceClient>(x => x.Address = new Uri(settings.StockUrl));
+            services.AddScoped<StockItemGrpcService>();
+        }
+
     }
 }
