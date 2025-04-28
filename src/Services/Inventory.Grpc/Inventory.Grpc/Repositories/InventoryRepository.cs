@@ -7,15 +7,11 @@ using Shared.Configurations;
 
 namespace Inventory.Grpc.Repositories;
 
-public class InventoryRepository : MongoDbRepository<InventoryEntry>, IInventoryRepository
+public class InventoryRepository(IMongoClient client, MongoDbSettings settings) : MongoDbRepository<InventoryEntry>(client, settings), IInventoryRepository
 {
-    public InventoryRepository(IMongoClient client, MongoDbSettings settings) : base(client, settings)
-    {
-    }
-
     public async Task<int> GetStockQuantity(string itemNo)
     {
-        var total = Collection.AsQueryable()
+        var total =Collection.AsQueryable()
                               .Where(x => x.ItemNo.Equals(itemNo))
                               .Sum(x => x.Quantity);
         return total;
