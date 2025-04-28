@@ -142,10 +142,6 @@ services:
   # Product API
   product-api:
     container_name: product-api
-    image: ${DOCKER_REGISTRY-}product-api:latest
-    build:
-      context: .
-      dockerfile: src/Services/Product.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -160,10 +156,6 @@ services:
   # Customer API
   customer-api:
     container_name: customer-api
-    image: ${DOCKER_REGISTRY-}customer-api:latest
-    build:
-      context: .
-      dockerfile: src/Services/Customer.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -177,10 +169,6 @@ services:
   # Basket API
   basket-api:
     container_name: basket-api
-    image: ${DOCKER_REGISTRY-}basket-api:latest
-    build:
-      context: .
-      dockerfile: src/Services/Basket.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -196,10 +184,6 @@ services:
   # Order API
   order-api:
     container_name: order-api
-    image: ${DOCKER_REGISTRY-}order-api:latest
-    build:
-      context: .
-      dockerfile: src/Services/Ordering/Ordering.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -211,6 +195,20 @@ services:
       - rabbitmq
     ports:
       - "6005:80"
+    restart: always
+  # Inventory API
+  inventory-product-api:
+    container_name: inventory-product-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "MongoDbSettings__ConnectionString=mongodb://localhost:27017"
+      - "MongoDbSettings__Database=InventoryDb"
+
+    depends_on:
+      - inventorydb
+    ports:
+      - "6006:80"
     restart: always
 
 networks:
