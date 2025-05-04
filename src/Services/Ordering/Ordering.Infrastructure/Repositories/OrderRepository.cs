@@ -1,5 +1,4 @@
 ﻿using Contracts.Common.Interfaces;
-using Infrastructure.Common;
 using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Common.Interfaces;
 using Ordering.Domain.Entities;

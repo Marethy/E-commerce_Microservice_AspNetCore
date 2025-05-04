@@ -9,7 +9,7 @@ namespace Common.Logging
             (context, configuration) =>
             {
                 var applicationName = context.HostingEnvironment.ApplicationName?.ToLower().Replace(".", "-");
-                var environmentName = context.HostingEnvironment.EnvironmentName?? "Development";
+                var environmentName = context.HostingEnvironment.EnvironmentName ?? "Development";
 
                 configuration
                     .WriteTo.Debug()

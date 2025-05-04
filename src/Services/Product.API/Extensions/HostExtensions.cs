@@ -32,6 +32,7 @@ namespace Product.API.Extensions
             // Add any additional migration logic here if needed
             context.Database.Migrate();
         }
+
         public static void AddAppConfigurations(this WebApplicationBuilder builder)
         {
             var env = builder.Environment;
@@ -46,6 +47,3 @@ namespace Product.API.Extensions
         }
     }
 }
-
-
-

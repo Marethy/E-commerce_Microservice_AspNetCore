@@ -1,7 +1,6 @@
-﻿using Serilog;
+﻿using Basket.API.Extensions;
 using Common.Logging;
-using Basket.API.Extensions;
-using Basket.API.Persistence;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 

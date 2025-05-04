@@ -9,7 +9,6 @@ using Ordering.Application.Common.Interfaces;
 using Ordering.Infrastructure.Persistence;
 using Ordering.Infrastructure.Repositories;
 using Shared.Services.Email;
-using System;
 using System.Reflection;
 
 namespace Ordering.Infrastructure

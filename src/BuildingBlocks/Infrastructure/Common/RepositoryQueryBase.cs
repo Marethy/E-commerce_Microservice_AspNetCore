@@ -1,10 +1,7 @@
 ﻿using Contracts.Common.Interfaces;
 using Contracts.Domains;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Common
 {

@@ -2,9 +2,6 @@
 using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace Basket.API.Repositories
 {
@@ -67,5 +64,3 @@ namespace Basket.API.Repositories
         }
     }
 }
-
-

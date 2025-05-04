@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Product.API.Entities;
 using Product.API.Repositories.Interfaces;
 using Shared.DTOs.Product;
@@ -22,6 +21,7 @@ namespace Product.API.Controllers
             var result = _mapper.Map<List<ProductDto>>(products);
             return Ok(result);
         }
+
         [HttpGet("get-product-by-no/{productNo}")]
         public async Task<IActionResult> GetProductByNo([Required] string productNo)
         {
@@ -99,7 +99,6 @@ namespace Product.API.Controllers
             var result = _mapper.Map<ProductDto>(product);
             return Ok(result);
         }
-
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> DeleteProduct([Required] long id)

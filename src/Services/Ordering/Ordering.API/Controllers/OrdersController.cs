@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders;
 using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
-using Shared.SeedWork;
+using Shared.SeedWork.ApiResult;
 using System.Net;
 
 namespace Ordering.API.Controllers;
@@ -37,6 +37,7 @@ public class OrdersController : ControllerBase
     }
 
     #region CRUD
+
     [HttpGet("{id:long}", Name = RouteNames.GetOrder)]
     [ProducesResponseType(typeof(OrderDto), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<ApiResult<OrderDto>>> GetOrder(long id)
@@ -68,5 +69,6 @@ public class OrdersController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
-    #endregion
+
+    #endregion CRUD
 }

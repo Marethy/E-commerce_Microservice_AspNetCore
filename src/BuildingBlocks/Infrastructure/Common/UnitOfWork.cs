@@ -1,6 +1,5 @@
 ﻿using Contracts.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Common
 {

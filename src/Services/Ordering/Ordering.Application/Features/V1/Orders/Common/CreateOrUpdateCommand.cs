@@ -17,6 +17,7 @@ public class CreateOrUpdateCommand : IMapFrom<Order>
     public string ShippingAddress { get; set; }
 
     private string _invoiceAddress;
+
     public string InvoiceAddress
     {
         get => _invoiceAddress;
