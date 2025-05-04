@@ -59,7 +59,11 @@ services:
     build:
       context: .
       dockerfile: src/Services/Inventory/Inventory.Product.API/Dockerfile
-
+  inventory-grpc:
+    image: ${DOCKER_REGISTRY-}inventory-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Inventory/Inventory.Grpc/Dockerfile
   
 # Network section
 networks:

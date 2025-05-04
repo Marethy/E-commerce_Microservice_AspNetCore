@@ -24,7 +24,6 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
-    <ProjectReference Include="..\..\..\WebApps\WebHealthStatus\WebHealthStatus.csproj" />
   </ItemGroup>
 
 </Project>

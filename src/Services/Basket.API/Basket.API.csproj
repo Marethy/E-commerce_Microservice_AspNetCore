@@ -32,8 +32,9 @@
 		<ProjectReference Include="..\..\BuildingBlocks\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
-		<ProjectReference Include="..\Inventory\Inventory.Grpc\Inventory.Grpc.csproj" />
 	</ItemGroup>
+
+
 	<ItemGroup>
 		<Protobuf Include="..\Inventory\Inventory.Grpc\Protos\stock.proto" GrpcServices="Client">
 			<Link>Protos\stock.proto</Link>
