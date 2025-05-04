@@ -1,7 +1,6 @@
 ﻿using Contracts.Identity;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
