@@ -29,8 +29,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\Inventory\Inventory.Grpc\Protos\stock.proto" GrpcServices="Client">
+		<Protobuf Include="..\..\BuildingBlocks\Contracts\Protos\stock.proto" GrpcServices="Client">
 			<Link>Protos\stock.proto</Link>
 		</Protobuf>
+		<PackageReference Include="Grpc.Net.Client" Version="2.57.0" />
+		<PackageReference Include="Grpc.Tools" Version="2.57.0" PrivateAssets="All" />
 	</ItemGroup>
 </Project>
