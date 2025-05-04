@@ -1,3 +1,6 @@
+using Common.Logging;
+using Infrastructure.Middlewares;
+using OcelotApiGw.Extensions;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -5,6 +8,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog(SeriLogger.Configure);
 
 Log.Information($"Start {builder.Environment.ApplicationName} up");
 
@@ -43,7 +47,6 @@ try
     {
         endpoints.MapGet("/", context =>
         {
-            //await context.Response.WriteAsync($"Hello TEDU members! This is {builder.Environment.ApplicationName}");
             context.Response.Redirect("swagger/index.html");
             return Task.CompletedTask;
         });
