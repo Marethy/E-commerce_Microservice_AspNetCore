@@ -19,7 +19,7 @@ COPY ["src/BuildingBlocks/Shared/Shared.csproj", "src/BuildingBlocks/Shared/"]
 COPY ["src/BuildingBlocks/EventBus/EventBus.MessageComponents/EventBus.MessageComponents.csproj", "src/BuildingBlocks/EventBus/EventBus.MessageComponents/"]
 COPY ["src/BuildingBlocks/EventBus/EventBus.Messages/EventBus.Messages.csproj", "src/BuildingBlocks/EventBus/EventBus.Messages/"]
 COPY ["src/BuildingBlocks/Infrastructure/Infrastructure.csproj", "src/BuildingBlocks/Infrastructure/"]
-RUN dotnet restore "./src/Services/Inventory/Inventory.Product.API/Inventory.Product.API.csproj"
+RUN dotnet restore "src/Services/Inventory/Inventory.Product.API/Inventory.Product.API.csproj"
 COPY . .
 WORKDIR "/microservices/src/Services/Inventory/Inventory.Product.API"
 RUN dotnet build "./Inventory.Product.API.csproj" -c $BUILD_CONFIGURATION -o /app/build

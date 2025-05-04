@@ -11,11 +11,16 @@ EXPOSE 8081
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["Inventory.Grpc/Inventory.Grpc.csproj", "Inventory.Grpc/"]
-RUN dotnet restore "./Inventory.Grpc/Inventory.Grpc.csproj"
+WORKDIR /microservices
+COPY ["src/Services/Inventory/Inventory.Grpc/Inventory.Grpc.csproj", "src/Services/Inventory/Inventory.Grpc/"]
+COPY ["src/BuildingBlocks/Common.Logging/Common.Logging.csproj", "src/BuildingBlocks/Common.Logging/"]
+COPY ["src/BuildingBlocks/Contracts/Contracts.csproj", "src/BuildingBlocks/Contracts/"]
+COPY ["src/BuildingBlocks/Shared/Shared.csproj", "src/BuildingBlocks/Shared/"]
+COPY ["src/BuildingBlocks/Infrastructure/Infrastructure.csproj", "src/BuildingBlocks/Infrastructure/"]
+COPY ["src/WebApps/WebHealthStatus/WebHealthStatus.csproj", "src/WebApps/WebHealthStatus/"]
+RUN dotnet restore "src/Services/Inventory/Inventory.Grpc/Inventory.Grpc.csproj"
 COPY . .
-WORKDIR "/src/Inventory.Grpc"
+WORKDIR "/microservices/src/Services/Inventory/Inventory.Grpc"
 RUN dotnet build "./Inventory.Grpc.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

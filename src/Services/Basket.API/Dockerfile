@@ -18,7 +18,7 @@ COPY ["src/BuildingBlocks/Contracts/Contracts.csproj", "src/BuildingBlocks/Contr
 COPY ["src/BuildingBlocks/Infrastructure/Infrastructure.csproj", "src/BuildingBlocks/Infrastructure/"]
 COPY ["src/BuildingBlocks/Shared/Shared.csproj", "src/BuildingBlocks/Shared/"]
 COPY ["src/BuildingBlocks/EventBus/EventBus.Messages/EventBus.Messages.csproj", "src/BuildingBlocks/EventBus/EventBus.Messages/"]
-RUN dotnet restore "./src/Services/Basket.API/Basket.API.csproj"
+RUN dotnet restore "src/Services/Basket.API/Basket.API.csproj"
 COPY . .
 WORKDIR "/microservices/src/Services/Basket.API"
 RUN dotnet build "./Basket.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
