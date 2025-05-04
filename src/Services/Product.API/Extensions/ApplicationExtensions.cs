@@ -13,7 +13,8 @@
 
             // Uncomment if you want to use HTTPS redirection
             // app.UseHttpsRedirection();
-
+            app.UseAuthentication();
+            app.UseRouting();
             app.UseAuthorization();
 
             app.MapControllers();
