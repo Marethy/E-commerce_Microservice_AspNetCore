@@ -1,7 +1,7 @@
 ﻿
-﻿using Grpc.Core;
-using Inventory.Grpc.Protos;
-using Inventory.Grpc.Repositories.Interfaces;
+using Grpc.Core;
+using Inventory.Grpc.Client;
+using Inventory.Grpc.Repositories.Interface;
 using ILogger = Serilog.ILogger;
 
 namespace Inventory.Grpc.Services;

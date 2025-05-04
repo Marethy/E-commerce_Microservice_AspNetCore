@@ -2,7 +2,7 @@
 using Inventory.Grpc.Entities;
 using Inventory.Product.API.Repositories.Abstraction;
 
-namespace Inventory.Grpc.Repositories.Interfaces;
+namespace Inventory.Grpc.Repositories.Interface;
 
 public interface IInventoryRepository : IMongoDbRepositoryBase<InventoryEntry>
 {
