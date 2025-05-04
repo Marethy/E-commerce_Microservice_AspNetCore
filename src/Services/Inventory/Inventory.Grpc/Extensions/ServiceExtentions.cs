@@ -1,6 +1,6 @@
 ﻿using Infrastructure.Extensions;
 using Inventory.Grpc.Repositories;
-using Inventory.Grpc.Repositories.Interfaces;
+using Inventory.Grpc.Repositories.Interface;
 using MongoDB.Driver;
 using Shared.Configurations;
 

@@ -4,11 +4,10 @@ using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
-using Inventory.Grpc.Protos;
+using Inventory.Grpc.Client;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shared.Configurations;
-using System.Runtime;
 
 namespace Basket.API.Extensions
 {
