@@ -4,11 +4,9 @@ using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Interfaces;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
-using Inventory.Grpc.Client;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shared.Configurations;
-
 namespace Basket.API.Extensions
 {
     public static class ServiceExtensions
