@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using Infrastructure.Extensions;
 using Infrastructure.Mappings;
 using MediatR;
 using Ordering.Application.Common.Mappings;
 using Ordering.Application.Common.Models;
 using Ordering.Domain.Entities;
-using Shared.SeedWork;
+using Shared.SeedWork.ApiResult;
 
 namespace Ordering.Application.Features.V1.Orders;
 

@@ -2,15 +2,12 @@
 using Contracts.Messages;
 using RabbitMQ.Client;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Infrastructure.Messages
 {
     public class RabbitMQProducer(ISerializeService serializeService) : IMessageProducer
     {
         private readonly ISerializeService _serializeService = serializeService;
-
-
 
         public async Task SendMessageAsync<T>(T message)
         {
@@ -29,6 +26,5 @@ namespace Infrastructure.Messages
 
             await channel.BasicPublishAsync(exchange: "", routingKey: "orders", body: body);
         }
-
     }
 }

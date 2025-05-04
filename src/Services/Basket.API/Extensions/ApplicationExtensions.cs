@@ -4,7 +4,7 @@
     {
         public static void UseInfrastructure(this WebApplication app)
         {
-          //  if (app.Environment.IsDevelopment())
+            //  if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

@@ -1,8 +1,6 @@
-﻿using Contracts.Domains;
-using Contracts.Domains.Interfaces;
+﻿using Contracts.Domains.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Product.API.Entities;
-using System.Data.Common;
 
 namespace Product.API.Persistence
 {
@@ -11,14 +9,15 @@ namespace Product.API.Persistence
         public ProductContext(DbContextOptions<ProductContext> options) : base(options)
         {
         }
+
         public DbSet<CatalogProduct> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<CatalogProduct>().HasIndex(x => x.No).IsUnique();    
-
+            modelBuilder.Entity<CatalogProduct>().HasIndex(x => x.No).IsUnique();
         }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             var modifedEntries = ChangeTracker.Entries()
@@ -35,6 +34,7 @@ namespace Product.API.Persistence
                             item.State = EntityState.Added;
                         }
                         break;
+
                     case EntityState.Modified:
                         Entry(item.Entity).Property("Id").IsModified = false;
                         if (item.Entity is IDateTracking modifiedEntity)
@@ -49,6 +49,5 @@ namespace Product.API.Persistence
             }
             return base.SaveChangesAsync(cancellationToken);
         }
-    
     }
 }

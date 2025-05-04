@@ -1,6 +1,4 @@
-﻿
-using Contracts.Common.Events;
-using Contracts.Common.Interfaces;
+﻿using Contracts.Common.Events;
 using Infrastructure.Common;
 using MediatR;
 using Serilog;

@@ -1,5 +1,4 @@
-﻿
-using MassTransit;
+﻿using MassTransit;
 
 namespace EventBus.MessageComponents.Consumers.Basket;
 

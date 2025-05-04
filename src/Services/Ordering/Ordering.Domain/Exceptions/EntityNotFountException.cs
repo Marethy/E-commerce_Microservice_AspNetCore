@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ordering.Domain.Exceptions
+﻿namespace Ordering.Domain.Exceptions
 {
     internal class EntityNotFoundException : ApplicationException
     {
@@ -10,4 +8,3 @@ namespace Ordering.Domain.Exceptions
         }
     }
 }
-
