@@ -10,7 +10,6 @@ namespace OcelotApiGw.Controllers;
 public class TokenController(ITokenService tokenService) : ControllerBase
 {
 
-   
 
     [HttpGet]
     [AllowAnonymous]

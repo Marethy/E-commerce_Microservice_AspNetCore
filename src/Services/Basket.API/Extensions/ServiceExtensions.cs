@@ -2,6 +2,7 @@
 using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Interfaces;
+using Contracts.Inventory;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
 using MassTransit;

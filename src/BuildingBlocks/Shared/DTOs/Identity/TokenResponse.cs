@@ -1,3 +1,4 @@
-﻿namespace Shared.DTOs.Identity;
+﻿
+namespace Shared.DTOs.Identity;
 
-public record TokenRequest();
+public record TokenResponse(string Token);

@@ -3,18 +3,13 @@ using Microsoft.IdentityModel.Tokens;
 using Shared.Configurations;
 using Shared.DTOs.Identity;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace Infrastructure.Identity;
 
-public class TokenService : ITokenService
+public class TokenService(JwtSettings jwtSettings) : ITokenService
 {
-    private readonly JwtSettings _jwtSettings;
-
-    public TokenService(JwtSettings jwtSettings)
-    {
-        _jwtSettings = jwtSettings;
-    }
 
     public TokenResponse GetToken(TokenRequest request)
     {
@@ -27,16 +22,16 @@ public class TokenService : ITokenService
 
     private SigningCredentials GetSigningCredential()
     {
-        byte[] secret = Encoding.UTF8.GetBytes(_jwtSettings.Key);
+        byte[] secret = Encoding.UTF8.GetBytes(jwtSettings.Key);
         return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
-    }
+    } 
 
     private string GenerateEncryptedToken(SigningCredentials signingCredentials)
     {
-        //var claims = new[]
-        //{
-        //    new Claim("Role", "Admin")
-        //};
+        var claims = new[]
+        {
+            new Claim("Role", "Admin")
+        };
         var token = new JwtSecurityToken(
             //claims: claims,
             expires: DateTime.Now.AddMinutes(30),
