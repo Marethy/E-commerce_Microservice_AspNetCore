@@ -1,6 +1,6 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "Inventory.Grpc.Protos";
+option csharp_namespace = "Contracts.Inventory";
 
 service StockProtoService {
 	rpc GetStock (GetStockRequest) returns	 (StockModel);

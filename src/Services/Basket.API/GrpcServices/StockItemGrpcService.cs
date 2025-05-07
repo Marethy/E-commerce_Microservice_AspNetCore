@@ -1,6 +1,4 @@
-﻿
-using Inventory.Grpc.Client;
-
+﻿using Contracts.Inventory;
 namespace Basket.API.GrpcServices;
 
 public class StockItemGrpcService(StockProtoService.StockProtoServiceClient stockProtoService)
