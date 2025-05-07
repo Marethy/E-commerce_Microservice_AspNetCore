@@ -30,7 +30,7 @@
 	</ItemGroup>
 	<ItemGroup>
 		<!-- Chỉ sinh mã Server -->
-		<Protobuf Include="..\..\BuildingBlocks\Contracts\Protos\stock.proto" GrpcServices="Server" />
+		<Protobuf Include="..\..\..\BuildingBlocks\Contracts\Protos\stock.proto" GrpcServices="Server" />
 	</ItemGroup>
 
-</Project>
+</Project>	

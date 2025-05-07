@@ -1,0 +1,247 @@
+﻿{
+  "GlobalConfiguration": {
+    "BaseUrl": "http://apigw-ocelot"
+  },
+  "Routes": [
+    // Product api: http://localhost:6002/api/products
+    {
+      "UpstreamPathTemplate": "/api/products",
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "DownstreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [], // the client in this array will not be affected by the rate limiting
+        "EnableRateLimiting": true,
+        "Period": "10s", // 1s, 5m, 1h, 1d
+        "PeriodTimespan": 10, // retry after a certain number of seconds
+        "Limit": 30 // the maximum number of requests that a client can make in a defined period.
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2,
+        "DurationOfBreak": 1000,
+        "TimeoutValue": 5000 // if a request takes more than 5 seconds, it will automatically be timed out.
+      },
+      "FileCacheOptions": {
+        "TtlSeconds": 15 //cached seconds
+      },
+      "SwaggerKey": "product-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/{any}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/products/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "SwaggerKey": "product-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/{any}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/products/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      //      "AuthenticationOptions": {
+      //        "AuthenticationProviderKey": "Bearer",
+      //        "AllowedScopes": []
+      //      },
+      //      "RouteClaimsRequirement": {
+      //        "Role": "Admin"
+      //      },
+      "SwaggerKey": "product-service"
+    },
+    // Customer api: http://localhost:6003/api/customers
+    {
+      "UpstreamPathTemplate": "/api/customers/{username}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/customers/{username}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    // Basket api: http://localhost:6004/api/baskets
+    {
+      "UpstreamPathTemplate": "/api/baskets",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/baskets",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
+      "SwaggerKey": "basket-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/baskets/{username}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "DownstreamPathTemplate": "/api/baskets/{username}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
+      "SwaggerKey": "basket-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/baskets/checkout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/baskets/checkout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
+      "SwaggerKey": "basket-service"
+    },
+    // Order api: http://localhost:6005/api/{version}/orders
+    {
+      "UpstreamPathTemplate": "/api/{version}/orders/{any}",
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "DownstreamPathTemplate": "/api/{version}/orders/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "SwaggerKey": "order-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/{version}/orders",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/{version}/orders",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "SwaggerKey": "order-service"
+    },
+    // Inventory API : http://localhost:6006/inventory
+    {
+      "UpstreamPathTemplate": "/api/inventory/items/{any}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/inventory/items/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6006
+        }
+      ],
+      "SwaggerKey": "inventory-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/inventory/purchase/{any}",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/inventory/purchase/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6006
+        }
+      ],
+      "SwaggerKey": "inventory-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/inventory/{any}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "DownstreamPathTemplate": "/api/inventory/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6006
+        }
+      ],
+      "SwaggerKey": "inventory-service"
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "product-service",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Product API",
+          "Version": "v1",
+          "Url": "http://product-api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "customer-service",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Customer API",
+          "Version": "v1",
+          "Url": "http://customer-api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "basket-service",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Basket API",
+          "Version": "v1",
+          "Url": "http://basket-api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "order-service",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Order API",
+          "Version": "v1",
+          "Url": "http://order-api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "inventory-service",
+      "TransformByOcelotConfig": false,
+      "Config": [ 
+        {
+          "Name": "Inventory API",
+          "Version": "v1",
+          "Url": "http://inventory-product-api/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}
