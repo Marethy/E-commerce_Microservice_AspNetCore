@@ -1,6 +1,6 @@
 ﻿
+using Contracts.Inventory;
 using Grpc.Core;
-using Inventory.Grpc.Client;
 using Inventory.Grpc.Repositories.Interface;
 using ILogger = Serilog.ILogger;
 

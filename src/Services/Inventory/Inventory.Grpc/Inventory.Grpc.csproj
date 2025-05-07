@@ -21,39 +21,16 @@
 	<ItemGroup>
 		<Folder Include="Controllers\" />
 	</ItemGroup>
-	<ItemGroup>
-		<Protobuf Include="Protos\stock.proto" GrpcServices="Server" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Remove="Protos\stock.proto" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Reference Include="Common.Logging">
-			<HintPath>..\..\src\BuildingBlocks\Common.Logging\obj\Debug\net8.0\Common.Logging.dll</HintPath>
-		</Reference>
-		<Reference Include="Contracts">
-			<HintPath>..\..\src\BuildingBlocks\Contracts\obj\Debug\net8.0\Contracts.dll</HintPath>
-		</Reference>
-		<Reference Include="Infrastructure">
-			<HintPath>..\..\src\BuildingBlocks\Infrastructure\obj\Debug\net8.0\Infrastructure.dll</HintPath>
-		</Reference>
-		<Reference Include="Shared">
-			<HintPath>..\..\src\BuildingBlocks\Shared\obj\Debug\net8.0\Shared.dll</HintPath>
-		</Reference>
-		<None Remove="Protos\stock.proto" />
-  </ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj" />
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
-	  <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
 	  <ProjectReference Include="..\..\..\WebApps\WebHealthStatus\WebHealthStatus.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+		<!-- Chỉ sinh mã Server -->
+		<Protobuf Include="..\..\..\BuildingBlocks\Contracts\Protos\stock.proto" GrpcServices="Server" />
+	</ItemGroup>
 
-  <ItemGroup>
-	<Protobuf Include="Protos\stock.proto" />
-  </ItemGroup>
-
-</Project>
+</Project>	

@@ -10,11 +10,11 @@
                 app.UseSwaggerUI();
             }
 
-            // Middleware chuẩn trong ASP.NET Core
             // app.UseHttpsRedirection(); // Bật nếu dùng HTTPS
+            app.UseAuthentication();  // Gọi Authentication trước Authorization
+
             app.UseRouting(); // Bắt buộc trước Authorization
 
-            app.UseAuthentication();  // Gọi Authentication trước Authorization
             app.UseAuthorization();
 
             app.MapControllers();
