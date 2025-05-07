@@ -15,6 +15,6 @@ public static class HostExtensions
                   .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                   .AddJsonFile($"ocelot.{env.EnvironmentName}.json", optional: false, reloadOnChange: true)
                   .AddEnvironmentVariables();
-        }).UseSerilog(Serilogger.Configure);
+        });
     }
 }

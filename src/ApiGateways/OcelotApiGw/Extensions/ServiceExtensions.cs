@@ -1,6 +1,7 @@
 ﻿using Contracts.Identity;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
@@ -64,7 +65,7 @@ public static class ServiceExtensions
             ClockSkew = TimeSpan.Zero,
             RequireExpirationTime = false
         };
-        services.AddAuthentication(o =>
+        services.AddAuthentication(o => 
         {
             o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
