@@ -18,7 +18,7 @@ public static class ServiceExtensions
         var hangFireSettings = configuration.GetSection(nameof(HangFireSettings)).Get<HangFireSettings>();
         services.AddSingleton(hangFireSettings);
 
-        var emailSettings = configuration.GetSection(nameof(EmailSMTPSetting)).Get<EmailSMTPSetting>();
+        var emailSettings = configuration.GetSection(nameof(SMTPEmailSetting)).Get<SMTPEmailSetting>();
         services.AddSingleton(emailSettings);
     }
 
@@ -29,9 +29,9 @@ public static class ServiceExtensions
                 .AddScoped<IEmailSMTPService, EmailSMTPService>();
     }
 
-    internal static void ConfigureHealthChecks(this IServiceCollection services)
-    {
-        var databaseSettings = services.GetOptions<HangFireSettings>(nameof(HangFireSettings));
-        services.AddHealthChecks().AddMongoDb(databaseSettings.Storage.ConnectionString, "MongoDb Health", HealthStatus.Degraded);
-    }
+    //internal static void ConfigureHealthChecks(this IServiceCollection services)
+    //{
+    //    var databaseSettings = services.GetOptions<HangFireSettings>(nameof(HangFireSettings));
+    //    services.AddHealthChecks().AddMongoDb(databaseSettings.Storage.ConnectionString, "MongoDb Health", HealthStatus.Degraded);
+    //}
 }
