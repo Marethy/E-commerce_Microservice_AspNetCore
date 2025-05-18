@@ -5,22 +5,13 @@ using Shared.Configurations;
 
 namespace Basket.API.Services;
 
-public class BasketEmailService : IBasketEmailService
+public class BasketEmailService(IEmailTemplateService emailTemplateService, UrlSettings urlSettings) : IBasketEmailService
 {
-    private readonly IEmailTemplateService _emailTemplateService;
-    private readonly UrlSettings _urlSettings;
-
-    public BasketEmailService(IEmailTemplateService emailTemplateService, UrlSettings urlSettings)
-    {
-        _emailTemplateService = emailTemplateService;
-        _urlSettings = urlSettings;
-    }
-
     public string GenerateReminderCheckoutOrderEmail(string userName)
     {
-        var emailContent = _emailTemplateService.ReadEmailTemplateContent("reminder-checkout-order");
+        var emailContent = emailTemplateService.ReadEmailTemplateContent("reminder-checkout-order");
 
-        var checkoutUrl = $"{_urlSettings.ApiGwUrl}/baskets/{userName}";
+        var checkoutUrl = $"{urlSettings.ApiGwUrl}/baskets/{userName}";
 
         var replacedContent = emailContent.Replace("[userName]", userName)
                                           .Replace("[checkoutUrl]", checkoutUrl);

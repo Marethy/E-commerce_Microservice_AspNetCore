@@ -4,12 +4,12 @@
     {
         public Cart() { }
 
-        public Cart(string userName)
+        public Cart(string username)
         {
-            UserName = userName;
+            Username = username;
         }
 
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         public string EmailAddress { get; set; }
 

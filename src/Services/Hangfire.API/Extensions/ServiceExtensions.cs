@@ -26,7 +26,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<IScheduledJobService, HangfireService>()
                 .AddScoped<IBackgroundJobService, BackgroundJobService>()
-                .AddScoped<IEmailSMTPService, EmailSMTPService>();
+                .AddScoped<ISMTPEmailService, SMTPEmailService>();
     }
 
     //internal static void ConfigureHealthChecks(this IServiceCollection services)
