@@ -2,24 +2,21 @@
 {
     public class Cart
     {
-        public string Username { get; set; }
-        public List<CartItem> Items { get; set; } = new List<CartItem>();
+        public Cart() { }
 
-        public Cart()
+        public Cart(string userName)
         {
+            UserName = userName;
         }
 
-        public Cart(string username)
-        {
-            this.Username = username;
-        }
+        public string UserName { get; set; }
 
-        public decimal TotalPrice
-        {
-            get
-            {
-                return Items.Sum(x => x.Quantity * x.ItemPrice);
-            }
-        }
+        public string EmailAddress { get; set; }
+
+        public List<CartItem> Items { get; set; } = new();
+
+        public decimal TotalPrice => Items.Sum(item => item.ItemPrice * item.Quantity);
+
+        public string JobId { get; set; }
     }
 }
