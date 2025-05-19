@@ -27,7 +27,7 @@ try
 
         Log.Information("Application is starting...");
 
-        app.Run(); // Start the application
+        app.Run(); 
         Log.Information("Application has stopped.");
     }
     catch (Exception ex)
