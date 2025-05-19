@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   # Database section
@@ -82,7 +81,8 @@ services:
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: 'admin'
-      MONGO_INITDB_ROOT_PASSWORD: 'admin!'
+      MONGO_INITDB_ROOT_PASSWORD: 'admin'
+    command: mongod --auth
   # Infrastructure section
 
   # RabbitMQ
