@@ -69,7 +69,7 @@ namespace Basket.API.Repositories
         {
             var emailContent = basketEmailService.GenerateReminderCheckoutOrderEmail(cart.Username);
 
-            var model = new ReminderEmailDto(cart.EmailAddress, "Reminder checkout", emailContent, DateTimeOffset.UtcNow.AddMinutes(1));
+            var model = new ReminderEmailDto(cart.EmailAddress, "Reminder checkout", emailContent, DateTimeOffset.UtcNow.AddSeconds(10));
 
             var jobId = await scheduledJobsClient.SendReminderEmailAsync(model);
             if (!string.IsNullOrEmpty(jobId))
