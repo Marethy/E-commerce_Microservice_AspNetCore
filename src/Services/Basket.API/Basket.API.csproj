@@ -35,4 +35,10 @@
 		<PackageReference Include="Grpc.Net.Client" Version="2.57.0" />
 		<PackageReference Include="Grpc.Tools" Version="2.57.0" PrivateAssets="All" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="EmailTemplates\reminder-checkout-order.html">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 </Project>

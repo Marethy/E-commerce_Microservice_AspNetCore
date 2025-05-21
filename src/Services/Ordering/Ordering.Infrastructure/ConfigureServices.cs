@@ -2,6 +2,7 @@
 using Contracts.Services;
 using Infrastructure.Common;
 using Infrastructure.Configurations;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
