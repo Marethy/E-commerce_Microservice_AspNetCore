@@ -16,7 +16,8 @@ services:
 
   inventorydb:
     image: mongo
-
+  hangfiredb:
+    image: mongo
   # Infrastructure section
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -70,11 +71,11 @@ services:
       context: .
       dockerfile: src/ApiGateways/OcelotApiGw/Dockerfile
 
-  # hangfire.api:
-  #  image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
-  #  build:
-  #    context: .
-  #    dockerfile: Services/Hangfire.API/Dockerfile  
+  hangfire-api:
+   image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
+   build:
+     context: .
+     dockerfile: src/Services/Hangfire.API/Dockerfile  
 # Network section
 networks:
   default:
@@ -97,5 +98,8 @@ volumes:
     name: jaeger_data
   mongo_data:
     name: mongo_data
+  hangfire_mongo_data:
+    name: hangfire_mongo_data
+
   pgadmin_data:
     name: pgadmin_data

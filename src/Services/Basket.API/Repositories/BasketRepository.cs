@@ -1,66 +1,106 @@
 ﻿using Basket.API.Entities;
 using Basket.API.Repositories.Interfaces;
+using Basket.API.Services.Interfaces;
 using Contracts.Common.Interfaces;
+using Contracts.ScheduledJobs;
+using Infrastructure.Common;
 using Microsoft.Extensions.Caching.Distributed;
+using Shared.DTOs.ScheduledJob;
+using ILogger = Serilog.ILogger;
 
 namespace Basket.API.Repositories
 {
-    public class BasketRepository : IBasketRepository
+    public class BasketRepository(IDistributedCache redisCacheService, ISerializeService serializerService, ILogger logger, IBasketEmailService basketEmailService, IScheduledJobsClient scheduledJobsClient) : IBasketRepository
     {
-        private readonly IDistributedCache _redisCacheService;
-        private readonly ISerializeService _serializeService;
-        private readonly ILogger<BasketRepository> _logger;
-
-        public BasketRepository(IDistributedCache redisCacheService, ISerializeService serializeService, ILogger<BasketRepository> logger)
+        public async Task<Cart?> GetBasketByUserName(string userName)
         {
-            _redisCacheService = redisCacheService ?? throw new ArgumentNullException(nameof(redisCacheService));
-            _serializeService = serializeService ?? throw new ArgumentNullException(nameof(serializeService));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        }
-
-        public async Task<Cart?> GetBasketByUserName(string username)
-        {
-            _logger.LogInformation("Getting basket for user {Username}", username);
-            var basket = await _redisCacheService.GetStringAsync(username);
-            if (string.IsNullOrEmpty(basket))
+            logger.Information($"BEGIN: GetBasketByUserName {userName}");
+            var cart = await redisCacheService.GetStringAsync(userName);
+            if (!string.IsNullOrEmpty(cart))
             {
-                _logger.LogInformation("No basket found for user {Username}", username);
-                return null;
+                var result = serializerService.Deserialize<Cart>(cart);
+                var totalPrice = result.TotalPrice;
+                logger.Information("Total price: {totalPrice}", totalPrice); // index totalPrice field into Elastic search
             }
-            _logger.LogInformation("Basket found for user {Username}", username);
-            return _serializeService.Deserialize<Cart>(basket);
+            logger.Information($"END: GetBasketByUserName {userName}");
+
+            return string.IsNullOrEmpty(cart) ? null : serializerService.Deserialize<Cart>(cart);
         }
 
-        public async Task<Cart> UpdateBasket(Cart cart, DistributedCacheEntryOptions? options = null)
+        public async Task<Cart> UpdateBasket(Cart cart, DistributedCacheEntryOptions options)
         {
-            _logger.LogInformation("Updating basket for user {Username}", cart.Username);
-            var basket = _serializeService.Serialize(cart);
-            if (options == null)
+            await DeleteReminderCheckoutOrder(cart.Username);
+
+            logger.Information($"BEGIN: UpdateBasket for {cart.Username}");
+            var jsonCart = serializerService.Serialize(cart);
+
+            if (options != null)
             {
-                await _redisCacheService.SetStringAsync(cart.Username, basket);
+                await redisCacheService.SetStringAsync(cart.Username, jsonCart, options);
             }
             else
             {
-                await _redisCacheService.SetStringAsync(cart.Username, basket, options);
+                await redisCacheService.SetStringAsync(cart.Username, jsonCart);
             }
-            _logger.LogInformation("Basket updated for user {Username}", cart.Username);
-            return await GetBasketByUserName(cart.Username);
-        }
 
-        public async Task<bool> DeleteBasketByUserName(string username)
-        {
-            _logger.LogInformation("Deleting basket for user {Username}", username);
+            logger.Information($"END: UpdateBasket for {cart.Username}");
+
             try
             {
-                await _redisCacheService.RemoveAsync(username);
-                _logger.LogInformation("Basket deleted for user {Username}", username);
-                return true;
+                await TriggerSendEmailReminderCheckoutOrder(cart);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error deleting basket for user {Username}", username);
-                return false;
+                logger.Error($"UpdateBasket: {ex.Message}");
+            }
+
+            return await GetBasketByUserName(cart.Username);
+        }
+
+        private async Task DeleteReminderCheckoutOrder(string Username)
+        {
+            var cart = await GetBasketByUserName(Username);
+            if (cart == null || string.IsNullOrEmpty(cart.JobId)) return;
+
+            await scheduledJobsClient.DeleteJobAsync(cart.JobId);
+        }
+
+        private async Task TriggerSendEmailReminderCheckoutOrder(Cart cart)
+        {
+            var emailContent = basketEmailService.GenerateReminderCheckoutOrderEmail(cart.Username);
+
+            var model = new ReminderEmailDto(cart.EmailAddress, "Reminder checkout", emailContent, DateTimeOffset.UtcNow.AddSeconds(10));
+
+            var jobId = await scheduledJobsClient.SendReminderEmailAsync(model);
+            if (!string.IsNullOrEmpty(jobId))
+            {
+                cart.JobId = jobId;
+                await redisCacheService.SetStringAsync(cart.Username, serializerService.Serialize(cart));
             }
         }
+
+        public async Task<bool> DeleteBasketByUserName(string userName)
+        {
+            try
+            {
+                await DeleteReminderCheckoutOrder(userName);
+
+                logger.Information($"BEGIN: DeleteBasketFromUserName {userName}");
+                await redisCacheService.RemoveAsync(userName);
+                logger.Information($"END: DeleteBasketFromUserName {userName}");
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                logger.Error("Error DeleteBasketFromUserName: " + e.Message);
+                throw;
+            }
+        }
+
+      
+
+
+
     }
 }

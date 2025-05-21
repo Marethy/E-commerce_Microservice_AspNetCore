@@ -1,6 +1,7 @@
 ﻿﻿using Contracts.Domains;
 using Infrastructure.Extensions;
 using MongoDB.Bson.Serialization.Attributes;
+using Npgsql.Internal.TypeHandlers;
 
 namespace Inventory.Grpc.Entities;
 

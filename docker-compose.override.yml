@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   # Database section
@@ -72,7 +71,18 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-
+  # Hangfire db
+  hangfiredb:
+    container_name: hangfiredb
+    ports:
+      - "27018:27017"
+    volumes:
+      - hangfire_mongo_data:/data/db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'admin'
+      MONGO_INITDB_ROOT_PASSWORD: 'admin'
+    command: mongod --auth
   # Infrastructure section
 
   # RabbitMQ
@@ -174,8 +184,9 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - "CacheSettings__ConnectionString=basketdb:6379"
       - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
-      - "GrpcSettings__StockUrl=http://inventory_grpc"
-
+      - "GrpcSettings__StockUrl=http://inventory-grpc"
+      - "UrlSettings__ApiGwUrl=http://apigw-ocelot"
+      - "UrlSettings__HangfireUrl=http://hangfire-api"
     depends_on:
       - basketdb
       - rabbitmq
@@ -212,6 +223,7 @@ services:
     ports:
       - "6006:80"
     restart: always
+
   inventory-grpc:
      container_name: inventory-grpc
      environment:
@@ -239,6 +251,17 @@ services:
      ports:
        - "6001:80"
      restart: always
+  hangfire-api:
+   container_name: hangfire-api
+   environment:
+     - ASPNETCORE_ENVIRONMENT=Local
+     - ASPNETCORE_URLS=http://+:80
+     - "HangFireSettings:Storage:ConnectionString=mongodb://admin:admin@hangfiredb/hangfire-webapi?authSource=admin"
+   depends_on:
+     - hangfiredb
+   ports:
+     - "6008:80"
+   restart: always
 networks:
   default:
     name: microservices
