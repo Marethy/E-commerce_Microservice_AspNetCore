@@ -37,7 +37,6 @@ public class OrdersController : ControllerBase
     }
 
     #region CRUD
-
     [HttpGet("{id:long}", Name = RouteNames.GetOrder)]
     [ProducesResponseType(typeof(OrderDto), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<ApiResult<OrderDto>>> GetOrder(long id)
@@ -48,7 +47,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost(Name = RouteNames.CreateOrder)]
-    public async Task<ActionResult<ApiResult<long>>> CreateOrder([FromBody] CreateOrderCommand command)
+    public async Task<ActionResult<ApiResult<long>>> CreateOrder(CreateOrderCommand command)
     {
         var result = await _mediator.Send(command);
         return Ok(result);
@@ -69,6 +68,5 @@ public class OrdersController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
-
-    #endregion CRUD
+    #endregion
 }
