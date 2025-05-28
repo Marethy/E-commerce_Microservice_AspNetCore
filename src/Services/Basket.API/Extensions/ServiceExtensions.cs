@@ -1,14 +1,19 @@
 ﻿using Basket.API.GrpcServices;
 using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
+using Basket.API.Services.Interfaces;
+using Basket.API.Services;
 using Contracts.Common.Interfaces;
+using Contracts.Inventory;
+using Contracts.ScheduledJobs;
+using Contracts.Services;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
-using Inventory.Grpc.Client;
+using Infrastructure.ScheduleJobs;
+using Infrastructure.Services;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shared.Configurations;
-
 namespace Basket.API.Extensions
 {
     public static class ServiceExtensions
@@ -24,8 +29,12 @@ namespace Basket.API.Extensions
             services.AddLogging();
 
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-            services.AddScoped<IBasketRepository, BasketRepository>();
-            services.AddTransient<ISerializeService, SerializeService>();
+            services.AddScoped<IBasketRepository, BasketRepository>()
+                   .AddTransient<ISerializeService, SerializeService>()
+                   .AddScoped<IEmailTemplateService, EmailTemplateService>()
+                   .AddScoped<IBasketEmailService, BasketEmailService>()
+                   .AddScoped<IHttpClientHelper, HttpClientHelper>()
+                   .AddScoped<IScheduledJobsClient, ScheduledJobClient>();
             services.AddSingleton<ILogger<BasketRepository>, Logger<BasketRepository>>();
 
             // Thêm các cấu hình hệ thống
@@ -45,11 +54,11 @@ namespace Basket.API.Extensions
             var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
             services.AddSingleton(cacheSettings);
 
-            var grpcSettings =configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>();
+            var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>();
             services.AddSingleton(grpcSettings);
 
-            // var urlSettings = configuration.GetSection(nameof(UrlSettings)).Get<UrlSettings>();
-            // services.AddSingleton(urlSettings);
+            var urlSettings = configuration.GetSection(nameof(UrlSettings)).Get<UrlSettings>();
+            services.AddSingleton(urlSettings);
         }
 
         private static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)

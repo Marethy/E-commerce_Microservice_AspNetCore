@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "http": {
+    "Hangfire.API": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -20,10 +20,10 @@
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7173;http://localhost:5276"
     },
-    "IIS Express": {
-      "commandName": "IISExpress",
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

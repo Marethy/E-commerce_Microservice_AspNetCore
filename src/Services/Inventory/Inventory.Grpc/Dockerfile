@@ -17,6 +17,8 @@ COPY ["src/BuildingBlocks/Common.Logging/Common.Logging.csproj", "src/BuildingBl
 COPY ["src/BuildingBlocks/Contracts/Contracts.csproj", "src/BuildingBlocks/Contracts/"]
 COPY ["src/BuildingBlocks/Shared/Shared.csproj", "src/BuildingBlocks/Shared/"]
 COPY ["src/BuildingBlocks/Infrastructure/Infrastructure.csproj", "src/BuildingBlocks/Infrastructure/"]
+COPY ["src/BuildingBlocks/Contracts/Protos", "src/BuildingBlocks/Contracts/Protos"]
+
 COPY ["src/WebApps/WebHealthStatus/WebHealthStatus.csproj", "src/WebApps/WebHealthStatus/"]
 RUN dotnet restore "src/Services/Inventory/Inventory.Grpc/Inventory.Grpc.csproj"
 COPY . .
