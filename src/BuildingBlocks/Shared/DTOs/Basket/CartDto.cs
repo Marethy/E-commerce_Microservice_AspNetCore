@@ -1,4 +1,5 @@
-﻿namespace Shared.DTOs.Basket;
+﻿
+namespace Shared.DTOs.Basket;
 public class CartDto
 {
     public string UserName { get; set; }

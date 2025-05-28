@@ -9,6 +9,7 @@ namespace Basket.API.Entities
 
         public decimal TotalPrice { get; set; }
 
+
         [Required]
         public string FirstName { get; set; }
 
