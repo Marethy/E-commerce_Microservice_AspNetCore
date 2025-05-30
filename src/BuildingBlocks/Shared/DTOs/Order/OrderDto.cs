@@ -1,5 +1,4 @@
-﻿
-using Shared.Enums;
+﻿using Shared.Enums.Order;
 
 namespace Shared.DTOs.Order;
 
@@ -23,5 +22,5 @@ public class OrderDto
 
     public string InvoiceAddress { get; set; }
 
-    public EOrderStatus Status { get; set; }
+    public OrderStatus Status { get; set; }
 }

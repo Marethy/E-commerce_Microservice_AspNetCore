@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Ordering.Application.Common.Mappings;
 using Ordering.Domain.Entities;
-using Ordering.Domain.Enums;
+using Shared.Enums.Order;
 
 namespace Ordering.Application.Common.Models
 {
@@ -19,7 +19,7 @@ namespace Ordering.Application.Common.Models
 
         public string InvoiceAddress { get; set; }
 
-        public EOrderStatus Status { get; set; }
+        public OrderStatus Status { get; set; }
 
         public void Mapping(Profile profile)
         {
