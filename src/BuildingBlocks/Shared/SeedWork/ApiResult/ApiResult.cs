@@ -1,4 +1,6 @@
-﻿namespace Shared.SeedWork.ApiResult
+﻿using System.Text.Json.Serialization;
+
+namespace Shared.SeedWork.ApiResult
 {
     public class ApiResult<T>
     {

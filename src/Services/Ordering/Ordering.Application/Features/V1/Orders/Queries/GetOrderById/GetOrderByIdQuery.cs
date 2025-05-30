@@ -4,9 +4,7 @@ using Shared.SeedWork.ApiResult;
 
 namespace Ordering.Application.Features.V1.Orders;
 
-public class GetOrderByIdQuery : IRequest<ApiResult<OrderDto>>
+public class GetOrderByIdQuery(long id) : IRequest<ApiResult<OrderDto>>
 {
-    public long Id { get; private set; }
-
-    public GetOrderByIdQuery(long id) => Id = id;
+    public long Id { get; private set; } = id;
 }
