@@ -1,6 +1,6 @@
 ﻿using Contracts.Common.Events;
-using Ordering.Domain.Enums;
 using Ordering.Domain.OrderAggregate.Events;
+using Shared.Enums.Order;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -37,7 +37,7 @@ namespace Ordering.Domain.Entities
         [StringLength(100)]
         public string InvoiceAddress { get; set; }
 
-        public EOrderStatus Status { get; set; }
+        public OrderStatus Status { get; set; }
 
         [NotMapped]
         public string FullName => FirstName + " " + LastName;
