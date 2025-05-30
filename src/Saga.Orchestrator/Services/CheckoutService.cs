@@ -48,7 +48,7 @@ public class CheckoutService(ILogger logger,
                 saleOrder.SetItemNo(item.ItemNo);
                 var documentNo = await inventoryHttpRepository.CreateSalesItemAsync(saleOrder);
                 inventoryDocumentNos.Add(documentNo);
-                logger.Information($"End: Sale Item No: {item.ItemNo} " +
+                logger.Information($"End: Sale Item No: {item.ItemNo} " +   
                                     $"- Quantity: {item.Quantity} - Document No: {documentNo}");
             }
 
