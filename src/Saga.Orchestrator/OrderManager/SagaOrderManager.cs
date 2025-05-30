@@ -4,7 +4,7 @@ using Saga.Orchestrator.HttpRepository.Interfaces;
 using Shared.DTOs.Basket;
 using Shared.DTOs.Inventory;
 using Shared.DTOs.Order;
-
+using ILogger = Serilog.ILogger;
 namespace Saga.Orchestrator.OrderManager;
 
 public class SagaOrderManager : ISagaOrderManager<BasketCheckoutDto, OrderResponse>

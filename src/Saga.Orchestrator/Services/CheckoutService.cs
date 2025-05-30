@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Saga.Orchestrator.HttpRepository.Interfaces;
-using Saga.Orchestrator.Service.Interfaces;
+using Saga.Orchestrator.Services.Interfaces;
 using Shared.DTOs.Basket;
 using Shared.DTOs.Inventory;
 using Shared.DTOs.Order;

@@ -5,6 +5,7 @@ using Saga.Orchestrator.HttpRepository;
 using Saga.Orchestrator.HttpRepository.Interfaces;
 using Saga.Orchestrator.OrderManager;
 using Saga.Orchestrator.Services;
+using Saga.Orchestrator.Services.Interfaces;
 using Shared.DTOs.Basket;
 
 namespace Saga.Orchestrator.Extensions;
