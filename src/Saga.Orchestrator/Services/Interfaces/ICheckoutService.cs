@@ -1,5 +1,5 @@
 ﻿using Shared.DTOs.Basket;
-namespace Saga.Orchestrator.Service.Interfaces;
+namespace Saga.Orchestrator.Services.Interfaces;
 
 public interface ICheckoutService
 {
