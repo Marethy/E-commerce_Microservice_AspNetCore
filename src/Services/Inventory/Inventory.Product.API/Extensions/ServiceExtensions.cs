@@ -42,9 +42,9 @@ public static class ServiceExtensions
         services.AddScoped<IInventoryService, InventoryService>();
     }
 
-    //public static void ConfigureHealthChecks(this IServiceCollection services)
-    //{
-    //    var settings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
-    //    services.AddHealthChecks().AddMongoDb(settings.ConnectionString, "Inventory MongoDB Health", HealthStatus.Degraded);
-    //}
+    public static void ConfigureHealthChecks(this IServiceCollection services)
+    {
+        var settings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
+        services.AddHealthChecks().AddMongoDb(settings.ConnectionString, "Inventory MongoDB Health", HealthStatus.Degraded);
+    }
 }
