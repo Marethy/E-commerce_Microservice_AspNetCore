@@ -14,13 +14,14 @@ using Infrastructure.Services;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Shared.Configurations;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace Basket.API.Extensions
 {
     public static class ServiceExtensions
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers();
+            services.AddControllers();  
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
             services.AddEndpointsApiExplorer();
@@ -42,7 +43,7 @@ namespace Basket.API.Extensions
             services.ConfigureRedis(configuration);
             services.ConfigureMassTransit(configuration);
             services.ConfigureGrpcService();
-
+            services.ConfigureHealthChecks();
             return services;
         }
 
@@ -105,6 +106,13 @@ namespace Basket.API.Extensions
             services.AddGrpcClient<StockProtoService.StockProtoServiceClient>(x => x.Address = new Uri(settings.StockUrl));
             services.AddScoped<StockItemGrpcService>();
         }
-
+        private static void ConfigureHealthChecks(this IServiceCollection services)
+        {
+            var settings = services.GetOptions<CacheSettings>(nameof(CacheSettings));
+            services.AddHealthChecks().AddRedis(settings.ConnectionString,
+                                                            name: "Redis Health",
+                                                            failureStatus: HealthStatus.Degraded);
+        }
     }
+
 }

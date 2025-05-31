@@ -39,7 +39,7 @@ namespace Customer.API.Extensions
 
         private static void AddInfrastructureService(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IRepositoryBaseAsync<,,>), typeof(RepositoryBaseAsync<,,>))
+            services.AddScoped(typeof(IRepositoryBase<,,>), typeof(RepositoryBase<,,>))
                     .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
                     .AddScoped<ICustomerRepository, CustomerRepository>()
                     .AddScoped<ICustomerService, CustomerService>();

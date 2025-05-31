@@ -1,6 +1,8 @@
 ﻿using Infrastructure.Configurations;
+using Infrastructure.Extensions;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ordering.API.EventBusConsumer;
 using Shared.Configurations;
 
@@ -28,7 +30,7 @@ namespace Ordering.API.Extensions
             if (AppDomain.CurrentDomain.FriendlyName.Contains("ef") || Environment.CommandLine.ToLower().Contains("ef"))
             {
                 Console.WriteLine("Skipping MassTransit configuration because EF migration is running.");
-                return;  // Bỏ qua MassTransit khi chạy EF migration
+                return;  
             }
 
             var settings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>();
@@ -54,6 +56,13 @@ namespace Ordering.API.Extensions
                     cfg.ConfigureEndpoints(context);
                 });
             });
+        }
+        public static void ConfigureHealthChecks(this IServiceCollection services)
+        {
+            var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+            services.AddHealthChecks().AddSqlServer(databaseSettings.ConnectionString,
+                                                    name: "SqlServer Health",
+                                                    failureStatus: HealthStatus.Degraded);
         }
     }
 }
