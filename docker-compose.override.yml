@@ -126,8 +126,11 @@ services:
     environment:
       - xpack.monitoring.enabled=true
       - xpack.watcher.enabled=false
+      - xpack.sercurity.enabled=true 
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
+      - ELASTIC_USERNAME=elastic #default username
+      - ELASTIC_PASSWORD=admin
     restart: always
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
@@ -141,6 +144,8 @@ services:
     image: docker.elastic.co/kibana/kibana:7.17.2
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+      -  ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=admin
     restart: always
     depends_on:
       - elasticsearch
