@@ -1,5 +1,6 @@
 
 using Common.Logging;
+using HealthChecks.UI.Client;
 using Inventory.Product.API.Extensions;
 using Inventory.Product.API.Persistence;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -29,9 +30,10 @@ try
         var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         options.IncludeXmlComments(xmlPath);
-    }); builder.Services.ConfigureMongoDbClient();
+    }); 
+    builder.Services.ConfigureMongoDbClient();
     builder.Services.AddInfrastructureServices();
-   // builder.Services.ConfigureHealthChecks();
+    builder.Services.ConfigureHealthChecks();
 
     var app = builder.Build();
 
@@ -48,11 +50,11 @@ try
 
     app.UseEndpoints(endpoints =>
     {
-        //endpoints.MapHealthChecks("/hc", new HealthCheckOptions
-        //{
-        //    Predicate = _ => true,
-        //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        //});
+        endpoints.MapHealthChecks("/hc", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
         endpoints.MapDefaultControllerRoute();
     });
 

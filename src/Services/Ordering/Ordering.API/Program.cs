@@ -1,8 +1,10 @@
 ﻿using Common.Logging;
 using Contracts.Common.Interfaces;
 using Contracts.Messages;
+using HealthChecks.UI.Client;
 using Infrastructure.Common;
 using Infrastructure.Messages;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Ordering.API.Extensions;
 using Ordering.Application;
 using Ordering.Infrastructure;
@@ -70,11 +72,20 @@ static async Task ConfigureMiddleware(WebApplication app)
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Order API v1"));
     }
-
+    app.UseRouting();
     app.UseHttpsRedirection();
     app.UseAuthorization();
-    app.MapControllers();
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
 
+        endpoints.MapHealthChecks("/hc", new HealthCheckOptions
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+        endpoints.MapDefaultControllerRoute();
+    });
     // Seed database
     await app.SeedOrderDataAsync();
 }

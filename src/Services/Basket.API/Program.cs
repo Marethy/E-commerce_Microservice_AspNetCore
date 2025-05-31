@@ -4,48 +4,31 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Log.Information($"Starting {builder.Environment.ApplicationName}");
+Log.Information("Starting Basket API up");
+
 try
 {
     builder.Host.UseSerilog(SeriLogger.Configure);
-    builder.AddAppConfigurations();
+    builder.Host.AddAppConfigurations();
+
     builder.Services.AddInfrastructure(builder.Configuration);
 
-    try
-    {
-        var app = builder.Build();
-        Log.Information($"Environment: {app.Environment.EnvironmentName}");
+    var app = builder.Build();
 
-        app.UseInfrastructure();
+    app.UseInfrastructure();
 
-        // Migrate database and seed data if needed
-        // app.MigrateDatabase<ProductContext>((context, services) =>
-        // {
-        //     var logger = services.GetService<ILogger<ProductContextSeed>>();
-        //     ProductContextSeed.SeedProductAsync(context, logger).Wait();
-        // }).Run();
-
-        Log.Information("Application is starting...");
-
-        app.Run(); 
-        Log.Information("Application has stopped.");
-    }
-    catch (Exception ex)
-    {
-        Log.Fatal(ex, $"❌ Error during application startup: {ex.Message}");
-        throw;
-    }
+    app.Run();
 }
 catch (Exception ex)
 {
-    if (ex.GetType().Name.Equals("StopTheHostException", StringComparison.Ordinal))
+    string type = ex.GetType().Name;
+    if (type.Equals("StopTheHostException", StringComparison.Ordinal))
     {
         throw;
     }
-    Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
+    Log.Fatal(ex, "Application terminated unexpectedly");
 }
 finally
 {
-    Log.Information($"Stopping {builder.Environment.ApplicationName}");
     Log.CloseAndFlush();
 }
