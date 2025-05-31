@@ -4,7 +4,6 @@ using Inventory.Product.API.Services.Interfaces;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MongoDB.Driver;
 using Shared.Configurations;
-
 namespace Inventory.Product.API.Extensions;
 
 public static class ServiceExtensions
@@ -45,6 +44,20 @@ public static class ServiceExtensions
     public static void ConfigureHealthChecks(this IServiceCollection services)
     {
         var settings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings));
-        services.AddHealthChecks().AddMongoDb(settings.ConnectionString, "Inventory MongoDB Health", HealthStatus.Degraded);
+        if (settings == null || string.IsNullOrWhiteSpace(settings.ConnectionString))
+            throw new ArgumentNullException("MongoDbSettings.ConnectionString is not configured.");
+
+        services
+            .AddHealthChecks()
+            .AddMongoDb(
+                dbFactory: sp =>
+                {
+                    var client = new MongoClient(settings.ConnectionString);
+                    return client.GetDatabase(settings.DatabaseName);
+                },
+                name: "Inventory MongoDB Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "ready", "mongodb" }
+            );
     }
 }
