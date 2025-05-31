@@ -11,7 +11,7 @@ Log.Information("Starting Customer API up");
 
 try
 {
-    builder.Host.UseSerilog(Serilogger.Configure);
+    builder.Host.UseSerilog(SeriLogger.Configure);
 
     builder.Host.AddAppConfigurations();
 
@@ -21,9 +21,11 @@ try
 
     app.UseInfrastructure(builder.Configuration);
 
-    app.MapCustomersAPI();
+    app.MapCustomerController();
 
-    app.SeedCustomerData().Run();
+    app.SeedCustomerDataAsync().GetAwaiter().GetResult();
+
+    app.Run();
 }
 catch (Exception ex)
 {
