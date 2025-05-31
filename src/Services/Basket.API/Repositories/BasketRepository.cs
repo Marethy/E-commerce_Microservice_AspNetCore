@@ -20,7 +20,7 @@ namespace Basket.API.Repositories
             {
                 var result = serializerService.Deserialize<Cart>(cart);
                 var totalPrice = result.TotalPrice;
-                logger.Information("Total price: {totalPrice}", totalPrice); // index totalPrice field into Elastic search
+                logger.Information("Total price: {totalPrice}", totalPrice); 
             }
             logger.Information($"END: GetBasketByUserName {userName}");
 
@@ -98,9 +98,7 @@ namespace Basket.API.Repositories
             }
         }
 
-      
-
-
+     
 
     }
 }
