@@ -13,6 +13,6 @@ public static class HostExtensions
             config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                   .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
                   .AddEnvironmentVariables();
-        }).UseSerilog(Serilogger.Configure);
+        }).UseSerilog(SeriLogger.Configure);
     }
 }

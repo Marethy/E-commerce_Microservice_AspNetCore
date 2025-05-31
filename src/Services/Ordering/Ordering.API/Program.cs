@@ -72,12 +72,13 @@ static async Task ConfigureMiddleware(WebApplication app)
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Swagger Order API v1"));
     }
-
+    app.UseRouting();
     app.UseHttpsRedirection();
     app.UseAuthorization();
-    app.MapControllers();
     app.UseEndpoints(endpoints =>
     {
+        endpoints.MapControllers();
+
         endpoints.MapHealthChecks("/hc", new HealthCheckOptions
         {
             Predicate = _ => true,
