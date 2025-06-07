@@ -1,4 +1,6 @@
-﻿namespace Product.API.Extensions
+﻿using Infrastructure.Middlewares;
+
+namespace Product.API.Extensions
 {
     public static class ApplicationExtensions
     {
@@ -8,11 +10,18 @@
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+            {
+                    c.OAuthClientId("microservices_swagger");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API");
+                    c.DisplayRequestDuration();
+                });
             }
 
-            // Uncomment if you want to use HTTPS redirection
             // app.UseHttpsRedirection();
+            app.UseMiddleware<ErrorWrappingMiddleware>();
+
+
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
