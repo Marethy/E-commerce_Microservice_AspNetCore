@@ -4,17 +4,28 @@ using Product.API.Entities;
 using Product.API.Repositories.Interfaces;
 using Shared.DTOs.Product;
 using System.ComponentModel.DataAnnotations;
+using Infrastructure.Identity.Authorization;
+
+using Shared.Common.Constants;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace Product.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize("Bearer")]
+
+
     public class ProductsController(IProductRepository repository, IMapper mapper) : ControllerBase
     {
         private readonly IProductRepository _repository = repository;
         private readonly IMapper _mapper = mapper;
 
+
         [HttpGet]
+        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+
         public async Task<IActionResult> GetProducts()
         {
             var products = await _repository.GetProducts();
@@ -23,6 +34,8 @@ namespace Product.API.Controllers
         }
 
         [HttpGet("get-product-by-no/{productNo}")]
+        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+
         public async Task<IActionResult> GetProductByNo([Required] string productNo)
         {
             if (string.IsNullOrWhiteSpace(productNo))
@@ -41,6 +54,8 @@ namespace Product.API.Controllers
         }
 
         [HttpGet("{id:long}")]
+        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+
         public async Task<IActionResult> GetProductById([Required] long id)
         {
             var product = await _repository.GetProduct(id);
@@ -53,6 +68,9 @@ namespace Product.API.Controllers
         }
 
         [HttpPost]
+        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.CREATE)]
+
+
         public async Task<IActionResult> CreateProduct([FromBody] CreateProductDto productDto)
         {
             if (productDto == null)
@@ -75,6 +93,8 @@ namespace Product.API.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.UPDATE)]
+
         public async Task<IActionResult> UpdateProduct([Required] long id, [FromBody] UpdateProductDto productDto)
         {
             if (productDto == null)
@@ -101,6 +121,9 @@ namespace Product.API.Controllers
         }
 
         [HttpDelete("{id:long}")]
+        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.DELETE)]
+
+
         public async Task<IActionResult> DeleteProduct([Required] long id)
         {
             var product = await _repository.GetProduct(id);

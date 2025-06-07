@@ -11,6 +11,11 @@ using Product.API.Repositories;
 using Product.API.Repositories.Interfaces;
 using Shared.Configurations;
 using System.Text;
+using Infrastructure.Identity;
+
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Product.API.Extensions
 {
@@ -22,11 +27,13 @@ namespace Product.API.Extensions
             services.Configure<RouteOptions>(options => { options.LowercaseUrls = true; });
 
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
-            services.AddJwtAuthentication();
+            services.ConfigureSwagger();
 
+         
             services.ConfigureProductDbContext(configuration);
             services.AddInfrastructureServices();
+            services.ConfigureAuthenticationHandler();
+            services.ConfigureAuthorization();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
 
             return services;
@@ -85,5 +92,6 @@ namespace Product.API.Extensions
                 .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
                 .AddScoped<IProductRepository, ProductRepository>();
         }
+
     }
 }
