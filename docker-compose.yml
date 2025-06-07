@@ -72,10 +72,15 @@ services:
       dockerfile: src/ApiGateways/OcelotApiGw/Dockerfile
 
   hangfire-api:
-   image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
-   build:
-     context: .
-     dockerfile: src/Services/Hangfire.API/Dockerfile  
+    image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Hangfire.API/Dockerfile  
+  webstatus:
+    image: ${DOCKER_REGISTRY-}webstatus:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/WebApps/WebHealthStatus/Dockerfile
 # Network section
 networks:
   default:

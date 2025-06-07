@@ -1,23 +1,29 @@
-﻿namespace Basket.API.Extensions
+﻿using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
+namespace Basket.API.Extensions
 {
     public static class ApplicationExtensions
     {
-        public static void UseInfrastructure(this WebApplication app)
+        public static void UseInfrastructure(this IApplicationBuilder app)
         {
-            //  if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
-            // app.UseHttpsRedirection(); // Bật nếu dùng HTTPS
-            app.UseAuthentication();  // Gọi Authentication trước Authorization
-
-            app.UseRouting(); // Bắt buộc trước Authorization
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-            app.MapControllers();
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }
