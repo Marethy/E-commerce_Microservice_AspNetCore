@@ -3,6 +3,7 @@
 public class ApiConfiguration
 {
     public string ApiName { get; set; }
+
     public string ApiVersion { get; set; }
 
     public string IdentityServerBaseUrl { get; set; }

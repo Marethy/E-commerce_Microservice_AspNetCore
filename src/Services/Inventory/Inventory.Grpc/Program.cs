@@ -15,7 +15,6 @@ try
     builder.Services.AddConfigurationSettings(builder.Configuration);
     builder.Services.ConfigureMongoDbClient();
     builder.Services.AddInfrastructureServices();
-
     builder.Services.AddGrpc();
 
     var app = builder.Build();
