@@ -17,8 +17,6 @@ using Product.API.Repositories.Interfaces;
 using Shared.Configurations;
 using System.Text;
 using HealthChecks.MySql;
-
-using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -32,10 +30,7 @@ namespace Product.API.Extensions
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-
-            //Swagger
-            services.AddSwaggerGen();
-          //  services.ConfigureSwagger();
+            services.ConfigureSwagger();
 
 
 
@@ -44,8 +39,8 @@ namespace Product.API.Extensions
             services.AddInfrastructrueService();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
             //services.AddJwtAuthentication();
-           // services.ConfigureAuthenticationHandler();
-            //services.ConfigureAuthorization();
+            services.ConfigureAuthenticationHandler();
+            services.ConfigureAuthorization();
             services.ConfigureHealthChecks();
         }
 
@@ -167,6 +162,7 @@ namespace Product.API.Extensions
             });
             });
         }
+
 
     }
 }
