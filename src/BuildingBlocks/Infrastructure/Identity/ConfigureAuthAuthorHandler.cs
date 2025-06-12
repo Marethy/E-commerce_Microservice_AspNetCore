@@ -2,7 +2,6 @@
 using IdentityServer4.AccessTokenValidation;
 using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Configurations;
 

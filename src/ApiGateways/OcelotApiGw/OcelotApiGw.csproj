@@ -18,6 +18,7 @@
     <PackageReference Include="Ocelot.Cache.CacheManager" Version="24.0.0" />
     <PackageReference Include="Ocelot.Provider.Polly" Version="24.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	  
   </ItemGroup>
 
   <ItemGroup>

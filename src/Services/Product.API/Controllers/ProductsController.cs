@@ -25,7 +25,6 @@ namespace Product.API.Controllers
 
         [HttpGet]
         [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
-
         public async Task<IActionResult> GetProducts()
         {
             var products = await _repository.GetProducts();

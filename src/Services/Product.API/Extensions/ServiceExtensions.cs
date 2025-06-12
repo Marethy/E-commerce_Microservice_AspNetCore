@@ -18,6 +18,7 @@ using Shared.Configurations;
 using System.Text;
 using HealthChecks.MySql;
 using Microsoft.Extensions.DependencyInjection;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 
 namespace Product.API.Extensions
@@ -30,7 +31,7 @@ namespace Product.API.Extensions
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-            services.ConfigureSwagger();
+            services.ConfigureSwagger(configuration);
 
 
 
@@ -99,67 +100,78 @@ namespace Product.API.Extensions
 
         private static void ConfigureHealthChecks(this IServiceCollection services)
         {
+
             var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
             services
                          .AddHealthChecks()
                          .AddMySql(
-                             connectionString: databaseSettings.ConnectionString,  
-                             name: "MySql Health",                       
-                             failureStatus: HealthStatus.Degraded,             
-                             tags: new[] { "ready", "sql" }            
+                             connectionString: databaseSettings.ConnectionString,
+                             name: "MySql Health",
+                             failureStatus: HealthStatus.Degraded,
+                             tags: new[] { "ready", "sql" }
                          );
         }
 
-        private static void ConfigureSwagger(this IServiceCollection services)
+        public static void ConfigureSwagger(this IServiceCollection services, IConfiguration configuration)
         {
-            var configuration = services.GetOptions<ApiConfiguration>("ApiConfiguration");
-            if (configuration == null || string.IsNullOrEmpty(configuration.IssuerUri) ||
-                string.IsNullOrEmpty(configuration.ApiName)) throw new Exception("ApiConfiguration is not configured!");
+            // 1) Bind your section once and throw if it’s not there
+            var apiCfg = configuration
+                .GetSection("ApiConfiguration")
+                .Get<ApiConfiguration>();
 
+            if (apiCfg == null)
+                throw new InvalidOperationException("Missing required section 'ApiConfiguration' in appsettings.json.");
+
+            // 2) Validate required fields
+            if (string.IsNullOrWhiteSpace(apiCfg.ApiName) ||
+                string.IsNullOrWhiteSpace(apiCfg.IssuerUri) ||
+                string.IsNullOrWhiteSpace(apiCfg.ApiVersion))
+            {
+                throw new InvalidOperationException("ApiConfiguration is missing ApiName, IssuerUri or ApiVersion.");
+            }
+
+            // 3) Define your OAuth2 flows/scopes
+            var authorizeUrl = new Uri($"{apiCfg.IdentityServerBaseUrl}/connect/authorize");
+            var scopes = new Dictionary<string, string>
+            {
+                { $"{apiCfg.ApiName}.read",  $"{apiCfg.ApiName} - read access"  },
+                { $"{apiCfg.ApiName}.write", $"{apiCfg.ApiName} - write access" }
+            };
+
+            // 4) Register SwaggerGen
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1",
-                    new OpenApiInfo
-                    {
-                        Title = "Product API V1",
-                        Version = configuration.ApiVersion
-                    });
+                c.SwaggerDoc(apiCfg.ApiVersion, new OpenApiInfo
+                {
+                    Title = $"{apiCfg.ApiName} API",
+                    Version = apiCfg.ApiVersion
+                });
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows
                     {
                         Implicit = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = new Uri($"{configuration.IdentityServerBaseUrl}/connect/authorize"),
-                            Scopes = new Dictionary<string, string>
-                        {
-                            { "microservices_api.read", "Microservices API Read Scope" },
-                            { "microservices_api.write", "Microservices API Write Scope" }
-                        }
+                            AuthorizationUrl = authorizeUrl,
+                            Scopes = scopes
                         }
                     }
                 });
+
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
                 {
-                    new OpenApiSecurityScheme
+                    [new OpenApiSecurityScheme
                     {
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        },
-                        Name = "Bearer"
-                    },
-                    new List<string>
-                    {
-                        "microservices_api.read",
-                        "microservices_api.write"
+                            Id = "oauth2"
+                        }
                     }
-                }
-            });
+                    ] = scopes.Keys.ToList()
+                });
             });
         }
 
