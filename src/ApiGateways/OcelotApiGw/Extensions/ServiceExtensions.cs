@@ -1,4 +1,4 @@
-﻿using Contracts.Identity;
+﻿﻿using Contracts.Identity;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -17,6 +17,9 @@ public static class ServiceExtensions
     {
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         services.AddSingleton(jwtSettings);
+
+        var apiConfiguration = configuration.GetSection(nameof(ApiConfiguration)).Get<ApiConfiguration>();
+        services.AddSingleton(apiConfiguration);
     }
 
     public static void ConfigureCors(this IServiceCollection services, IConfiguration configuration)
@@ -47,33 +50,32 @@ public static class ServiceExtensions
 
     internal static void AddJwtAuthentication(this IServiceCollection services)
     {
-        var settings = services.GetOptions<JwtSettings>(nameof(JwtSettings));
-        if (settings == null || string.IsNullOrEmpty(settings.Key))
-        {
-            throw new ArgumentNullException($"{nameof(JwtSettings)} is not configured properly");
-        }
+        var apiConfig = services.GetOptions<ApiConfiguration>(nameof(ApiConfiguration));
+        if (apiConfig == null || string.IsNullOrEmpty(apiConfig.IssuerUri) || string.IsNullOrEmpty(apiConfig.ApiName))
+            throw new ArgumentNullException("ApiConfiguration");
 
-        var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Key));
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = apiConfig.IssuerUri;
+            options.Audience = apiConfig.ApiName;
+            options.RequireHttpsMetadata = false;          
 
-        var tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = signingKey,
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = false,
-            ClockSkew = TimeSpan.Zero,
-            RequireExpirationTime = false
-        };
-        services.AddAuthentication(o => 
-        {
-            o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(x =>
-        {
-            x.SaveToken = true;
-            x.RequireHttpsMetadata = false;
-            x.TokenValidationParameters = tokenValidationParameters;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = apiConfig.IssuerUri,
+                ValidateAudience = true,
+                ValidAudience = apiConfig.ApiName,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                ValidateIssuerSigningKey = true
+            };
+            options.IncludeErrorDetails = true;
         });
     }
 }

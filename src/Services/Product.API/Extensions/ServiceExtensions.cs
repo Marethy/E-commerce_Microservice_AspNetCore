@@ -31,7 +31,7 @@ namespace Product.API.Extensions
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-            services.ConfigureSwagger(configuration);
+            services.ConfigureSwagger();
 
 
 
@@ -39,41 +39,13 @@ namespace Product.API.Extensions
             services.ConfigureProductDbContext(configuration);
             services.AddInfrastructrueService();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-            //services.AddJwtAuthentication();
+     //       services.AddJwtAuthentication();
             services.ConfigureAuthenticationHandler();
-            services.ConfigureAuthorization();
+    //        services.ConfigureAuthorization();
             services.ConfigureHealthChecks();
         }
 
-        internal static void AddJwtAuthentication(this IServiceCollection services)
-        {
-            var settings = services.GetOptions<JwtSettings>(nameof(JwtSettings));
-            if (settings == null || string.IsNullOrEmpty(settings.Key))
-                throw new ArgumentNullException($"{nameof(JwtSettings)} is not configured properly");
-
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Key));
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = false,
-                ClockSkew = TimeSpan.Zero,
-                RequireExpirationTime = false
-            };
-            services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.SaveToken = true;
-                x.RequireHttpsMetadata = false;
-                x.TokenValidationParameters = tokenValidationParameters;
-            });
-        }
+    
 
 
         private static void ConfigureProductDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -112,68 +84,59 @@ namespace Product.API.Extensions
                          );
         }
 
-        public static void ConfigureSwagger(this IServiceCollection services, IConfiguration configuration)
+        private static void ConfigureSwagger(this IServiceCollection services)
         {
-            // 1) Bind your section once and throw if it’s not there
-            var apiCfg = configuration
-                .GetSection("ApiConfiguration")
-                .Get<ApiConfiguration>();
+            var configuration = services.GetOptions<ApiConfiguration>("ApiConfiguration");
+            if (configuration == null || string.IsNullOrEmpty(configuration.IssuerUri) ||
+                string.IsNullOrEmpty(configuration.ApiName)) throw new Exception("ApiConfiguration is not configured!");
 
-            if (apiCfg == null)
-                throw new InvalidOperationException("Missing required section 'ApiConfiguration' in appsettings.json.");
-
-            // 2) Validate required fields
-            if (string.IsNullOrWhiteSpace(apiCfg.ApiName) ||
-                string.IsNullOrWhiteSpace(apiCfg.IssuerUri) ||
-                string.IsNullOrWhiteSpace(apiCfg.ApiVersion))
-            {
-                throw new InvalidOperationException("ApiConfiguration is missing ApiName, IssuerUri or ApiVersion.");
-            }
-
-            // 3) Define your OAuth2 flows/scopes
-            var authorizeUrl = new Uri($"{apiCfg.IdentityServerBaseUrl}/connect/authorize");
-            var scopes = new Dictionary<string, string>
-            {
-                { $"{apiCfg.ApiName}.read",  $"{apiCfg.ApiName} - read access"  },
-                { $"{apiCfg.ApiName}.write", $"{apiCfg.ApiName} - write access" }
-            };
-
-            // 4) Register SwaggerGen
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc(apiCfg.ApiVersion, new OpenApiInfo
-                {
-                    Title = $"{apiCfg.ApiName} API",
-                    Version = apiCfg.ApiVersion
-                });
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "Product API V1",
+                        Version = configuration.ApiVersion
+                    });
 
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows
                     {
                         Implicit = new OpenApiOAuthFlow
                         {
-                            AuthorizationUrl = authorizeUrl,
-                            Scopes = scopes
+                            AuthorizationUrl = new Uri($"{configuration.IdentityServerBaseUrl}/connect/authorize"),
+                            Scopes = new Dictionary<string, string>
+                        {
+                            { "microservices_api.read", "Microservices API Read Scope" },
+                            { "microservices_api.write", "Microservices API Write Scope" }
+                        }
                         }
                     }
                 });
-
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
                 {
-                    [new OpenApiSecurityScheme
+                    new OpenApiSecurityScheme
                     {
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.SecurityScheme,
-                            Id = "oauth2"
-                        }
+                            Id = "Bearer"
+                        },
+                        Name = "Bearer"
+                    },
+                    new List<string>
+                    {
+                        "microservices_api.read",
+                        "microservices_api.write"
                     }
-                    ] = scopes.Keys.ToList()
-                });
+                }
             });
-        }
+            });
+            }
+        
 
 
     }

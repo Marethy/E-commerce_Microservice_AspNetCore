@@ -1,13 +1,18 @@
+using Common.Logging;
 using Infrastructure.Middlewares;
 using Ocelot.Middleware;
 using OcelotApiGw.Extensions;
 using Serilog;
+using Microsoft.IdentityModel.Logging;
+IdentityModelEventSource.ShowPII = true;
+
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog(SeriLogger.Configure);
 
 Log.Information($"Start {builder.Environment.ApplicationName} up");
 
@@ -24,7 +29,7 @@ try
 
     builder.Services.ConfigureOcelot(builder.Configuration);
     builder.Services.ConfigureCors(builder.Configuration);
-    //builder.Services.ConfigureAuthenticationHandler();
+  //  builder.Services.ConfigureAuthenticationHandler();
 
     var app = builder.Build();
 
@@ -38,27 +43,32 @@ try
     app.UseCors("CorsPolicy");
 
     app.UseMiddleware<ErrorWrappingMiddleware>();
-    app.UseAuthentication();
+    //app.UseAuthentication();
     app.UseRouting();
     //app.UseHttpsRedirection();
-    app.UseAuthorization();
+   // app.UseAuthorization();
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapGet("/", context =>
         {
-            //await context.Response.WriteAsync($"Hello TEDU members! This is {builder.Environment.ApplicationName}");
             context.Response.Redirect("swagger/index.html");
             return Task.CompletedTask;
         });
     });
-
+    
     app.MapControllers();
-    app.UseSwaggerForOcelotUI(opt =>
+    app.UseSwaggerForOcelotUI(
+    opts =>
     {
-        opt.PathToSwaggerGenerator = "/swagger/docs";
-        opt.OAuthClientId("tedu_microservices_swagger");
-        opt.DisplayRequestDuration();
-    });
+        opts.PathToSwaggerGenerator = "/swagger/docs";
+    },
+    ui =>
+    {
+        ui.OAuthClientId("microservices_swagger");
+        ui.DisplayRequestDuration();
+    }
+);
+
     await app.UseOcelot();
     app.Run();
 }
