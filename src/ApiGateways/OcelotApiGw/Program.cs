@@ -3,6 +3,9 @@ using Infrastructure.Middlewares;
 using Ocelot.Middleware;
 using OcelotApiGw.Extensions;
 using Serilog;
+using Microsoft.IdentityModel.Logging;
+IdentityModelEventSource.ShowPII = true;
+
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -40,10 +43,10 @@ try
     app.UseCors("CorsPolicy");
 
     app.UseMiddleware<ErrorWrappingMiddleware>();
-    app.UseAuthentication();
+    //app.UseAuthentication();
     app.UseRouting();
     //app.UseHttpsRedirection();
-    app.UseAuthorization();
+   // app.UseAuthorization();
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapGet("/", context =>
@@ -52,14 +55,20 @@ try
             return Task.CompletedTask;
         });
     });
-
+    
     app.MapControllers();
-    app.UseSwaggerForOcelotUI(opt =>
+    app.UseSwaggerForOcelotUI(
+    opts =>
     {
-        opt.PathToSwaggerGenerator = "/swagger/docs";
-        //opt.OAuthClientId("microservices_swagger");
-        //opt.DisplayRequestDuration();
-    });
+        opts.PathToSwaggerGenerator = "/swagger/docs";
+    },
+    ui =>
+    {
+        ui.OAuthClientId("microservices_swagger");
+        ui.DisplayRequestDuration();
+    }
+);
+
     await app.UseOcelot();
     app.Run();
 }

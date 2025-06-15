@@ -37,7 +37,7 @@ public class BackgroundJobService(IScheduledJobService jobService, ISMTPEmailSer
     }
 
     // Wrapper method to avoid optional arguments in the expression tree
-    private void SendEmail(MailRequest emailRequest)
+    public  void SendEmail(MailRequest emailRequest)
     {
         emailSMTPService.SendEmailAsync(emailRequest).GetAwaiter().GetResult();
     }

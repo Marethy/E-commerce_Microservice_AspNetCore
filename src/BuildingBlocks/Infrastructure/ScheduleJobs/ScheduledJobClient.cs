@@ -12,7 +12,7 @@ namespace Infrastructure.ScheduleJobs;
 
 public class ScheduledJobClient(IHttpClientHelper httpClientHelper, UrlSettings urlSettings, ILogger logger) : IScheduledJobsClient
 {
-    private static readonly string _scheduledJobs = "api/scheduledJobs";
+    private static readonly string _scheduledJobs = "api/ScheduledJobs";
 
     public async Task<string?> SendReminderEmailAsync(ReminderEmailDto model)
     {
