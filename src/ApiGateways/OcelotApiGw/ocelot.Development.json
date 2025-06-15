@@ -30,10 +30,10 @@
       "FileCacheOptions": {
         "TtlSeconds": 15 //cached seconds
       },
-      //"AuthenticationOptions": {
-      //  "AuthenticationProviderKey": "Bearer",
-      //  "AllowedScopes": []
-      //},
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "product-service"
     },
     {
@@ -47,10 +47,10 @@
           "Port": 5002
         }
       ],
-      //"AuthenticationOptions": {
-      //  "AuthenticationProviderKey": "Bearer",
-      //  "AllowedScopes": []
-      //},
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "product-service"
     },
     {
@@ -64,13 +64,13 @@
           "Port": 5002
         }
       ],
-      //"AuthenticationOptions": {
-      //  "AuthenticationProviderKey": "Bearer",
-      //  "AllowedScopes": []
-      //},
-      //      "RouteClaimsRequirement": {
-      //        "Role": "Admin"
-      //      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+            "RouteClaimsRequirement": {
+              "Role": "Admin"
+            },
       "SwaggerKey": "product-service"
     },
     // Customer api: http://localhost:5003/api/customers

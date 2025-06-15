@@ -36,5 +36,7 @@ public static class ServiceExtensions
     public static void AddInfrastructureServices(this IServiceCollection services)
     {
         services.AddScoped<IInventoryRepository, InventoryRepository>();
+        services.AddHealthChecks();
+
     }
 }
