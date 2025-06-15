@@ -2,6 +2,7 @@
 ---
 
 # 🛒 AspNetCore Microservices - Basic E-Commerce System
+![Architecture](./arch.jpg)
 
 ## 📌 Overview
 
