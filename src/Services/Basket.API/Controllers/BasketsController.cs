@@ -86,7 +86,7 @@ namespace Basket.API.Controllers
             }
 
             var basket = await repository.GetBasketByUserName(basketCheckout.Username);
-            if (basket == null)
+            if (basket == null) 
             {
                 return NotFound("Basket not found.");
             }

@@ -17,6 +17,6 @@
 
         public decimal TotalPrice => Items.Sum(item => item.ItemPrice * item.Quantity);
 
-        public string JobId { get; set; }
+        public string? JobId { get; set; }
     }
 }

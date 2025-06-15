@@ -1,22 +1,87 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Checkout Your Order</title>
+    <title>Complete Your Checkout</title>
     <style>
-        .orange {
-            color: #ffa500
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: #ffa500;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 24px;
+            }
+
+        .content {
+            padding: 30px 20px;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        .button-wrap {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background-color: #ffa500;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+            .btn:hover {
+                background-color: #cc8400;
+            }
+
+        .footer {
+            background-color: #f0f0f0;
+            color: #777;
+            font-size: 12px;
+            text-align: center;
+            padding: 15px 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Hello [userName]</h1>
-    <p>You still have an order to checkout</p>
-    <p>
-        Please complete your order by click: <a href="[checkoutUrl]"
-                                                class="orange"
-                                                target="_blank">here</a>
-    </p>
+    <div class="container">
+        <div class="header">
+            <h1>Hello, [userName]!</h1>
+        </div>
+        <div class="content">
+            <p>It looks like you still have an order waiting to be completed.</p>
+            <p>Please click the button below to finish checking out:</p>
+            <div class="button-wrap">
+                <a href="[checkoutUrl]" class="btn" target="_blank">Complete Your Order</a>
+            </div>
+            <p>If you need any assistance, feel free to reach out at <a href="mailto:support@example.com">support@example.com</a>.</p>
+        </div>
+        <div class="footer">
+            &copy; 2025 KhiemCompany. All Rights Reserved.
+        </div>
+    </div>
 </body>
 </html>
