@@ -17,9 +17,8 @@ using Product.API.Repositories.Interfaces;
 using Shared.Configurations;
 using System.Text;
 using HealthChecks.MySql;
-
-using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.DependencyInjection;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 
 namespace Product.API.Extensions
@@ -32,10 +31,7 @@ namespace Product.API.Extensions
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
-
-            //Swagger
-            services.AddSwaggerGen();
-          //  services.ConfigureSwagger();
+            services.ConfigureSwagger();
 
 
 
@@ -43,41 +39,13 @@ namespace Product.API.Extensions
             services.ConfigureProductDbContext(configuration);
             services.AddInfrastructrueService();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-            //services.AddJwtAuthentication();
-           // services.ConfigureAuthenticationHandler();
-            //services.ConfigureAuthorization();
+     //       services.AddJwtAuthentication();
+            services.ConfigureAuthenticationHandler();
+    //        services.ConfigureAuthorization();
             services.ConfigureHealthChecks();
         }
 
-        internal static void AddJwtAuthentication(this IServiceCollection services)
-        {
-            var settings = services.GetOptions<JwtSettings>(nameof(JwtSettings));
-            if (settings == null || string.IsNullOrEmpty(settings.Key))
-                throw new ArgumentNullException($"{nameof(JwtSettings)} is not configured properly");
-
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Key));
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = signingKey,
-                ValidateIssuer = false,
-                ValidateAudience = false,
-                ValidateLifetime = false,
-                ClockSkew = TimeSpan.Zero,
-                RequireExpirationTime = false
-            };
-            services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.SaveToken = true;
-                x.RequireHttpsMetadata = false;
-                x.TokenValidationParameters = tokenValidationParameters;
-            });
-        }
+    
 
 
         private static void ConfigureProductDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -104,14 +72,15 @@ namespace Product.API.Extensions
 
         private static void ConfigureHealthChecks(this IServiceCollection services)
         {
+
             var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
             services
                          .AddHealthChecks()
                          .AddMySql(
-                             connectionString: databaseSettings.ConnectionString,  
-                             name: "MySql Health",                       
-                             failureStatus: HealthStatus.Degraded,             
-                             tags: new[] { "ready", "sql" }            
+                             connectionString: databaseSettings.ConnectionString,
+                             name: "MySql Health",
+                             failureStatus: HealthStatus.Degraded,
+                             tags: new[] { "ready", "sql" }
                          );
         }
 
@@ -166,7 +135,9 @@ namespace Product.API.Extensions
                 }
             });
             });
-        }
+            }
+        
+
 
     }
 }
