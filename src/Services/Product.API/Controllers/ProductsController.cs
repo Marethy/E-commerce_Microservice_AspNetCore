@@ -8,24 +8,24 @@ using Infrastructure.Identity.Authorization;
 
 using Shared.Common.Constants;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 namespace Product.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize("Bearer")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
 
     public class ProductsController(IProductRepository repository, IMapper mapper) : ControllerBase
     {
         private readonly IProductRepository _repository = repository;
-        private readonly IMapper _mapper = mapper;
+            private readonly IMapper _mapper = mapper;
 
 
         [HttpGet]
         [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
-
         public async Task<IActionResult> GetProducts()
         {
             var products = await _repository.GetProducts();

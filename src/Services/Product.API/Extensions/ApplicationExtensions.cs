@@ -11,13 +11,15 @@ namespace Product.API.Extensions
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.OAuthClientId("microservices_swagger");
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product API");
+                c.OAuthClientId("microservices_swagger");
+
                 c.DisplayRequestDuration();
             });
+            app.UseRouting();
+
             app.UseMiddleware<ErrorWrappingMiddleware>();
             app.UseAuthentication();
-            app.UseRouting();
             //app.UseHttpsRedirection(); // for production only
 
             app.UseAuthorization();
@@ -29,7 +31,7 @@ namespace Product.API.Extensions
                     Predicate = _ => true,
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllers();
             });
         }
     }
