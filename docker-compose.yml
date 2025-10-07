@@ -4,9 +4,8 @@ services:
   orderdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
 
-  # MySQL section
   productdb:
-    image: mysql:latest
+    image: postgres:alpine
 
   customerdb:
     image: postgres:alpine

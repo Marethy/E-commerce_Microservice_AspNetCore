@@ -1,6 +1,6 @@
 ﻿using Contracts.Domains;
+using Contracts.Domains.Interfaces;
 using Infrastructure.Extensions;
-using Inventory.Product.API.Repositories.Abstraction;
 using MongoDB.Driver;
 using Shared.Configurations;
 using System.Linq.Expressions;

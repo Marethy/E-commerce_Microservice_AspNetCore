@@ -1,4 +1,4 @@
-
+﻿
 services:
   # Database section
 
@@ -11,25 +11,23 @@ services:
       ACCEPT_EULA: "Y"
     restart: always
     volumes:
-      - sqlserver_data:/var/opt/mssql
+      - order_data:/var/opt/mssql
     ports:
       - "1435:1433"
 
-
-  # MySQL (productdb)
+ 
   productdb:
     container_name: productdb
-    image: mysql:latest
+    image: postgres:alpine
     environment:
-      MYSQL_ROOT_PASSWORD: "Marethyu2004!"
-      MYSQL_DATABASE: "products"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "Marethyu2004!"
+      POSTGRES_DB: ProductDb
     restart: always
     volumes:
-      - mysql_data:/var/lib/mysql
+      - product_data:/var/lib/postgresql/data
     ports:
-      - "3307:3306"
-  
-
+        - "5432:5432"  
   # PostgreSQL (customerdb)
   customerdb:
     container_name: customerdb
@@ -39,8 +37,8 @@ services:
       POSTGRES_PASSWORD: "Marethyu2004!"
       POSTGRES_DB: CustomerDb
     restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    volumes:    
+      - customer_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -60,7 +58,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - inventory_data:/data/db
   # Hangfire db
   hangfiredb:
     container_name: hangfiredb
@@ -150,7 +148,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - "ConnectionStrings__DefaultConnection=server=productdb;port=3306;database=ProductDb;uid=root;pwd=Marethyu2004!"
+      - "ConnectionStrings__DefaultConnection=server=productdb;port=5432;database=ProductDb;uid=admin;pwd=Marethyu2004!"
       - ApiConfiguration__ApiBaseUrl=http://product-api
       - ApiConfiguration__IdentityServerBaseUrl=http://identity-api:80
       - ApiConfiguration__IssuerUri=http://identity-api

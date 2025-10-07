@@ -2,7 +2,6 @@
 using Contracts.Domains.Interfaces;
 using Inventory.Product.API.Entities;
 using Inventory.Product.API.Extensions;
-using Inventory.Product.API.Repositories.Abstraction;
 using Shared.DTOs.Inventory;
 using Shared.SeedWork.Paging;
 

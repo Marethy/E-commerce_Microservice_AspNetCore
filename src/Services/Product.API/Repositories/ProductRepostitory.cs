@@ -1,32 +1,35 @@
-﻿using Contracts.Common.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Product.API.Entities;
 using Product.API.Persistence;
 using Product.API.Repositories.Interfaces;
+using Infrastructure.Common;
+using Contracts.Common.Interfaces;
 
 namespace Product.API.Repositories;
 
-public class ProductRepository : RepositoryBase<CatalogProduct, long, ProductContext>, IProductRepository
+public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductContext>, IProductRepository
 {
     public ProductRepository(ProductContext dbContext, IUnitOfWork<ProductContext> unitOfWork)
         : base(dbContext, unitOfWork)
     {
     }
+    
+    public async Task<IEnumerable<CatalogProduct>> GetProducts() 
+        => await FindAll(false, x => x.Category).ToListAsync();
 
-    public async Task<IEnumerable<CatalogProduct>> GetProducts() => await FindAll().ToListAsync();
+    public async Task<IEnumerable<CatalogProduct>> GetProductsByCategory(Guid categoryId)
+        => await FindByCondition(x => x.CategoryId == categoryId, false, x => x.Category)
+                .ToListAsync();
 
-    public Task<CatalogProduct> GetProduct(long id) => GetByIdAsync(id);
+    public async Task<CatalogProduct?> GetProduct(Guid id)
+        => await FindByCondition(x => x.Id == id, false, x => x.Category, x => x.Reviews)
+                .FirstOrDefaultAsync();
+    
+    public async Task<CatalogProduct?> GetProductByNo(string productNo)
+        => await FindByCondition(x => x.No == productNo, false, x => x.Category)
+                .FirstOrDefaultAsync();
+    
+    public async Task<bool> CategoryExists(Guid categoryId)
+        => await _context.Categories.AnyAsync(x => x.Id == categoryId);
 
-    public Task<CatalogProduct> GetProductByNo(string productNo) =>
-        FindByCondition(x => x.No.Equals(productNo)).SingleOrDefaultAsync();
-
-    public Task CreateProduct(CatalogProduct product) => CreateAsync(product);
-
-    public Task UpdateProduct(CatalogProduct product) => UpdateAsync(product);
-
-    public async Task DeleteProduct(long id)
-    {
-        var product = await GetProduct(id);
-        if (product != null) await DeleteAsync(product);
-    }
 }
