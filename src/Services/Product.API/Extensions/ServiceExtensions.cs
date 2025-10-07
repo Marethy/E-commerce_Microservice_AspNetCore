@@ -2,24 +2,20 @@
 using Infrastructure.Common;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MySqlConnector;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Product.API.Persistence;
 using Product.API.Repositories;
 using Product.API.Repositories.Interfaces;
 using Shared.Configurations;
 using System.Text;
-using HealthChecks.MySql;
 using Microsoft.Extensions.DependencyInjection;
 using static Org.BouncyCastle.Math.EC.ECCurve;
-
+using Npgsql;
+using HealthChecks.NpgSql;
 
 namespace Product.API.Extensions
 {
@@ -33,19 +29,16 @@ namespace Product.API.Extensions
             services.AddEndpointsApiExplorer();
             services.ConfigureSwagger();
 
-
-
-
             services.ConfigureProductDbContext(configuration);
             services.AddInfrastructrueService();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-     //       services.AddJwtAuthentication();
+            //       services.AddJwtAuthentication();
             services.ConfigureAuthenticationHandler();
-    //        services.ConfigureAuthorization();
+            //        services.ConfigureAuthorization();
             services.ConfigureHealthChecks();
         }
 
-    
+
 
 
         private static void ConfigureProductDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -54,34 +47,35 @@ namespace Product.API.Extensions
             if (databaseSettings == null || string.IsNullOrEmpty(databaseSettings.ConnectionString))
                 throw new ArgumentNullException("Connection string is not configured.");
 
-            var builder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
-
-            services.AddDbContext<ProductContext>(m => m.UseMySql(builder.ConnectionString,
-                ServerVersion.AutoDetect(builder.ConnectionString), e =>
+            services.AddDbContext<ProductContext>(options =>
+                options.UseNpgsql(databaseSettings.ConnectionString, e =>
                 {
                     e.MigrationsAssembly("Product.API");
-                    e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
                 }));
         }
         private static void AddInfrastructrueService(this IServiceCollection services)
         {
+            // Register base repository and unit of work
             services.AddScoped(typeof(IRepositoryBase<,,>), typeof(RepositoryBase<,,>))
-                    .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
-                    .AddScoped<IProductRepository, ProductRepository>();
+                    .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+
+            // Register specific repositories
+            services.AddScoped<IProductRepository, ProductRepository>()
+                    .AddScoped<ICategoryRepository, CategoryRepository>()
+                    .AddScoped<IProductReviewRepository, ProductReviewRepository>();
         }
 
         private static void ConfigureHealthChecks(this IServiceCollection services)
         {
-
             var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
             services
-                         .AddHealthChecks()
-                         .AddMySql(
-                             connectionString: databaseSettings.ConnectionString,
-                             name: "MySql Health",
-                             failureStatus: HealthStatus.Degraded,
-                             tags: new[] { "ready", "sql" }
-                         );
+                    .AddHealthChecks()
+                    .AddNpgSql(
+                            connectionString: databaseSettings.ConnectionString,
+                            name: "PostgreSQL Health",
+                            failureStatus: HealthStatus.Degraded,
+                            tags: new[] { "ready", "sql" }
+                    );
         }
 
         private static void ConfigureSwagger(this IServiceCollection services)
@@ -135,9 +129,6 @@ namespace Product.API.Extensions
                 }
             });
             });
-            }
-        
-
-
+        }
     }
 }

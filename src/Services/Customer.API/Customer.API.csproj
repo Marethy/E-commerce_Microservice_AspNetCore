@@ -27,11 +27,13 @@
 		<PackageReference Include="Npgsql" Version="8.0.4" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+
+		<PackageReference Include="Marethy.Common.Logging" Version="1.*" />
+
 	</ItemGroup>
 
 	<ItemGroup>
 		<!-- Project references -->
-		<ProjectReference Include="..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Contracts\Contracts.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />

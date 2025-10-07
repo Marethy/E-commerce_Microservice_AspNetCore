@@ -2,10 +2,7 @@ using Common.Logging;
 using Inventory.Grpc.Extensions;
 using Inventory.Grpc.Services;
 using Serilog;
-using System.Reflection;
-using Serilog.AspNetCore;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(SeriLogger.Configure);

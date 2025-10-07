@@ -94,12 +94,11 @@ namespace Basket.API.Controllers
             var eventMessage = mapper.Map<BasketCheckoutEvent>(basketCheckout);
             eventMessage.TotalPrice = basket.TotalPrice;
 
+
             // Publish event to RabbitMQ
             await publishEndpoint.Publish(eventMessage);
-
             // Clear the basket after publishing the event
             await repository.DeleteBasketByUserName(basketCheckout.Username);
-
             return Accepted("Checkout event has been published.");
         }
     }

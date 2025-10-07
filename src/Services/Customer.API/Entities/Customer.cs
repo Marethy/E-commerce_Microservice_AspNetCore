@@ -13,5 +13,6 @@ namespace Customer.API.Entities
 
         [StringLength(250)]
         public string LastName { get; set; }
+
     }
 }
