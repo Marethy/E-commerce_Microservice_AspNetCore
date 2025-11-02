@@ -62,6 +62,7 @@ public static class UserActivityActions
     public const string Checkout = "Checkout";
     public const string Login = "Login";
     public const string Logout = "Logout";
+    public const string MergeCart = "MergeCart";
 }
 
 /// <summary>
