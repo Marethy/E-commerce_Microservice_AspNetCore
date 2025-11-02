@@ -11,16 +11,15 @@
 
 	<!-- ItemGroup chứa các thư viện NuGet -->
 	<ItemGroup>
-		<PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="9.0.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
-		<PackageReference Include="Marethy.Common.Logging" Version="1.*" />
-
+		<PackageReference Include="AspNetCore.HealthChecks.MongoDb" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
 	</ItemGroup>
 
 	<!-- ItemGroup chứa các project reference -->
 	<ItemGroup>
+		<ProjectReference Include="..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Contracts\Contracts.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Shared\Shared.csproj" />
@@ -33,4 +32,4 @@
 		</VisualStudio>
 	</ProjectExtensions>
 
-</Project>
+</Project></Project>
