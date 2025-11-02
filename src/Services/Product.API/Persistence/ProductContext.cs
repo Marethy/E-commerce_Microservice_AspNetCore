@@ -13,6 +13,11 @@ namespace Product.API.Persistence
         public DbSet<CatalogProduct> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Seller> Sellers { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<ProductSpecification> ProductSpecifications { get; set; }
+        public DbSet<ProductCategory> ProductCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,15 +29,20 @@ namespace Product.API.Persistence
                 modelBuilder.HasPostgresExtension("uuid-ossp");
             }
             
-            // Configure CatalogProduct with Data Annotations moved here (DDD approach)
+            // Configure CatalogProduct
             modelBuilder.Entity<CatalogProduct>(entity =>
             {
-                // Configure UUID for PostgreSQL
                 entity.Property(e => e.Id)
                       .HasColumnType("uuid")
                       .HasDefaultValueSql("uuid_generate_v4()");
 
                 entity.Property(e => e.CategoryId)
+                      .HasColumnType("uuid");
+
+                entity.Property(e => e.BrandId)
+                      .HasColumnType("uuid");
+
+                entity.Property(e => e.SellerId)
                       .HasColumnType("uuid");
 
                 entity.Property(e => e.No)
@@ -45,30 +55,58 @@ namespace Product.API.Persistence
                 
                 entity.Property(e => e.Summary)
                       .HasMaxLength(500);
+
+                entity.Property(e => e.ShortDescription)
+                      .HasMaxLength(1000);
                 
                 entity.Property(e => e.Price)
                       .HasPrecision(18, 2);
-                
-                entity.Property(e => e.CategoryId)
-                      .IsRequired();
+
+                entity.Property(e => e.OriginalPrice)
+                      .HasPrecision(18, 2);
+
+                entity.Property(e => e.RatingAverage)
+                      .HasPrecision(3, 2);
+
+                entity.Property(e => e.InventoryStatus)
+                      .HasMaxLength(50)
+                      .HasDefaultValue("IN_STOCK");
+
+                entity.Property(e => e.Slug)
+                      .HasMaxLength(300);
 
                 entity.HasIndex(x => x.No)
                       .IsUnique()
                       .HasDatabaseName("IX_Products_No");
+
+                entity.HasIndex(x => x.Slug)
+                      .HasDatabaseName("IX_Products_Slug");
                 
                 entity.HasOne(p => p.Category)
                       .WithMany(c => c.Products)
                       .HasForeignKey(p => p.CategoryId)
                       .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(p => p.Brand)
+                      .WithMany(b => b.Products)
+                      .HasForeignKey(p => p.BrandId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasOne(p => p.Seller)
+                      .WithMany(s => s.Products)
+                      .HasForeignKey(p => p.SellerId)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
 
             // Configure Category
             modelBuilder.Entity<Category>(entity =>
             {
-                // Configure UUID for PostgreSQL
                 entity.Property(e => e.Id)
                       .HasColumnType("uuid")
                       .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.ParentId)
+                      .HasColumnType("uuid");
 
                 entity.Property(e => e.Name)
                       .IsRequired()
@@ -77,15 +115,23 @@ namespace Product.API.Persistence
                 entity.Property(e => e.Description)
                       .HasMaxLength(500);
 
+                entity.Property(e => e.Url)
+                      .HasMaxLength(500);
+
                 entity.HasIndex(x => x.Name)
                       .IsUnique()
                       .HasDatabaseName("IX_Categories_Name");
+
+                // Self-referencing relationship
+                entity.HasOne(c => c.Parent)
+                      .WithMany(c => c.Children)
+                      .HasForeignKey(c => c.ParentId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             // Configure ProductReview
             modelBuilder.Entity<ProductReview>(entity =>
             {
-                // Configure UUID for PostgreSQL
                 entity.Property(e => e.Id)
                       .HasColumnType("uuid")
                       .HasDefaultValueSql("uuid_generate_v4()");
@@ -94,17 +140,23 @@ namespace Product.API.Persistence
                       .HasColumnType("uuid")
                       .IsRequired();
                 
-                // Configure UserId as string (not UUID)
                 entity.Property(e => e.UserId)
                       .IsRequired()
                       .HasMaxLength(100)
                       .HasColumnType("varchar(100)");
-                
+
                 entity.Property(e => e.Rating)
+                      .HasPrecision(2, 1)
                       .IsRequired();
+
+                entity.Property(e => e.Title)
+                      .HasMaxLength(200);
                 
                 entity.Property(e => e.Comment)
-                      .HasMaxLength(1000);
+                      .HasMaxLength(2000);
+
+                entity.Property(e => e.ReviewDate)
+                      .IsRequired();
                 
                 entity.HasOne(r => r.Product)
                       .WithMany(p => p.Reviews)
@@ -115,8 +167,148 @@ namespace Product.API.Persistence
                       .IsUnique()
                       .HasDatabaseName("IX_ProductReviews_UserId_ProductId");
 
-                // PostgreSQL-specific check constraint
-                entity.HasCheckConstraint("CK_ProductReview_Rating", "\"Rating\" >= 1 AND \"Rating\" <= 5");
+                entity.ToTable(t => t.HasCheckConstraint("CK_ProductReview_Rating", "\"Rating\" >= 1.0 AND \"Rating\" <= 5.0"));
+            });
+
+            // Configure Brand
+            modelBuilder.Entity<Brand>(entity =>
+            {
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
+                      .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.Name)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.Property(e => e.Slug)
+                      .IsRequired()
+                      .HasMaxLength(250);
+
+                entity.Property(e => e.CountryOfOrigin)
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.LogoUrl)
+                      .HasMaxLength(500);
+
+                entity.Property(e => e.Description)
+                      .HasMaxLength(1000);
+
+                entity.HasIndex(x => x.Name)
+                      .IsUnique()
+                      .HasDatabaseName("IX_Brands_Name");
+
+                entity.HasIndex(x => x.Slug)
+                      .IsUnique()
+                      .HasDatabaseName("IX_Brands_Slug");
+            });
+
+            // Configure Seller
+            modelBuilder.Entity<Seller>(entity =>
+            {
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
+                      .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.Name)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.Property(e => e.Email)
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.PhoneNumber)
+                      .HasMaxLength(20);
+
+                entity.Property(e => e.Address)
+                      .HasMaxLength(500);
+
+                entity.Property(e => e.Rating)
+                      .HasPrecision(3, 2);
+
+                entity.HasIndex(x => x.Name)
+                      .HasDatabaseName("IX_Sellers_Name");
+            });
+
+            // Configure ProductImage
+            modelBuilder.Entity<ProductImage>(entity =>
+            {
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
+                      .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.ProductId)
+                      .HasColumnType("uuid")
+                      .IsRequired();
+
+                entity.Property(e => e.Url)
+                      .IsRequired()
+                      .HasMaxLength(500);
+
+                entity.Property(e => e.AltText)
+                      .HasMaxLength(200);
+
+                entity.HasOne(i => i.Product)
+                      .WithMany(p => p.Images)
+                      .HasForeignKey(i => i.ProductId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(x => new { x.ProductId, x.Position })
+                      .HasDatabaseName("IX_ProductImages_ProductId_Position");
+            });
+
+            // Configure ProductSpecification
+            modelBuilder.Entity<ProductSpecification>(entity =>
+            {
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
+                      .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.ProductId)
+                      .HasColumnType("uuid")
+                      .IsRequired();
+
+                entity.Property(e => e.SpecGroup)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.SpecName)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.Property(e => e.SpecValue)
+                      .IsRequired()
+                      .HasMaxLength(1000);
+
+                entity.HasOne(s => s.Product)
+                      .WithMany(p => p.Specifications)
+                      .HasForeignKey(s => s.ProductId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(x => new { x.ProductId, x.SpecGroup, x.SpecName })
+                      .HasDatabaseName("IX_ProductSpecifications_Product_Group_Name");
+            });
+
+            // Configure ProductCategory (Many-to-Many)
+            modelBuilder.Entity<ProductCategory>(entity =>
+            {
+                entity.HasKey(pc => new { pc.ProductId, pc.CategoryId });
+
+                entity.Property(e => e.ProductId)
+                      .HasColumnType("uuid");
+
+                entity.Property(e => e.CategoryId)
+                      .HasColumnType("uuid");
+
+                entity.HasOne(pc => pc.Product)
+                      .WithMany(p => p.ProductCategories)
+                      .HasForeignKey(pc => pc.ProductId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(pc => pc.Category)
+                      .WithMany(c => c.ProductCategories)
+                      .HasForeignKey(pc => pc.CategoryId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
 
