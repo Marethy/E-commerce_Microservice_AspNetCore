@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product.API.Entities;
 using Product.API.Repositories.Interfaces;
+using Product.API.Services.Interfaces;
 using Shared.Common.Constants;
 using Shared.DTOs.Product;
 using System.ComponentModel.DataAnnotations;
@@ -18,15 +19,18 @@ public class ProductReviewsController : ControllerBase
 {
     private readonly IProductReviewRepository _repository;
     private readonly IProductRepository _productRepository;
+    private readonly IProductStatsService _statsService;
     private readonly IMapper _mapper;
 
     public ProductReviewsController(
         IProductReviewRepository repository,
         IProductRepository productRepository,
+        IProductStatsService statsService,
         IMapper mapper)
     {
         _repository = repository;
         _productRepository = productRepository;
+        _statsService = statsService;
         _mapper = mapper;
     }
 
@@ -94,6 +98,9 @@ public class ProductReviewsController : ControllerBase
         var review = _mapper.Map<ProductReview>(reviewDto);
         var reviewId = await _repository.CreateAsync(review);
 
+        // Update product rating statistics
+        await _statsService.UpdateProductRatingAsync(reviewDto.ProductId);
+
         var result = _mapper.Map<ProductReviewDto>(review);
         return CreatedAtAction(nameof(GetReviewById), new { id = reviewId }, result);
     }
@@ -106,8 +113,13 @@ public class ProductReviewsController : ControllerBase
         if (review == null)
             return NotFound(new { error = $"Review with ID {id} not found." });
 
+        var productId = review.ProductId;
+
         _mapper.Map(reviewDto, review);
         await _repository.UpdateAsync(review);
+
+        // Update product rating statistics
+        await _statsService.UpdateProductRatingAsync(productId);
 
         var result = _mapper.Map<ProductReviewDto>(review);
         return Ok(result);
@@ -121,7 +133,27 @@ public class ProductReviewsController : ControllerBase
         if (review == null)
             return NotFound(new { error = $"Review with ID {id} not found." });
 
+        var productId = review.ProductId;
+
         await _repository.DeleteAsync(review);
+
+        // Update product rating statistics
+        await _statsService.UpdateProductRatingAsync(productId);
+
         return NoContent();
+    }
+
+    [HttpPost("{id:guid}/helpful")]
+    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.UPDATE)]
+    public async Task<IActionResult> MarkReviewAsHelpful([Required] Guid id)
+    {
+        var review = await _repository.GetReview(id);
+        if (review == null)
+            return NotFound(new { error = $"Review with ID {id} not found." });
+
+        review.HelpfulVotes++;
+        await _repository.UpdateAsync(review);
+
+        return Ok(new { helpfulVotes = review.HelpfulVotes });
     }
 }
