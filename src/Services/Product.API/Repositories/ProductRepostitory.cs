@@ -15,18 +15,28 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
     }
     
     public async Task<IEnumerable<CatalogProduct>> GetProducts() 
-        => await FindAll(false, x => x.Category).ToListAsync();
+        => await FindAll(false, x => x.Category, x => x.Brand, x => x.Seller)
+                .Include(x => x.Images)
+                .Include(x => x.Specifications)
+                .ToListAsync();
 
     public async Task<IEnumerable<CatalogProduct>> GetProductsByCategory(Guid categoryId)
-        => await FindByCondition(x => x.CategoryId == categoryId, false, x => x.Category)
+        => await FindByCondition(x => x.CategoryId == categoryId, false, x => x.Category, x => x.Brand, x => x.Seller)
+                .Include(x => x.Images)
+                .Include(x => x.Specifications)
                 .ToListAsync();
 
     public async Task<CatalogProduct?> GetProduct(Guid id)
-        => await FindByCondition(x => x.Id == id, false, x => x.Category, x => x.Reviews)
+        => await FindByCondition(x => x.Id == id, false, x => x.Category, x => x.Brand, x => x.Seller)
+                .Include(x => x.Reviews)
+                .Include(x => x.Images)
+                .Include(x => x.Specifications)
                 .FirstOrDefaultAsync();
     
     public async Task<CatalogProduct?> GetProductByNo(string productNo)
-        => await FindByCondition(x => x.No == productNo, false, x => x.Category)
+        => await FindByCondition(x => x.No == productNo, false, x => x.Category, x => x.Brand, x => x.Seller)
+                .Include(x => x.Images)
+                .Include(x => x.Specifications)
                 .FirstOrDefaultAsync();
     
     public async Task<bool> CategoryExists(Guid categoryId)

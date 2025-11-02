@@ -31,7 +31,7 @@ public class ProductReviewRepository : RepositoryBase<ProductReview, Guid, Produ
     public async Task<double> GetAverageRatingByProduct(Guid productId)
     {
         var reviews = await FindByCondition(x => x.ProductId == productId).ToListAsync();
-        return reviews.Any() ? reviews.Average(x => x.Rating) : 0;
+        return reviews.Any() ? (double)reviews.Average(x => x.Rating) : 0;
     }
 
     public async Task<int> GetReviewCountByProduct(Guid productId)
