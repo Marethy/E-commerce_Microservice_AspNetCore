@@ -22,7 +22,7 @@ public class OrdersDomainHandler :
     public Task Handle(OrderCreatedEvent notification, CancellationToken cancellationToken)
     {
         _logger.Information($"Ordering Domain Event: {notification.GetType().Name}");
-        var emailRequest = new MailRequest
+        var emailRequest = new MailRequestDto
         {
             ToAddress = notification.EmailAddress,
             Body = $"Your order detail. " +
