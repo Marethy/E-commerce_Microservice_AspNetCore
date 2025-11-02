@@ -11,19 +11,20 @@
 
 
 	<ItemGroup>
-		<PackageReference Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
-		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
-		<PackageReference Include="MassTransit" Version="8.4.0" />
-		<PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
-		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.4" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+		<PackageReference Include="AspNetCore.HealthChecks.Redis" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
+		<PackageReference Include="MassTransit" />
+		<PackageReference Include="MassTransit.RabbitMQ" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
 
-		<PackageReference Include="Marethy.Common.Logging" Version="1.*" />
+		<PackageReference Include="Marethy.Common.Logging" />
 
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\Contracts\Contracts.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\EventBus\EventBus.MessageComponents\EventBus.MessageComponents.csproj" />
 		<ProjectReference Include="..\..\BuildingBlocks\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
@@ -36,8 +37,8 @@
 		<Protobuf Include="..\..\BuildingBlocks\Contracts\Protos\stock.proto" GrpcServices="Client">
 			<Link>Protos\stock.proto</Link>
 		</Protobuf>
-		<PackageReference Include="Grpc.Net.Client" Version="2.57.0" />
-		<PackageReference Include="Grpc.Tools" Version="2.57.0" PrivateAssets="All" />
+		<PackageReference Include="Grpc.Net.Client" />
+		<PackageReference Include="Grpc.Tools" PrivateAssets="All" />
 	</ItemGroup>
 
 	<ItemGroup>
