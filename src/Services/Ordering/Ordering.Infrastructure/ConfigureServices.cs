@@ -31,7 +31,7 @@ namespace Ordering.Infrastructure
             services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
             services.Configure<SMTPEmailSetting>(configuration.GetSection("SMTPSettings"));
 
-            services.AddSingleton<ISMTPEmailService<MailRequest>, SMTPEmailService>();
+            services.AddSingleton<ISMTPEmailService<MailRequestDto>, SMTPEmailService>();
             services.AddSingleton<ISMTPEmailService, SMTPEmailService>();
 
             return services;
