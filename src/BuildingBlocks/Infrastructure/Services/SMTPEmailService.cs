@@ -11,7 +11,7 @@ public class SMTPEmailService(ILogger logger, SMTPEmailSetting emailSetting) : I
 {
     private readonly SmtpClient _smtpClient = new SmtpClient();
 
-    public async Task SendEmailAsync(MailRequest request, CancellationToken cancellationToken = default)
+    public async Task SendEmailAsync(MailRequestDto request, CancellationToken cancellationToken = default)
     {
         var emailMessage = GetEmailMessage(request);
 
@@ -34,7 +34,7 @@ public class SMTPEmailService(ILogger logger, SMTPEmailSetting emailSetting) : I
         }
     }
 
-    public void SendEmail(MailRequest request)
+    public void SendEmail(MailRequestDto request)
     {
         var emailMessage = GetEmailMessage(request);
 
@@ -57,7 +57,7 @@ public class SMTPEmailService(ILogger logger, SMTPEmailSetting emailSetting) : I
         }
     }
 
-    private MimeMessage GetEmailMessage(MailRequest request)
+    private MimeMessage GetEmailMessage(MailRequestDto request)
     {
         var emailMessage = new MimeMessage
         {

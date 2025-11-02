@@ -2,7 +2,7 @@
 
 namespace Contracts.Services
 {
-    public interface ISMTPEmailService : ISMTPEmailService<MailRequest>
+    public interface ISMTPEmailService : ISMTPEmailService<MailRequestDto>
     {
     }
 }
