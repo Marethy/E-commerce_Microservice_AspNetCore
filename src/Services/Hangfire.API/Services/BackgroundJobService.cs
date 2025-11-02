@@ -13,7 +13,7 @@ public class BackgroundJobService(IScheduledJobService jobService, ISMTPEmailSer
 
     public string? SendMailContent(string email, string subject, string emailContent, DateTimeOffset enqueueAt)
     {
-        var emailRequest = new MailRequest
+        var emailRequest = new MailRequestDto
         {
             ToAddress = email,
             Subject = subject,
@@ -37,7 +37,7 @@ public class BackgroundJobService(IScheduledJobService jobService, ISMTPEmailSer
     }
 
     // Wrapper method to avoid optional arguments in the expression tree
-    public  void SendEmail(MailRequest emailRequest)
+    public  void SendEmail(MailRequestDto emailRequest)
     {
         emailSMTPService.SendEmailAsync(emailRequest).GetAwaiter().GetResult();
     }
