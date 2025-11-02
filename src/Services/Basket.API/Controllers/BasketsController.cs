@@ -180,6 +180,158 @@ namespace Basket.API.Controllers
         }
         
         /// <summary>
+        /// Get cart item count for badge display
+        /// </summary>
+        [HttpGet("{username}/count")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<int>> GetCartItemCount(string username)
+        {
+            var basket = await _repository.GetBasketByUserName(username);
+            var count = basket?.Items?.Sum(i => i.Quantity) ?? 0;
+            return Ok(new { count });
+        }
+
+        /// <summary>
+        /// Validate cart before checkout - check stock availability
+        /// </summary>
+        [HttpGet("{username}/validate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ValidateCart(string username)
+        {
+            var basket = await _repository.GetBasketByUserName(username);
+            if (basket == null || basket.Items == null || !basket.Items.Any())
+            {
+                return Ok(new 
+                { 
+                    isValid = false, 
+                    message = "Cart is empty",
+                    issues = new[] { "Cart is empty" }
+                });
+            }
+
+            var issues = new List<string>();
+            var invalidItems = new List<object>();
+
+            foreach (var item in basket.Items)
+            {
+                try
+                {
+                    var stock = await _stockItemGrpcService.GetStock(item.ItemNo);
+                    
+                    if (stock.Quantity <= 0)
+                    {
+                        issues.Add($"{item.ItemName} is out of stock");
+                        invalidItems.Add(new { itemNo = item.ItemNo, itemName = item.ItemName, issue = "OUT_OF_STOCK" });
+                    }
+                    else if (item.Quantity > stock.Quantity)
+                    {
+                        issues.Add($"Only {stock.Quantity} of {item.ItemName} available (requested: {item.Quantity})");
+                        invalidItems.Add(new 
+                        { 
+                            itemNo = item.ItemNo, 
+                            itemName = item.ItemName, 
+                            issue = "INSUFFICIENT_STOCK",
+                            requested = item.Quantity,
+                            available = stock.Quantity
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Failed to validate stock for item {ItemNo}", item.ItemNo);
+                    issues.Add($"Failed to validate {item.ItemName}");
+                    invalidItems.Add(new { itemNo = item.ItemNo, itemName = item.ItemName, issue = "VALIDATION_ERROR" });
+                }
+            }
+
+            var isValid = !issues.Any();
+            
+            return Ok(new 
+            { 
+                isValid, 
+                message = isValid ? "Cart is valid" : "Cart has issues",
+                issues,
+                invalidItems,
+                totalItems = basket.Items.Count,
+                totalPrice = basket.TotalPrice
+            });
+        }
+
+        /// <summary>
+        /// Merge guest cart with user cart after login
+        /// </summary>
+        [HttpPost("{username}/merge")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Cart>> MergeGuestCart(string username, [FromBody] Cart guestCart)
+        {
+            if (guestCart == null || guestCart.Items == null || !guestCart.Items.Any())
+            {
+                return BadRequest("Guest cart is empty");
+            }
+
+            var userCart = await _repository.GetBasketByUserName(username) ?? new Cart { Username = username, Items = new List<CartItem>() };
+
+            foreach (var guestItem in guestCart.Items)
+            {
+                var existingItem = userCart.Items.FirstOrDefault(i => i.ItemNo == guestItem.ItemNo);
+                
+                if (existingItem != null)
+                {
+                    // Merge quantities
+                    existingItem.Quantity += guestItem.Quantity;
+                    
+                    // Check stock availability
+                    var stock = await _stockItemGrpcService.GetStock(existingItem.ItemNo);
+                    if (existingItem.Quantity > stock.Quantity)
+                    {
+                        existingItem.Quantity = stock.Quantity; // Cap at available stock
+                        _logger.LogWarning("Capped quantity for {ItemNo} to {Quantity} due to stock limit", 
+                            existingItem.ItemNo, stock.Quantity);
+                    }
+                    existingItem.AvailableQuanlity = stock.Quantity;
+                }
+                else
+                {
+                    // Add new item
+                    var stock = await _stockItemGrpcService.GetStock(guestItem.ItemNo);
+                    guestItem.AvailableQuanlity = stock.Quantity;
+                    
+                    if (guestItem.Quantity > stock.Quantity)
+                    {
+                        guestItem.Quantity = stock.Quantity;
+                    }
+                    
+                    userCart.Items.Add(guestItem);
+                }
+            }
+
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(2),
+                SlidingExpiration = TimeSpan.FromDays(1)
+            };
+
+            var mergedCart = await _repository.UpdateBasket(userCart, options);
+            
+            // Track merge activity
+            await TrackActivityAsync(
+                username,
+                UserActivityActions.MergeCart,
+                UserActivityEntityTypes.Basket,
+                username,
+                new Dictionary<string, object>
+                {
+                    ["GuestItemCount"] = guestCart.Items.Count,
+                    ["MergedItemCount"] = mergedCart.Items?.Count ?? 0,
+                    ["TotalPrice"] = mergedCart.TotalPrice
+                });
+
+            return Ok(mergedCart);
+        }
+
+        /// <summary>
         /// Helper method to track user activities for AI analytics
         /// </summary>
         private async Task TrackActivityAsync(
