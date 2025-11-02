@@ -1,5 +1,6 @@
 ﻿using HealthChecks.UI.Client;
 using Infrastructure.Middlewares;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Product.API.Extensions
@@ -17,7 +18,7 @@ namespace Product.API.Extensions
                 c.DisplayRequestDuration();
             });
             app.UseRouting();
-
+            
             app.UseMiddleware<ErrorWrappingMiddleware>();
             app.UseAuthentication();
             //app.UseHttpsRedirection(); // for production only

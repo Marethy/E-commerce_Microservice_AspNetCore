@@ -32,14 +32,12 @@ namespace Product.API.Extensions
             services.ConfigureProductDbContext(configuration);
             services.AddInfrastructrueService();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+            
             //       services.AddJwtAuthentication();
             services.ConfigureAuthenticationHandler();
             //        services.ConfigureAuthorization();
             services.ConfigureHealthChecks();
         }
-
-
-
 
         private static void ConfigureProductDbContext(this IServiceCollection services, IConfiguration configuration)
         {
@@ -53,6 +51,7 @@ namespace Product.API.Extensions
                     e.MigrationsAssembly("Product.API");
                 }));
         }
+        
         private static void AddInfrastructrueService(this IServiceCollection services)
         {
             // Register base repository and unit of work
@@ -62,7 +61,12 @@ namespace Product.API.Extensions
             // Register specific repositories
             services.AddScoped<IProductRepository, ProductRepository>()
                     .AddScoped<ICategoryRepository, CategoryRepository>()
-                    .AddScoped<IProductReviewRepository, ProductReviewRepository>();
+                    .AddScoped<IProductReviewRepository, ProductReviewRepository>()
+                    .AddScoped<IBrandRepository, BrandRepository>()
+                    .AddScoped<ISellerRepository, SellerRepository>();
+
+            // Register services
+            services.AddScoped<Product.API.Services.Interfaces.IProductStatsService, Product.API.Services.ProductStatsService>();
         }
 
         private static void ConfigureHealthChecks(this IServiceCollection services)
