@@ -1,7 +1,9 @@
-
 services:
   # Database section
   orderdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+
+  identitydb:
     image: mcr.microsoft.com/mssql/server:2022-latest
 
   productdb:
@@ -21,8 +23,7 @@ services:
   rabbitmq:
     image: rabbitmq:3-management-alpine
 
-  pgadmin:
-    image: dpage/pgadmin4
+
 
   portainer:
     image: portainer/portainer-ce
@@ -34,6 +35,12 @@ services:
     image: docker.elastic.co/kibana/kibana:7.17.2
   
 #microsesrvice api section
+  identity-api:
+    image: ${DOCKER_REGISTRY-}identity-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Identity/Identity.API/src/TeduMicroservices.IDP/Dockerfile
+
   product-api:
     image: ${DOCKER_REGISTRY-}product-api:latest
     build:
@@ -80,30 +87,3 @@ services:
     build:
       context: .
       dockerfile: src/WebApps/WebHealthStatus/Dockerfile
-# Network section
-networks:
-  default:
-    name: microservices
-    driver: bridge
-
-# Volumes section
-volumes:
-  sqlserver_data:
-    name: sqlserver_data
-  mysql_data:
-    name: mysql_data
-  postgres_data:
-    name: postgres_data
-  portainer_data:
-    name: portainer_data
-  elasticsearch_data:
-    name: elasticsearch_data
-  jaeger_data:
-    name: jaeger_data
-  mongo_data:
-    name: mongo_data
-  hangfire_mongo_data:
-    name: hangfire_mongo_data
-
-  pgadmin_data:
-    name: pgadmin_data
