@@ -96,7 +96,10 @@ public static class HangfireExtensions
 
             case "postgresql":
                 services.AddHangfire(x =>
-                    x.UsePostgreSqlStorage(c => c.UseNpgsqlConnection(settings.Storage.ConnectionString)));
+                    x.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                        .UseSimpleAssemblyNameTypeSerializer()
+                        .UseRecommendedSerializerSettings()
+                        .UsePostgreSqlStorage(settings.Storage.ConnectionString));
                 break;
 
             case "mssql":
