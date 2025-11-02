@@ -35,7 +35,8 @@ namespace Basket.API.Extensions
                    .AddScoped<IEmailTemplateService, EmailTemplateService>()
                    .AddScoped<IBasketEmailService, BasketEmailService>()
                    .AddScoped<IHttpClientHelper, HttpClientHelper>()
-                   .AddScoped<IScheduledJobsClient, ScheduledJobClient>();
+                   .AddScoped<IScheduledJobsClient, ScheduledJobClient>()
+                   .AddScoped<IUserActivityService, UserActivityService>(); // Add UserActivityService
             services.AddSingleton<ILogger<BasketRepository>, Logger<BasketRepository>>();
 
             // Thêm các cấu hình hệ thống
@@ -44,6 +45,7 @@ namespace Basket.API.Extensions
             services.ConfigureMassTransit(configuration);
             services.ConfigureGrpcService();
             services.ConfigureHealthChecks();
+            
             return services;
         }
 
