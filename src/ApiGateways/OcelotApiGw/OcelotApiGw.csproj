@@ -10,16 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
-	<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.1.2" />
-	<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.1.2" />
-	<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
-	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-	<PackageReference Include="MMLib.SwaggerForOcelot" Version="9.0.0" />
-	<PackageReference Include="Ocelot" Version="24.0.0" />
-	<PackageReference Include="Ocelot.Cache.CacheManager" Version="24.0.0" />
-	<PackageReference Include="Ocelot.Provider.Polly" Version="24.0.0" />
-	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+	<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+	<PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
+	<PackageReference Include="Microsoft.IdentityModel.Tokens" />
+	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+	<PackageReference Include="MMLib.SwaggerForOcelot" />
+	<PackageReference Include="Ocelot" />
+	<PackageReference Include="Ocelot.Cache.CacheManager" />
+	<PackageReference Include="Ocelot.Provider.Polly" />
+	<PackageReference Include="Swashbuckle.AspNetCore" />
 	  
   </ItemGroup>
 

@@ -1,0 +1,113 @@
+<Project>
+  <PropertyGroup>
+	<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  
+  <ItemGroup>
+	<!-- Serilog unified stack - using 8.x versions to match Marethy.Common.Logging 1.0.1 -->
+	<PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
+	<PackageVersion Include="Serilog" Version="3.1.1" />
+	<PackageVersion Include="Serilog.Settings.Configuration" Version="8.0.0" />
+	<PackageVersion Include="Serilog.Sinks.Console" Version="5.0.1" />
+	<PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
+	<PackageVersion Include="Serilog.Sinks.Elasticsearch" Version="10.0.0" />
+	<PackageVersion Include="Serilog.Enrichers.Environment" Version="2.3.0" />
+	<PackageVersion Include="Elastic.Serilog.Sinks" Version="9.0.0" />
+
+	<PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
+	<PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+	<PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="8.0.6" />
+	<PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.4" />
+
+	<!-- Entity Framework & PostgreSQL -->
+	<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
+	<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4" />
+	<PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4" />
+	<PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
+	<PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.4" />
+	<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+	<PackageVersion Include="Npgsql" Version="8.0.4" />
+	
+	<!-- MongoDB - using 3.4.0 to match Hangfire.Mongo and HealthChecks requirements -->
+	<PackageVersion Include="MongoDB.Bson" Version="3.4.0" />
+	<PackageVersion Include="MongoDB.Driver" Version="3.4.0" />
+	
+	<!-- Swagger & HealthChecks -->
+	<PackageVersion Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+	<PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
+	<PackageVersion Include="AspNetCore.HealthChecks.UI" Version="9.0.0" />
+	<PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
+	<PackageVersion Include="AspNetCore.HealthChecks.UI.InMemory.Storage" Version="9.0.0" />
+	<PackageVersion Include="AspNetCore.HealthChecks.MongoDb" Version="9.0.0" />
+	<PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
+	<PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+	<PackageVersion Include="AspNetCore.HealthChecks.Redis" Version="9.0.0" />
+	
+	<!-- Messaging -->
+	<PackageVersion Include="MassTransit" Version="8.4.0" />
+	<PackageVersion Include="MassTransit.RabbitMQ" Version="8.4.0" />
+	<PackageVersion Include="MediatR" Version="12.4.1" />
+	
+	<!-- Hangfire -->
+	<PackageVersion Include="Hangfire.Core" Version="1.8.20" />
+	<PackageVersion Include="Hangfire.AspNetCore" Version="1.8.20" />
+	<PackageVersion Include="Hangfire.NetCore" Version="1.8.20" />
+	<PackageVersion Include="Hangfire.SqlServer" Version="1.8.20" />
+	<PackageVersion Include="Hangfire.PostgreSql" Version="1.9.2" />
+	<PackageVersion Include="Hangfire.Mongo" Version="1.11.6" />
+	<PackageVersion Include="Hangfire.Console.Extensions" Version="2.1.0" />
+	  
+
+	  <!-- GRPC -->
+	<PackageVersion Include="Grpc.AspNetCore" Version="2.57.0" />
+	<PackageVersion Include="Grpc.Net.Client" Version="2.57.0" />
+	<PackageVersion Include="Grpc.Tools" Version="2.57.0" />
+	
+	<!-- Stateless - for Saga pattern -->
+	<PackageVersion Include="Stateless" Version="5.16.0" />
+
+	<!-- Ocelot API Gateway -->
+	<PackageVersion Include="Ocelot" Version="24.0.0" />
+	<PackageVersion Include="Ocelot.Cache.CacheManager" Version="24.0.0" />
+	<PackageVersion Include="Ocelot.Provider.Polly" Version="24.0.0" />
+	<PackageVersion Include="MMLib.SwaggerForOcelot" Version="9.0.0" />
+	
+	<!-- Identity & JWT -->
+	<PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
+	<PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.12" />
+	<PackageVersion Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.1.2" />
+	<PackageVersion Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.1.2" />
+	<PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
+	<PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
+	<PackageVersion Include="Cnblogs.IdentityServer4.AccessTokenValidation" Version="3.1.0" />
+	
+	<!-- Duende IdentityServer -->
+	<PackageVersion Include="Duende.IdentityServer" Version="7.0.4" />
+	<PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="7.0.4" />
+	<PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.0.4" />
+	
+	<!-- AutoMapper & FluentValidation -->
+	<PackageVersion Include="AutoMapper" Version="14.0.0" />
+	<PackageVersion Include="FluentValidation" Version="11.11.0" />
+	<PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+	
+	<!-- Data Access -->
+	<PackageVersion Include="Dapper" Version="2.1.35" />
+	
+	<!-- Other Libraries -->
+	<PackageVersion Include="MailKit" Version="4.10.0" />
+	<PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+	<PackageVersion Include="RabbitMQ.Client" Version="7.1.2" />
+	<PackageVersion Include="ServiceStack.Interfaces" Version="8.6.0" />
+	<PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.4" />
+	
+	<!-- Code Generation -->
+	<PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+	
+	<!-- Docker Tools -->
+	<PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+	
+	<!-- External Packages - using 1.0.1 to match Contracts dependency -->
+	<PackageVersion Include="Marethy.Common.Logging" Version="1.0.2" />
+  </ItemGroup>
+</Project>

@@ -11,18 +11,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="9.0.0" />
-		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
-		<PackageReference Include="AutoMapper" Version="14.0.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-		<PackageReference Include="MongoDB.Driver" Version="3.4.0" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-
-		<PackageReference Include="Marethy.Common.Logging" Version="1.*" />
-
+		<PackageReference Include="AspNetCore.HealthChecks.MongoDb" />
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
+		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+		<PackageReference Include="MongoDB.Driver" />
+		<PackageReference Include="Swashbuckle.AspNetCore" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\BuildingBlocks\Common.Logging\Common.Logging.csproj" />
 		<ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj" />
 		<ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.MessageComponents\EventBus.MessageComponents.csproj" />
 		<ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.Messages\EventBus.Messages.csproj" />
