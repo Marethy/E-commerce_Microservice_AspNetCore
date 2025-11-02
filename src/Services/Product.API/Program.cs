@@ -2,6 +2,7 @@ using Common.Logging;
 using Product.API.Extensions;
 using Product.API.Persistence;
 using Serilog;
+using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
