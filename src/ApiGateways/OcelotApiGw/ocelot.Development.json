@@ -193,6 +193,45 @@
         }
       ],
       "SwaggerKey": "inventory-service"
+    },
+    // Chatbot API: http://localhost:5009/api/v1/chat
+    {
+      "UpstreamPathTemplate": "/api/chat",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/v1/chat",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1m",
+        "PeriodTimespan": 1,
+        "Limit": 60
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3,
+        "DurationOfBreak": 2000,
+        "TimeoutValue": 30000
+      },
+      "SwaggerKey": "chatbot-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/chat/{sessionId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "DownstreamPathTemplate": "/api/v1/chat/{sessionId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "SwaggerKey": "chatbot-service"
     }
   ],
   "SwaggerEndPoints": [
@@ -248,6 +287,17 @@
           "Name": "Inventory API",
           "Version": "v1",
           "Url": "http://localhost:5006/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "chatbot-service",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Chatbot API",
+          "Version": "v1",
+          "Url": "http://localhost:5009/docs"
         }
       ]
     }
