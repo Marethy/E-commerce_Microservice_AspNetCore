@@ -45,32 +45,38 @@ services:
     image: ${DOCKER_REGISTRY-}product-api:latest
     build:
       context: .
-      dockerfile: src/Services/Product.API/Dockerfile
+      dockerfile: src/Services/Product/Product.API/Dockerfile
+
   customer-api:
     image: ${DOCKER_REGISTRY-}customer-api:latest
     build:
       context: .
-      dockerfile: src/Services/Customer.API/Dockerfile
+      dockerfile: src/Services/Customer/Customer.API/Dockerfile
+
   basket-api:
     image: ${DOCKER_REGISTRY-}basket-api:latest
     build:
       context: .
-      dockerfile: src/Services/Basket.API/Dockerfile
+      dockerfile: src/Services/Basket/Basket.API/Dockerfile
+
   order-api:
     image: ${DOCKER_REGISTRY-}order-api:latest
     build:
       context: .
       dockerfile: src/Services/Ordering/Ordering.API/Dockerfile
+
   inventory-product-api:
     image: ${DOCKER_REGISTRY-}inventory-product-api:latest
     build:
       context: .
       dockerfile: src/Services/Inventory/Inventory.Product.API/Dockerfile
+
   inventory-grpc:
     image: ${DOCKER_REGISTRY-}inventory-grpc:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: src/Services/Inventory/Inventory.Grpc/Dockerfile
+
   apigw-ocelot:
     image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -81,7 +87,14 @@ services:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: src/Services/Hangfire.API/Dockerfile  
+      dockerfile: src/Services/ScheduledJob/Hangfire.API/Dockerfile
+  
+  chatbot-api:
+    image: ${DOCKER_REGISTRY-}chatbot-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Chatbot/Dockerfile
+      
   webstatus:
     image: ${DOCKER_REGISTRY-}webstatus:${PLATFORM:-linux}-${TAG:-latest}
     build:
