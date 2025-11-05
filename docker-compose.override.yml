@@ -193,9 +193,14 @@
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
-      - "ConnectionStrings__DefaultConnection=server=customerdb;port=5432;database=CustomerDb;uid=admin;pwd=Marethyu2004!"
+      - "DatabaseSettings__ConnectionString=server=customerdb;port=5432;database=CustomerDb;uid=admin;pwd=Marethyu2004!"
+      - "HangFireSettings__Storage__ConnectionString=server=customerdb;port=5432;database=CustomerDb;uid=admin;pwd=Marethyu2004!"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
     depends_on:
       - customerdb
+      - elasticsearch
     ports:
       - "6003:80"
     restart: always
@@ -226,10 +231,13 @@
       - ASPNETCORE_URLS=http://+:80
       - "ConnectionStrings__DefaultConnection=Server=orderdb,1433;Database=OrderDb;User Id=sa;Password=Marethyu2004!;MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True"
       - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
-
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
     depends_on:
       - orderdb
       - rabbitmq
+      - elasticsearch
     ports:
       - "6005:80"
     restart: always
@@ -240,10 +248,13 @@
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - "MongoDbSettings__ConnectionString=mongodb://inventorydb:27017"
-      - "MongoDbSettings__Database=InventoryDb"
-
+      - "MongoDbSettings__DatabaseName=InventoryDb"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
     depends_on:
       - inventorydb
+      - elasticsearch
     ports:
       - "6006:80"
     restart: always
@@ -253,10 +264,17 @@
      environment:
        - ASPNETCORE_ENVIRONMENT=Development
        - ASPNETCORE_URLS=http://+:80
+       - ASPNETCORE_HTTP_PORTS=80
        - "MongoDbSettings__ConnectionString=mongodb://inventorydb:27017"
        - "MongoDbSettings__DatabaseName=InventoryDb"
+       - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+       - "ElasticConfiguration__Username=elastic"
+       - "ElasticConfiguration__Password=admin"
+       # Force Kestrel to use HTTP/2
+       - Kestrel__EndpointDefaults__Protocols=Http2
      depends_on:
        - inventorydb
+       - elasticsearch
      ports:
        - "6007:80"
      restart: always
@@ -286,11 +304,46 @@
      - ASPNETCORE_ENVIRONMENT=Local
      - ASPNETCORE_URLS=http://+:80
      - "HangFireSettings:Storage:ConnectionString=mongodb://admin:admin@hangfiredb/hangfire-webapi?authSource=admin"
+     - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+     - "ElasticConfiguration__Username=elastic"
+     - "ElasticConfiguration__Password=admin"
    depends_on:
      - hangfiredb
+     - elasticsearch
    ports:
      - "6008:80"
    restart: always
+
+  # Chatbot API (Python FastAPI)
+  chatbot-api:
+    container_name: chatbot-api
+    environment:
+      # AI Configuration
+      - GROK_KEY=${GROK_KEY:-}
+      - GROK_MODEL=grok-2-latest
+      # Service URLs (Docker internal network)
+      - API_GATEWAY_URL=http://apigw-ocelot
+      - PRODUCT_API_URL=http://product-api
+      - BASKET_API_URL=http://basket-api
+      - ORDER_API_URL=http://order-api
+      # Redis Configuration
+      - REDIS_HOST=basketdb
+      - REDIS_PORT=6379
+      - REDIS_DB=1
+      # Application Settings
+      - APP_NAME=E-commerce Chatbot Service
+      - APP_VERSION=1.0.0
+      - LOG_LEVEL=INFO
+    depends_on:
+      - rabbitmq
+      - basketdb
+      - product-api
+      - basket-api
+      - order-api
+    ports:
+      - "6009:80"
+    restart: always
+
   webstatus:
     container_name: webstatus
     environment:
@@ -309,6 +362,8 @@
       - HealthChecksUI__HealthChecks__5__Uri=http://inventory-product-api/hc
       - HealthChecksUI__HealthChecks__6__Name=Scheduled Job Health Check
       - HealthChecksUI__HealthChecks__6__Uri=http://hangfire-api/hc
+      - HealthChecksUI__HealthChecks__7__Name=Chatbot Health Check
+      - HealthChecksUI__HealthChecks__7__Uri=http://chatbot-api/health
     ports:
         - "6010:80"
 
