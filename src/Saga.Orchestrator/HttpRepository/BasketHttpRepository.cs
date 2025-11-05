@@ -1,5 +1,7 @@
-﻿using Saga.Orchestrator.HttpRepository.Interfaces;
+﻿using Infrastructure.Extensions;
+using Saga.Orchestrator.HttpRepository.Interfaces;
 using Shared.DTOs.Basket;
+using Shared.SeedWork.ApiResult;
 
 namespace Saga.Orchestrator.HttpRepository;
 
@@ -14,19 +16,18 @@ public class BasketHttpRepository : IBasketHttpRepository
 
     public async Task<CartDto> GetBasketAsync(string userName)
     {
-        var cart = await _client.GetFromJsonAsync<CartDto>($"baskets/{userName}");
-        if (cart == null || !cart.Items.Any()) return null;
+        var response = await _client.GetAsync($"baskets/{userName}");
+        if (!response.IsSuccessStatusCode) return null;
 
-        return cart;
+        var apiResult = await response.ReadContentAs<ApiSuccessResult<CartDto>>();
+        if (apiResult?.Data == null || !apiResult.Data.Items.Any()) return null;
+
+        return apiResult.Data;
     }
 
     public async Task<bool> DeleteBasketAsync(string userName)
     {
         var response = await _client.DeleteAsync($"baskets/{userName}");
-        if (!response.EnsureSuccessStatusCode().IsSuccessStatusCode)
-            throw new Exception($"Delete basket for: {userName} not success");
-
-        var result = response.IsSuccessStatusCode;
-        return result;
+        return response.IsSuccessStatusCode;
     }
 }
