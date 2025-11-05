@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{32b6619b-f71c-4cc9-b120-b39e2a2eacc1}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile />
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{789894c7-04a9-4a11-a6b5-3f4435165112};{1b580a1a-fdb3-4b32-83e1-6407eb2722e6};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Web launcher</LaunchProvider>
+    <InterpreterId>Global|PythonCore|3.12</InterpreterId>
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+    <PythonWsgiHandler>{StartupModule}.wsgi_app</PythonWsgiHandler>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include=".vs\microservice\v17\HierarchyCache.v1.txt" />
+    <Content Include="arch.jpg" />
+    <Content Include="package-list.txt" />
+    <Content Include="src\ApiGateways\OcelotApiGw\obj\Debug\net8.0\OcelotApiGw.csproj.FileListAbsolute.txt" />
+    <Content Include="src\ApiGateways\OcelotApiGw\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\ApiGateways\OcelotApiGw\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\BuildingBlocks\Common.Logging\obj\Debug\net8.0\Common.Logging.csproj.FileListAbsolute.txt" />
+    <Content Include="src\BuildingBlocks\Contracts\obj\Debug\net8.0\Contracts.csproj.FileListAbsolute.txt" />
+    <Content Include="src\BuildingBlocks\EventBus\EventBus.MessageComponents\obj\Debug\net8.0\EventBus.MessageComponents.csproj.FileListAbsolute.txt" />
+    <Content Include="src\BuildingBlocks\EventBus\EventBus.Messages\obj\Debug\net8.0\EventBus.Messages.csproj.FileListAbsolute.txt" />
+    <Content Include="src\BuildingBlocks\Infrastructure\obj\Debug\net8.0\Infrastructure.csproj.FileListAbsolute.txt" />
+    <Content Include="src\BuildingBlocks\Shared\obj\Debug\net8.0\Shared.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Saga.Orchestrator\obj\Debug\net8.0\Saga.Orchestrator.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Saga.Orchestrator\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Saga.Orchestrator\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Basket.API\bin\Debug\net8.0\EmailTemplates\reminder-checkout-order.html" />
+    <Content Include="src\Services\Basket.API\EmailTemplates\reminder-checkout-order.html" />
+    <Content Include="src\Services\Basket.API\obj\Debug\net8.0\Basket.API.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Basket.API\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Services\Basket.API\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Chatbot\requirements.txt" />
+    <Content Include="src\Services\Customer.API\obj\Debug\net8.0\Customer.API.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Customer.API\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Services\Customer.API\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Hangfire.API\obj\Debug\net8.0\Hangfire.API.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Hangfire.API\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Identity\Identity.API\mailmap.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\Shared\obj\Debug\net8.0\Shared.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP.Infrastructure\obj\Debug\net8.0\TeduMicroservices.IDP.Infrastructure.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP.Presentation\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP.Presentation\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP.Presentation\obj\Debug\net8.0\TeduMicroservices.IDP.Presentation.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\obj\Debug\net8.0\TeduMicroservices.IDP.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\css\site.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\css\site.min.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\duende-logo.svg" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\favicon.ico" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\js\signin-redirect.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\js\signout-redirect.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap4-glyphicons\css\bootstrap-glyphicons.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap4-glyphicons\css\bootstrap-glyphicons.min.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap4-glyphicons\fonts\glyphicons\glyphicons-halflings-regular.svg" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap4-glyphicons\maps\glyphicons-fontawesome.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap4-glyphicons\maps\glyphicons-fontawesome.min.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\css\bootstrap.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\jquery\dist\jquery.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\jquery\dist\jquery.min.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\jquery\dist\jquery.slim.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\jquery\dist\jquery.slim.min.js" />
+    <Content Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\jquery\LICENSE.txt" />
+    <Content Include="src\Services\Inventory\Inventory.Grpc\obj\Debug\net8.0\Inventory.Grpc.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Inventory\Inventory.Grpc\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Services\Inventory\Inventory.Grpc\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Inventory\Inventory.Product.API\obj\Debug\net8.0\Inventory.Product.API.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Inventory\Inventory.Product.API\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Services\Inventory\Inventory.Product.API\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Ordering\Ordering.API\obj\Debug\net8.0\Ordering.API.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Ordering\Ordering.API\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Services\Ordering\Ordering.API\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\Services\Ordering\Ordering.Application\obj\Debug\net8.0\Ordering.Application.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Ordering\Ordering.Domain\obj\Debug\net8.0\Ordering.Domain.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Ordering\Ordering.Infrastructure\obj\Debug\net8.0\Ordering.Infrastructure.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Product.API\obj\Debug\net8.0\Product.API.csproj.FileListAbsolute.txt" />
+    <Content Include="src\Services\Product.API\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\Services\Product.API\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\WebApps\WebHealthStatus\obj\Debug\net8.0\staticwebassets.references.upToDateCheck.txt" />
+    <Content Include="src\WebApps\WebHealthStatus\obj\Debug\net8.0\staticwebassets.removed.txt" />
+    <Content Include="src\WebApps\WebHealthStatus\obj\Debug\net8.0\WebHealthStatus.csproj.FileListAbsolute.txt" />
+    <Content Include="structure.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="src\Services\Chatbot\config.py" />
+    <Compile Include="src\Services\Chatbot\lg\graph.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\context.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\finish.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\intent.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\navigation.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\present.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\search.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\selection.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\tools.py" />
+    <Compile Include="src\Services\Chatbot\lg\nodes\__init__.py" />
+    <Compile Include="src\Services\Chatbot\lg\state.py" />
+    <Compile Include="src\Services\Chatbot\lg\tools\cart.py" />
+    <Compile Include="src\Services\Chatbot\lg\tools\order.py" />
+    <Compile Include="src\Services\Chatbot\lg\tools\product.py" />
+    <Compile Include="src\Services\Chatbot\lg\tools\wishlist.py" />
+    <Compile Include="src\Services\Chatbot\lg\tools\__init__.py" />
+    <Compile Include="src\Services\Chatbot\lg\__init__.py" />
+    <Compile Include="src\Services\Chatbot\main.py" />
+    <Compile Include="src\Services\Chatbot\models\chat.py" />
+    <Compile Include="src\Services\Chatbot\routers\chat.py" />
+    <Compile Include="src\Services\Chatbot\test_api.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".vs\microservice\v17" />
+    <Folder Include="src\ApiGateways\OcelotApiGw\obj\Debug\net8.0" />
+    <Folder Include="src\BuildingBlocks\Common.Logging\obj\Debug\net8.0" />
+    <Folder Include="src\BuildingBlocks\Contracts\obj\Debug\net8.0" />
+    <Folder Include="src\BuildingBlocks\EventBus\EventBus.MessageComponents\obj\Debug\net8.0" />
+    <Folder Include="src\BuildingBlocks\EventBus\EventBus.Messages\obj\Debug\net8.0" />
+    <Folder Include="src\BuildingBlocks\Infrastructure\obj\Debug\net8.0" />
+    <Folder Include="src\BuildingBlocks\Shared\obj\Debug\net8.0" />
+    <Folder Include="src\Saga.Orchestrator\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Basket.API\bin\Debug\net8.0\EmailTemplates" />
+    <Folder Include="src\Services\Basket.API\EmailTemplates" />
+    <Folder Include="src\Services\Basket.API\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Chatbot" />
+    <Folder Include="src\Services\Chatbot\lg" />
+    <Folder Include="src\Services\Chatbot\lg\nodes" />
+    <Folder Include="src\Services\Chatbot\lg\tools" />
+    <Folder Include="src\Services\Chatbot\models" />
+    <Folder Include="src\Services\Chatbot\routers" />
+    <Folder Include="src\Services\Customer.API\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Hangfire.API\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Identity\Identity.API" />
+    <Folder Include="src\Services\Identity\Identity.API\src\Shared\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP.Infrastructure\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP.Presentation\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\css" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\js" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap4-glyphicons\css" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap4-glyphicons\fonts\glyphicons" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap4-glyphicons\maps" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\css" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\bootstrap\dist\js" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\jquery" />
+    <Folder Include="src\Services\Identity\Identity.API\src\TeduMicroservices.IDP\wwwroot\lib\jquery\dist" />
+    <Folder Include="src\Services\Inventory\Inventory.Grpc\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Inventory\Inventory.Product.API\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Ordering\Ordering.API\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Ordering\Ordering.Application\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Ordering\Ordering.Domain\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Ordering\Ordering.Infrastructure\obj\Debug\net8.0" />
+    <Folder Include="src\Services\Product.API\obj\Debug\net8.0" />
+    <Folder Include="src\WebApps\WebHealthStatus\obj\Debug\net8.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.12" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Web.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+    <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+    <WebProjectProperties>
+        <AutoAssignPort>True</AutoAssignPort>
+        <UseCustomServer>True</UseCustomServer>
+        <CustomServerUrl>http://localhost</CustomServerUrl>
+        <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+    </WebProjectProperties>
+    </FlavorProperties>
+    <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+    <WebProjectProperties>
+        <StartPageUrl>
+        </StartPageUrl>
+        <StartAction>CurrentPage</StartAction>
+        <AspNetDebugging>True</AspNetDebugging>
+        <SilverlightDebugging>False</SilverlightDebugging>
+        <NativeDebugging>False</NativeDebugging>
+        <SQLDebugging>False</SQLDebugging>
+        <ExternalProgram>
+        </ExternalProgram>
+        <StartExternalURL>
+        </StartExternalURL>
+        <StartCmdLineArguments>
+        </StartCmdLineArguments>
+        <StartWorkingDirectory>
+        </StartWorkingDirectory>
+        <EnableENC>False</EnableENC>
+        <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+    </WebProjectProperties>
+    </FlavorProperties>
+</VisualStudio>
+  </ProjectExtensions>
+</Project>
