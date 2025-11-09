@@ -1,4 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -10,23 +10,43 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    app.Logger.LogInformation("Running in Development mode");
+}
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment() && !IsRunningInDocker())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseStaticFiles();
 
-app.UseRouting();
+// 👇 Quan trọng: bật HealthChecksUI middleware
+app.UseHealthChecksUI(options =>
+{
+    options.UIPath = "/healthchecks-ui";
+    options.ApiPath = "/healthchecks-api";
+});
 
+app.UseRouting();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapHealthChecksUI();
     endpoints.MapControllerRoute(
-        "default",
-        "{controller=Home}/{action=Index}/{id?}");
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 });
 
+app.Logger.LogInformation("WebHealthStatus started on: {urls}", builder.Configuration["ASPNETCORE_URLS"] ?? "http://localhost:5010");
+
 app.Run();
+
+static bool IsRunningInDocker()
+{
+    return Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+}
