@@ -1,9 +1,14 @@
-﻿using Infrastructure.Configurations;
+﻿using Contracts.Common.Interfaces;
+using Contracts.ScheduledJobs;
+using Infrastructure.Common;
+using Infrastructure.Configurations;
 using Infrastructure.Extensions;
+using Infrastructure.ScheduleJobs;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ordering.API.EventBusConsumer;
+using Ordering.API.Services;
 using Shared.Configurations;
 
 namespace Ordering.API.Extensions
@@ -21,6 +26,11 @@ namespace Ordering.API.Extensions
                 .Get<EventBusSettings>();
 
             services.AddSingleton(eventBusSettings);
+
+            var urlSettings = configuration.GetSection(nameof(UrlSettings))
+                .Get<UrlSettings>();
+
+            services.AddSingleton(urlSettings);
 
             return services;
         }
@@ -57,12 +67,18 @@ namespace Ordering.API.Extensions
                 });
             });
         }
-        public static void ConfigureHealthChecks(this IServiceCollection services)
+
+        public static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
         {
-            var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
-            services.AddHealthChecks().AddSqlServer(databaseSettings.ConnectionString,
-                                                    name: "SqlServer Health",
-                                                    failureStatus: HealthStatus.Degraded);
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            services.AddHealthChecks()
+                .AddSqlServer(connectionString);
+        }
+
+        public static void ConfigureOrderingServices(this IServiceCollection services)
+        {
+            // Register PDF Service
+            services.AddScoped<IOrderPdfService, OrderPdfService>();
         }
     }
 }

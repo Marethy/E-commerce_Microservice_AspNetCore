@@ -32,6 +32,7 @@ try
 }
 catch (Exception ex) when (ex.GetType().Name != "StopTheHostException")
 {
+    Console.Write(ex.Message);
     Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 }
 finally
@@ -54,12 +55,14 @@ static void ConfigureServices(WebApplicationBuilder builder)
         .AddConfigurationSettings(configuration)
         .ConfigureMassTransit(configuration);
 
+    services.ConfigureHealthChecks(configuration);
+    services.ConfigureOrderingServices();
+
     services.AddControllers();
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
 
-    services.AddScoped<IMessageProducer, RabbitMQProducer>();
-    services.AddScoped<ISerializeService, SerializeService>();
+
 }
 
 /// <summary>
