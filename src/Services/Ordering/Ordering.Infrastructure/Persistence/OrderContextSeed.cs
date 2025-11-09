@@ -14,11 +14,33 @@ namespace Ordering.Infrastructure.Persistence
             var orderContext = scope.ServiceProvider.GetRequiredService<OrderContext>();
             var logger = scope.ServiceProvider.GetRequiredService<ILogger<OrderContext>>();
 
+            const int maxRetries = 5;
+            var retryCount = 0;
+
+            while (retryCount < maxRetries)
+            {
+                try
+                {
+                    logger.LogInformation("Attempting database migration... (Attempt {Retry}/{MaxRetries})", retryCount + 1, maxRetries);
+                    await orderContext.Database.MigrateAsync();
+                    logger.LogInformation("Database migration completed successfully");
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    if (retryCount >= maxRetries)
+                    {
+                        logger.LogError(ex, "Failed to migrate database after {MaxRetries} attempts", maxRetries);
+                        throw;
+                    }
+                    logger.LogWarning(ex, "Database migration failed. Retrying in 5 seconds... (Attempt {Retry}/{MaxRetries})", retryCount, maxRetries);
+                    await Task.Delay(5000);
+                }
+            }
+
             try
             {
-                // Migrate database
-                await orderContext.Database.MigrateAsync().ConfigureAwait(false);
-
                 // Seed data if the table is empty
                 if (!orderContext.Orders.Any())
                 {
@@ -64,16 +86,16 @@ namespace Ordering.Infrastructure.Persistence
                     await orderContext.Orders.AddRangeAsync(orders);
                     await orderContext.SaveChangesAsync();
 
-                    logger.LogInformation("Seeded database with {OrderCount} initial orders.", orders.Count);
+                    logger.LogInformation("Seeded database with {OrderCount} initial orders", orders.Count);
                 }
                 else
                 {
-                    logger.LogInformation("Database already contains orders. No seeding required.");
+                    logger.LogInformation("Database already contains orders. No seeding required");
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred while seeding the database.");
+                logger.LogError(ex, "An error occurred while seeding the database");
             }
 
             return host;
