@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ordering.API.Services;
-using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
+using Ordering.Application.Features.V1.Orders;
 using Shared.SeedWork.ApiResult;
 using System.Net;
 

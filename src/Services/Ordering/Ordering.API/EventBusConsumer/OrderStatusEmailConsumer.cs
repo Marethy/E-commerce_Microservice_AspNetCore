@@ -19,40 +19,40 @@ public class OrderStatusEmailConsumer : IConsumer<OrderStatusChangedEvent>
 
     public async Task Consume(ConsumeContext<OrderStatusChangedEvent> context)
     {
-  var orderEvent = context.Message;
+        var orderEvent = context.Message;
         _logger.Information($"Processing order status change: Order {orderEvent.OrderId} ? {orderEvent.NewStatus}");
 
         try
-{
+        {
             switch (orderEvent.NewStatus)
-      {
+            {
                 case "Pending":
-           await SendOrderConfirmationEmail(orderEvent);
-             break;
+                    await SendOrderConfirmationEmail(orderEvent);
+                    break;
 
-       case "Confirmed":
-         await SendOrderConfirmedEmail(orderEvent);
-              break;
+                case "Confirmed":
+                    await SendOrderConfirmationEmail(orderEvent);
+                    break;
 
-case "Shipped":
- await SendShipmentNotificationEmail(orderEvent);
-      await ScheduleDeliveryReminderEmail(orderEvent);
-       break;
+                case "Shipped":
+                    await SendShipmentNotificationEmail(orderEvent);
+                    await ScheduleDeliveryReminderEmail(orderEvent);
+                    break;
 
-         case "Delivered":
-  await SendDeliveryConfirmationEmail(orderEvent);
-             await ScheduleReviewReminderEmail(orderEvent);
-        break;
+                case "Delivered":
+                    await SendDeliveryConfirmationEmail(orderEvent);
+                    await ScheduleReviewReminderEmail(orderEvent);
+                    break;
 
-    case "Cancelled":
-      await SendCancellationEmail(orderEvent);
- break;
-       }
-  }
-   catch (Exception ex)
+                case "Cancelled":
+                    await SendCancellationEmail(orderEvent);
+                    break;
+            }
+        }
+        catch (Exception ex)
         {
             _logger.Error(ex, $"Failed to send order status email for Order {orderEvent.OrderId}");
-        throw; // Retry via MassTransit
+            throw; // Retry via MassTransit
         }
     }
 
