@@ -39,7 +39,7 @@ services:
     image: ${DOCKER_REGISTRY-}identity-api:latest
     build:
       context: .
-      dockerfile: src/Services/Identity/Identity.API/src/TeduMicroservices.IDP/Dockerfile
+      dockerfile: src/Services/Identity/IDP/Dockerfile
 
   product-api:
     image: ${DOCKER_REGISTRY-}product-api:latest
@@ -94,9 +94,20 @@ services:
     build:
       context: .
       dockerfile: src/Services/Chatbot/Dockerfile
+    volumes:
+      - chatbot-data:/app/data
+
+  mcp-server:
+    image: ${DOCKER_REGISTRY-}mcp-server:latest
+    build:
+      context: .
+      dockerfile: src/Services/MCP/Dockerfile
       
   webstatus:
     image: ${DOCKER_REGISTRY-}webstatus:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: src/WebApps/WebHealthStatus/Dockerfile
+
+volumes:
+  chatbot-data:

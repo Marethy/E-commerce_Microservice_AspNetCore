@@ -25,18 +25,22 @@ namespace Product.API.Extensions
         {
             services.AddControllers();
             services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.ConfigureSwagger();
 
+            services.AddConfigurationSettings(configuration);
             services.ConfigureProductDbContext(configuration);
             services.AddInfrastructrueService();
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
             
-            //       services.AddJwtAuthentication();
             services.ConfigureAuthenticationHandler();
-            //        services.ConfigureAuthorization();
             services.ConfigureHealthChecks();
+        }
+
+        private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
+            services.AddSingleton(jwtSettings);
         }
 
         private static void ConfigureProductDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -63,7 +67,8 @@ namespace Product.API.Extensions
                     .AddScoped<ICategoryRepository, CategoryRepository>()
                     .AddScoped<IProductReviewRepository, ProductReviewRepository>()
                     .AddScoped<IBrandRepository, BrandRepository>()
-                    .AddScoped<ISellerRepository, SellerRepository>();
+                    .AddScoped<ISellerRepository, SellerRepository>()
+                    .AddScoped<IWishlistRepository, WishlistRepository>();
 
             // Register services
             services.AddScoped<Product.API.Services.Interfaces.IProductStatsService, Product.API.Services.ProductStatsService>();

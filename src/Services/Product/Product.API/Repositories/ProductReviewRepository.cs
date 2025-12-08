@@ -14,6 +14,12 @@ public class ProductReviewRepository : RepositoryBase<ProductReview, Guid, Produ
     {
     }
 
+    public async Task<IEnumerable<ProductReview>> GetAllReviewsAsync()
+        => await FindAll(false, x => x.Product)
+                .OrderByDescending(x => x.CreatedDate)
+                .Take(100) // Limit to prevent performance issues
+                .ToListAsync();
+
     public async Task<IEnumerable<ProductReview>> GetReviewsByProduct(Guid productId)
         => await FindByCondition(x => x.ProductId == productId, false, x => x.Product)
                 .OrderByDescending(x => x.CreatedDate)
@@ -39,4 +45,10 @@ public class ProductReviewRepository : RepositoryBase<ProductReview, Guid, Produ
 
     public async Task<bool> HasUserReviewedProduct(string userId, Guid productId)
         => await FindByCondition(x => x.UserId == userId && x.ProductId == productId).AnyAsync();
+
+    public async Task<(IEnumerable<ProductReview> Replies, int TotalCount)> GetReviewRepliesAsync(Guid reviewId, int page, int size)
+    {
+        // Reply functionality removed - ParentReviewId not in database
+        return (Array.Empty<ProductReview>(), 0);
+    }
 }

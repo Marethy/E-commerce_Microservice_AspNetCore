@@ -9,6 +9,10 @@ namespace Product.API
     {
         public MappingProfile()
         {
+            // Global type converter for DateTimeOffset -> DateTime
+            CreateMap<DateTimeOffset, DateTime>().ConvertUsing(src => src.DateTime);
+            CreateMap<DateTimeOffset?, DateTime?>().ConvertUsing(src => src.HasValue ? src.Value.DateTime : null);
+            
             // Product mappings
             CreateMap<CatalogProduct, ProductDto>()
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))

@@ -49,6 +49,17 @@ namespace Product.API.Persistence
             public static readonly Guid Review11Id = Guid.Parse("f47ac10b-58cc-4372-a567-0e02b2c3d489");
             public static readonly Guid Review12Id = Guid.Parse("f47ac10b-58cc-4372-a567-0e02b2c3d490");
             public static readonly Guid Review13Id = Guid.Parse("f47ac10b-58cc-4372-a567-0e02b2c3d491");
+
+            // Image IDs
+            public static readonly Guid Img01Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d501");
+            public static readonly Guid Img02Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d502");
+            public static readonly Guid Img03Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d503");
+            public static readonly Guid Img04Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d504");
+            public static readonly Guid Img05Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d505");
+            public static readonly Guid Img06Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d506");
+            public static readonly Guid Img07Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d507");
+            public static readonly Guid Img08Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d508");
+            public static readonly Guid Img09Id = Guid.Parse("a47ac10b-58cc-4372-a567-0e02b2c3d509");
         }
 
         public static async Task SeedAsync(ProductContext context, ILogger<ProductContextSeed> logger)
@@ -57,6 +68,7 @@ namespace Product.API.Persistence
             await SeedBrandsAsync(context, logger);
             await SeedSellersAsync(context, logger);
             await SeedProductsAsync(context, logger);
+            await SeedProductImagesAsync(context, logger);
             await SeedProductReviewsAsync(context, logger);
         }
 
@@ -350,6 +362,48 @@ namespace Product.API.Persistence
                 await context.Products.AddRangeAsync(products);
                 await context.SaveChangesAsync();
                 logger.LogInformation("Seeded {Count} products", products.Count);
+            }
+        }
+
+        private static async Task SeedProductImagesAsync(ProductContext context, ILogger<ProductContextSeed> logger)
+        {
+            if (!context.ProductImages.Any())
+            {
+                logger.LogInformation("Seeding database with initial product images...");
+
+                var images = new List<ProductImage>
+                {
+                    // Smartphone images
+                    new ProductImage { Id = SeedIds.Img01Id, ProductId = SeedIds.SmartphoneId, Url = "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600", AltText = "Smartphone Pro X - Front View", Position = 1, IsPrimary = true },
+                    
+                    // Earbuds images
+                    new ProductImage { Id = SeedIds.Img02Id, ProductId = SeedIds.EarbudsId, Url = "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600", AltText = "Wireless Earbuds Pro", Position = 1, IsPrimary = true },
+                    
+                    // Laptop images
+                    new ProductImage { Id = SeedIds.Img03Id, ProductId = SeedIds.LaptopId, Url = "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600", AltText = "Gaming Laptop Ultra", Position = 1, IsPrimary = true },
+                    
+                    // Denim Jacket images
+                    new ProductImage { Id = SeedIds.Img04Id, ProductId = SeedIds.DenimJacketId, Url = "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=600", AltText = "Classic Denim Jacket", Position = 1, IsPrimary = true },
+                    
+                    // Running Shoes images
+                    new ProductImage { Id = SeedIds.Img05Id, ProductId = SeedIds.RunningShoesId, Url = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600", AltText = "Running Shoes Max", Position = 1, IsPrimary = true },
+                    
+                    // Clean Code book images
+                    new ProductImage { Id = SeedIds.Img06Id, ProductId = SeedIds.CleanCodeBookId, Url = "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600", AltText = "Clean Code Book", Position = 1, IsPrimary = true },
+                    
+                    // Design Patterns book images
+                    new ProductImage { Id = SeedIds.Img07Id, ProductId = SeedIds.DesignPatternsBookId, Url = "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600", AltText = "Design Patterns Book", Position = 1, IsPrimary = true },
+                    
+                    // Smart Home Hub images
+                    new ProductImage { Id = SeedIds.Img08Id, ProductId = SeedIds.SmartHomeHubId, Url = "https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=600", AltText = "Smart Home Hub", Position = 1, IsPrimary = true },
+                    
+                    // Yoga Mat images
+                    new ProductImage { Id = SeedIds.Img09Id, ProductId = SeedIds.YogaMatId, Url = "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=600", AltText = "Premium Yoga Mat", Position = 1, IsPrimary = true }
+                };
+
+                await context.ProductImages.AddRangeAsync(images);
+                await context.SaveChangesAsync();
+                logger.LogInformation("Seeded {Count} product images", images.Count);
             }
         }
 

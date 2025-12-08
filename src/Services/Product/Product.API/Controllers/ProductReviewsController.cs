@@ -36,8 +36,18 @@ public class ProductReviewsController : ControllerBase
      _mapper = mapper;
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<ProductReviewDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<ProductReviewDto>>>> GetAllReviews()
+    {
+        var reviews = await _repository.GetAllReviewsAsync();
+        var result = _mapper.Map<List<ProductReviewDto>>(reviews);
+        return Ok(new ApiSuccessResult<List<ProductReviewDto>>(result));
+    }
+
     [HttpGet("product/{productId:guid}")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<List<ProductReviewDto>>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<ApiResult<List<ProductReviewDto>>>> GetReviewsByProduct([Required] Guid productId)
     {
@@ -47,7 +57,7 @@ public class ProductReviewsController : ControllerBase
  }
 
     [HttpGet("user/{userId}")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<List<ProductReviewDto>>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<ApiResult<List<ProductReviewDto>>>> GetReviewsByUser([Required] string userId)
     {
@@ -57,7 +67,7 @@ public class ProductReviewsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<ProductReviewDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ApiResult<ProductReviewDto>>> GetReviewById([Required] Guid id)
@@ -71,7 +81,7 @@ public class ProductReviewsController : ControllerBase
     }
 
     [HttpGet("product/{productId:guid}/statistics")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<object>), (int)HttpStatusCode.OK)]
   public async Task<ActionResult<ApiResult<object>>> GetProductReviewStatistics([Required] Guid productId)
     {
@@ -159,12 +169,52 @@ public class ProductReviewsController : ControllerBase
     public async Task<ActionResult<ApiResult<object>>> MarkReviewAsHelpful([Required] Guid id)
     {
         var review = await _repository.GetReview(id);
-    if (review == null)
-   return NotFound(new ApiErrorResult<object>($"Review with ID {id} not found"));
+        if (review == null)
+            return NotFound(new ApiErrorResult<object>($"Review with ID {id} not found"));
 
         review.HelpfulVotes++;
-await _repository.UpdateAsync(review);
+        await _repository.UpdateAsync(review);
 
         return Ok(new ApiSuccessResult<object>(new { helpfulVotes = review.HelpfulVotes }));
+    }
+
+    [HttpGet("{reviewId:guid}/replies")]
+    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [ProducesResponseType(typeof(ApiResult<object>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<object>>> GetReviewReplies(
+        [Required] Guid reviewId,
+        [FromQuery] int page = 0,
+        [FromQuery] int size = 10)
+    {
+        var review = await _repository.GetReview(reviewId);
+        if (review == null)
+            return NotFound(new ApiErrorResult<object>($"Review with ID {reviewId} not found"));
+
+        var (replies, totalCount) = await _repository.GetReviewRepliesAsync(reviewId, page, size);
+        var replyDtos = _mapper.Map<List<ProductReviewDto>>(replies);
+
+        var result = new
+        {
+            content = replyDtos,
+            page,
+            size,
+            totalElements = totalCount,
+            totalPages = (int)Math.Ceiling(totalCount / (double)size)
+        };
+
+        return Ok(new ApiSuccessResult<object>(result));
+    }
+
+    [HttpPost("{reviewId:guid}/replies")]
+    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.CREATE)]
+    [ProducesResponseType(typeof(ApiResult<ProductReviewDto>), (int)HttpStatusCode.Created)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<ProductReviewDto>>> CreateReviewReply(
+        [Required] Guid reviewId,
+        [FromBody] CreateProductReviewDto replyDto)
+    {
+        // Reply functionality temporarily disabled - ParentReviewId not in database schema
+        return BadRequest(new ApiErrorResult<ProductReviewDto>("Reply functionality is not available"));
     }
 }

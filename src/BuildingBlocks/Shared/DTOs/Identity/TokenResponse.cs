@@ -1,4 +1,3 @@
-﻿
-namespace Shared.DTOs.Identity;
+﻿namespace Shared.DTOs.Identity;
 
-public record TokenResponse(string Token);
+public record TokenResponse(string Token, int ExpiresIn = 1800);

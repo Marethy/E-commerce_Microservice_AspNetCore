@@ -27,7 +27,7 @@ namespace Product.API.Controllers
         }
 
         [HttpGet]
-        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResult<List<SellerDto>>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ApiResult<List<SellerDto>>>> GetSellers([FromQuery] bool? officialOnly = null)
         {
@@ -40,7 +40,7 @@ namespace Product.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResult<SellerDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<ApiResult<SellerDto>>> GetSellerById([Required] Guid id)

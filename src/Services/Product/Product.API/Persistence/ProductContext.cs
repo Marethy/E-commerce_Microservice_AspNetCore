@@ -18,6 +18,7 @@ namespace Product.API.Persistence
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductSpecification> ProductSpecifications { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -309,6 +310,42 @@ namespace Product.API.Persistence
                       .WithMany(c => c.ProductCategories)
                       .HasForeignKey(pc => pc.CategoryId)
                       .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure Wishlist
+            modelBuilder.Entity<Wishlist>(entity =>
+            {
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
+                      .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.ProductId)
+                      .HasColumnType("uuid")
+                      .IsRequired();
+
+                entity.Property(e => e.UserId)
+                      .IsRequired()
+                      .HasMaxLength(100)
+                      .HasColumnType("varchar(100)");
+
+                entity.Property(e => e.OriginalPrice)
+                      .HasPrecision(18, 2)
+                      .IsRequired();
+
+                entity.Property(e => e.AddedDate)
+                      .IsRequired();
+
+                entity.HasOne(w => w.Product)
+                      .WithMany()
+                      .HasForeignKey(w => w.ProductId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(x => new { x.UserId, x.ProductId })
+                      .IsUnique()
+                      .HasDatabaseName("IX_Wishlists_UserId_ProductId");
+
+                entity.HasIndex(x => x.UserId)
+                      .HasDatabaseName("IX_Wishlists_UserId");
             });
         }
 
