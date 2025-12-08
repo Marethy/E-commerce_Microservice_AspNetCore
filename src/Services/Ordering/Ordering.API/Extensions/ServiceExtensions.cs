@@ -77,8 +77,8 @@ namespace Ordering.API.Extensions
 
         public static void ConfigureOrderingServices(this IServiceCollection services)
         {
-            // Register PDF Service
             services.AddScoped<IOrderPdfService, OrderPdfService>();
+            services.AddScoped<IOrderExcelService, OrderExcelService>();
         }
     }
 }

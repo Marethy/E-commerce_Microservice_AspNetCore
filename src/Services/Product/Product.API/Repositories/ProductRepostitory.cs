@@ -39,6 +39,19 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
                 .Include(x => x.Specifications)
                 .FirstOrDefaultAsync();
     
+    public async Task<CatalogProduct?> GetProductBySlug(string slug)
+        => await FindByCondition(x => x.Slug == slug, false, x => x.Category, x => x.Brand, x => x.Seller)
+                .Include(x => x.Reviews)
+                .Include(x => x.Images)
+                .Include(x => x.Specifications)
+                .FirstOrDefaultAsync();
+    
+    public async Task<IEnumerable<ProductImage>> GetProductImages(Guid productId)
+        => await _context.ProductImages
+                .Where(x => x.ProductId == productId)
+                .OrderBy(x => x.Position)
+                .ToListAsync();
+    
     public async Task<bool> CategoryExists(Guid categoryId)
         => await _context.Categories.AnyAsync(x => x.Id == categoryId);
 

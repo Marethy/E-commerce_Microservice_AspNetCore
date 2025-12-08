@@ -57,8 +57,9 @@
 	<PackageVersion Include="Hangfire.Mongo" Version="1.11.6" />
 	<PackageVersion Include="Hangfire.Console.Extensions" Version="2.1.0" />
 
-	<!-- PDF Generation -->
+	<!-- PDF & Excel Generation -->
 	<PackageVersion Include="itext7" Version="8.0.5" />
+	<PackageVersion Include="ClosedXML" Version="0.104.1" />
 
 	<!-- GRPC -->
 	<PackageVersion Include="Grpc.AspNetCore" Version="2.57.0" />

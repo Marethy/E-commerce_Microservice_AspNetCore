@@ -28,7 +28,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<List<CategoryDto>>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategories([FromQuery] bool includeProducts = false)
     {
@@ -41,7 +41,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ApiResult<CategoryDto>>> GetCategoryById([Required] Guid id)
@@ -55,7 +55,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet("by-name/{name}")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ApiResult<CategoryDto>>> GetCategoryByName([Required] string name)
@@ -124,5 +124,130 @@ public class CategoriesController : ControllerBase
 
         await _repository.DeleteAsync(category);
         return NoContent();
+    }
+
+    // ===== HIERARCHY ENDPOINTS =====
+
+    /// <summary>
+    /// Get full category hierarchy (all root categories with nested children)
+    /// </summary>
+    [HttpGet("hierarchy")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<CategoryDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategoryHierarchy()
+    {
+        var categories = await _repository.GetFullHierarchyAsync();
+        var result = _mapper.Map<List<CategoryDto>>(categories);
+        return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
+    }
+
+    /// <summary>
+    /// Get all root categories (categories without parent)
+    /// </summary>
+    [HttpGet("roots")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<CategoryDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetRootCategories()
+    {
+        var categories = await _repository.GetRootCategoriesAsync();
+        var result = _mapper.Map<List<CategoryDto>>(categories);
+        
+        // Add hasChildren flag
+        foreach (var cat in result)
+        {
+            cat.HasChildren = await _repository.HasSubcategoriesAsync(cat.Id);
+        }
+        
+        return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
+    }
+
+    /// <summary>
+    /// Get subcategories by parent ID
+    /// </summary>
+    [HttpGet("{parentId:guid}/subcategories")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<CategoryDto>>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetSubcategories([Required] Guid parentId)
+    {
+        var parent = await _repository.GetCategory(parentId);
+        if (parent == null)
+            return NotFound(new ApiErrorResult<List<CategoryDto>>($"Category with ID {parentId} not found"));
+        
+        var subcategories = await _repository.GetSubcategoriesAsync(parentId);
+        var result = _mapper.Map<List<CategoryDto>>(subcategories);
+        
+        // Add hasChildren flag
+        foreach (var cat in result)
+        {
+            cat.HasChildren = await _repository.HasSubcategoriesAsync(cat.Id);
+        }
+        
+        return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
+    }
+
+    /// <summary>
+    /// Get category path (breadcrumb from root to current category)
+    /// </summary>
+    [HttpGet("{categoryId:guid}/path")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<CategoryDto>>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategoryPath([Required] Guid categoryId)
+    {
+        var category = await _repository.GetCategory(categoryId);
+        if (category == null)
+            return NotFound(new ApiErrorResult<List<CategoryDto>>($"Category with ID {categoryId} not found"));
+        
+        var path = await _repository.GetCategoryPathAsync(categoryId);
+        var result = _mapper.Map<List<CategoryDto>>(path);
+        return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
+    }
+
+    /// <summary>
+    /// Get category with full hierarchy (children nested)
+    /// </summary>
+    [HttpGet("{categoryId:guid}/hierarchy")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<CategoryDto>>> GetCategoryHierarchy([Required] Guid categoryId)
+    {
+        var category = await _repository.GetCategoryWithHierarchyAsync(categoryId);
+        if (category == null)
+            return NotFound(new ApiErrorResult<CategoryDto>($"Category with ID {categoryId} not found"));
+        
+        var result = _mapper.Map<CategoryDto>(category);
+        return Ok(new ApiSuccessResult<CategoryDto>(result));
+    }
+
+    /// <summary>
+    /// Check if category has subcategories
+    /// </summary>
+    [HttpGet("{categoryId:guid}/has-subcategories")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<bool>>> HasSubcategories([Required] Guid categoryId)
+    {
+        var category = await _repository.GetCategory(categoryId);
+        if (category == null)
+            return NotFound(new ApiErrorResult<bool>($"Category with ID {categoryId} not found"));
+        
+        var hasChildren = await _repository.HasSubcategoriesAsync(categoryId);
+        return Ok(new ApiSuccessResult<bool>(hasChildren));
+    }
+
+    /// <summary>
+    /// Get categories by product ID
+    /// </summary>
+    [HttpGet("product/{productId:guid}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<CategoryDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategoriesByProduct([Required] Guid productId)
+    {
+        var categories = await _repository.GetCategoriesByProductIdAsync(productId);
+        var result = _mapper.Map<List<CategoryDto>>(categories);
+        return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
     }
 }

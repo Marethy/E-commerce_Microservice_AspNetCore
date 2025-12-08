@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package mcp;
+
+service MCPService {
+    rpc GetRelevantTools(GetToolsRequest) returns (GetToolsResponse);
+    rpc ExecuteTool(ExecuteToolRequest) returns (ExecuteToolResponse);
+}
+
+message GetToolsRequest {
+    string user_id = 1;
+    string query = 2;
+    string auth_token = 3;
+}
+
+message Tool {
+    string name = 1;
+    string description = 2;
+    string parameters_schema = 3;
+}
+
+message GetToolsResponse {
+    bool success = 1;
+    repeated Tool tools = 2;
+    string context = 3;
+}
+
+message ExecuteToolRequest {
+    string user_id = 1;
+    string tool_name = 2;
+    string arguments_json = 3;
+    string auth_token = 4;
+}
+
+message ExecuteToolResponse {
+    bool success = 1;
+    string result = 2;
+    string error = 3;
+}

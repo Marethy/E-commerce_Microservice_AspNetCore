@@ -27,7 +27,7 @@ namespace Product.API.Controllers
         }
 
         [HttpGet]
-        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResult<List<BrandDto>>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<ApiResult<List<BrandDto>>>> GetBrands()
         {
@@ -37,7 +37,7 @@ namespace Product.API.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResult<BrandDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<ApiResult<BrandDto>>> GetBrandById([Required] Guid id)
@@ -51,7 +51,7 @@ namespace Product.API.Controllers
         }
 
         [HttpGet("by-slug/{slug}")]
-        [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResult<BrandDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<ApiResult<BrandDto>>> GetBrandBySlug([Required] string slug)

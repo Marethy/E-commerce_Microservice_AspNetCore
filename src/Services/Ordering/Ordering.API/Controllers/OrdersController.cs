@@ -83,4 +83,72 @@ public class OrdersController : ControllerBase
         await _mediator.Send(command);
         return NoContent();
     }
+
+    [HttpGet("admin")]
+    [ProducesResponseType(typeof(ApiResult<object>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<object>>> GetAllOrders(
+        [FromQuery] int page = 0,
+        [FromQuery] int limit = 20,
+        [FromQuery] string? status = null)
+    {
+        var query = new GetAllOrdersQuery(page, limit, status);
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpPatch("{id:long}/status")]
+    [ProducesResponseType(typeof(ApiResult<OrderDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<OrderDto>>> UpdateOrderStatus(
+        long id,
+        [FromBody] UpdateOrderStatusCommand command)
+    {
+        if (id <= 0)
+            return BadRequest(new ApiErrorResult<OrderDto>("Invalid order ID"));
+        
+        command.SetId(id);
+        var result = await _mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPost("{id:long}/cancel")]
+    [ProducesResponseType(typeof(ApiResult<OrderDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<OrderDto>>> CancelOrder(
+        long id,
+        [FromBody] CancelOrderCommand? command = null)
+    {
+        if (id <= 0)
+            return BadRequest(new ApiErrorResult<OrderDto>("Invalid order ID"));
+        
+        var cancelCommand = command ?? new CancelOrderCommand();
+        cancelCommand.SetId(id);
+        var result = await _mediator.Send(cancelCommand);
+        return Ok(result);
+    }
+
+    [HttpGet("admin/stats")]
+    [ProducesResponseType(typeof(ApiResult<OrderStatistics>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<OrderStatistics>>> GetOrderStatistics()
+    {
+        var query = new GetOrderStatisticsQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("check-purchase/{productNo}")]
+    [ProducesResponseType(typeof(ApiResult<object>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<object>>> CheckUserPurchase(
+        string productNo,
+        [FromQuery] string userName)
+    {
+        if (string.IsNullOrEmpty(userName))
+            return BadRequest(new ApiErrorResult<object>("Username is required"));
+            
+        var query = new CheckUserPurchaseQuery(userName, productNo);
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
 }

@@ -28,10 +28,21 @@ public static class ServiceExtensions
         services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy", builder =>
-                builder.WithOrigins(origins)
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-            );
+            {
+                if (origins == "*")
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                }
+                else
+                {
+                    builder.WithOrigins(origins.Split(','))
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                }
+            });
         });
     }
 

@@ -15,6 +15,7 @@ namespace Shared.DTOs.Product
         public DateTimeOffset ReviewDate { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset? LastModifiedDate { get; set; }
+        public Guid? ParentReviewId { get; set; }
         public ProductDto? Product { get; set; }
     }
 

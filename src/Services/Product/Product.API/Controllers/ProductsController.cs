@@ -36,7 +36,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<List<ProductDto>>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<ApiResult<List<ProductDto>>>> GetProducts([FromQuery] Guid? categoryId = null)
     {
@@ -49,7 +49,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("summary")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<List<ProductSummaryDto>>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<ApiResult<List<ProductSummaryDto>>>> GetProductsSummary([FromQuery] Guid? categoryId = null)
   {
@@ -62,7 +62,7 @@ public class ProductsController : ControllerBase
     }
 
  [HttpGet("{id:guid}")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<ProductDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ApiResult<ProductDto>>> GetProductById([Required] Guid id)
@@ -76,7 +76,7 @@ if (product == null)
   }
 
     [HttpGet("by-no/{productNo}")]
-    [ClaimRequirement(FunctionCode.PRODUCT, CommandCode.VIEW)]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<ProductDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ApiResult<ProductDto>>> GetProductByNo([Required] string productNo)
@@ -87,6 +87,45 @@ if (product == null)
 
         var result = _mapper.Map<ProductDto>(product);
         return Ok(new ApiSuccessResult<ProductDto>(result));
+    }
+
+    [HttpGet("slug/{slug}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<ProductDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<ProductDto>>> GetProductBySlug([Required] string slug)
+    {
+        var product = await _repository.GetProductBySlug(slug);
+        if (product == null)
+            return NotFound(new ApiErrorResult<ProductDto>($"Product with slug '{slug}' not found"));
+
+        var result = _mapper.Map<ProductDto>(product);
+        return Ok(new ApiSuccessResult<ProductDto>(result));
+    }
+
+    [HttpGet("{id:guid}/images")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<ProductImageDto>>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<List<ProductImageDto>>>> GetProductImages([Required] Guid id)
+    {
+        var product = await _repository.GetProduct(id);
+        if (product == null)
+            return NotFound(new ApiErrorResult<List<ProductImageDto>>($"Product with ID {id} not found"));
+
+        var images = await _repository.GetProductImages(id);
+        var result = _mapper.Map<List<ProductImageDto>>(images);
+        return Ok(new ApiSuccessResult<List<ProductImageDto>>(result));
+    }
+
+    [HttpGet("category/{categoryId:guid}")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<ProductDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<ProductDto>>>> GetProductsByCategory([Required] Guid categoryId)
+    {
+        var products = await _repository.GetProductsByCategory(categoryId);
+        var result = _mapper.Map<List<ProductDto>>(products);
+        return Ok(new ApiSuccessResult<List<ProductDto>>(result));
     }
 
     [HttpPost]

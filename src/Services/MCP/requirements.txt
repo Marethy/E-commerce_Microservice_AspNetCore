@@ -1,0 +1,11 @@
+grpcio>=1.60.0
+grpcio-tools>=1.60.0
+playwright>=1.40.0
+openai>=1.0.0
+langchain>=0.1.0
+langchain-openai>=0.0.5
+python-dotenv>=1.0.0
+numpy>=1.24.0
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+websockets>=12.0

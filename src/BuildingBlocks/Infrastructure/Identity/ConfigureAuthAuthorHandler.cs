@@ -6,6 +6,7 @@ using Shared.Configurations;
 using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
 using Infrastructure.Extensions;
+using System.Text;
 
 namespace Infrastructure.Identity
 {
@@ -14,6 +15,8 @@ namespace Infrastructure.Identity
         public static void ConfigureAuthenticationHandler(this IServiceCollection services)
         {
             var configuration = services.GetOptions<ApiConfiguration>("ApiConfiguration");
+            var jwtSettings = services.GetOptions<JwtSettings>(nameof(JwtSettings));
+
             if (configuration == null ||
                 string.IsNullOrEmpty(configuration.IssuerUri) ||
                 string.IsNullOrEmpty(configuration.ApiName))
@@ -24,11 +27,41 @@ namespace Infrastructure.Identity
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
-                        options.Authority = configuration.IssuerUri;
-                        options.Audience = configuration.ApiName;
                         options.RequireHttpsMetadata = false;
 
-                        // Bật logging chi tiết để xem quá trình fetch discovery & JWKS
+                        // Use JWT Key validation if available, otherwise use IdentityServer
+                        if (jwtSettings != null && !string.IsNullOrEmpty(jwtSettings.Key))
+                        {
+                            // JWT Key-based validation
+                            var key = Encoding.UTF8.GetBytes(jwtSettings.Key);
+                            options.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuer = true,
+                                ValidIssuer = jwtSettings.Issuer ?? configuration.IssuerUri,
+                                ValidateAudience = true,
+                                ValidAudience = jwtSettings.Audience ?? configuration.ApiName,
+                                ValidateLifetime = true,
+                                ValidateIssuerSigningKey = true,
+                                IssuerSigningKey = new SymmetricSecurityKey(key),
+                                ClockSkew = TimeSpan.Zero
+                            };
+                        }
+                        else
+                        {
+                            // IdentityServer OAuth2 validation
+                            options.Authority = configuration.IssuerUri;
+                            options.Audience = configuration.ApiName;
+
+                            options.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuer = true,
+                                ValidateAudience = true,
+                                ValidateLifetime = true,
+                                ValidateIssuerSigningKey = true
+                            };
+                        }
+
+                        // Logging events
                         options.Events = new JwtBearerEvents
                         {
                             OnAuthenticationFailed = ctx =>
@@ -46,15 +79,6 @@ namespace Infrastructure.Identity
                                 Console.WriteLine("[Jwt] Token validated successfully");
                                 return Task.CompletedTask;
                             }
-                        };
-
-                        // (Tùy chọn) Tăng control over validation
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true
                         };
                     });
         }

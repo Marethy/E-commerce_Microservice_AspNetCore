@@ -5,4 +5,5 @@ namespace Contracts.Identity;
 public interface ITokenService
 {
     TokenResponse GetToken(TokenRequest request);
+    TokenResponse GenerateToken(UserInfoDto userInfo);
 }

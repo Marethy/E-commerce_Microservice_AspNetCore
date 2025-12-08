@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Shared.DTOs.Product
 {
@@ -8,6 +8,11 @@ namespace Shared.DTOs.Product
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
         public ICollection<ProductDto>? Products { get; set; }
+        // Hierarchy properties
+        public Guid? ParentId { get; set; }
+        public int Level { get; set; }
+        public bool HasChildren { get; set; }
+        public ICollection<CategoryDto>? Children { get; set; }
     }
 
     public class CreateCategoryDto

@@ -10,6 +10,8 @@ namespace Product.API.Repositories.Interfaces
         Task<IEnumerable<CatalogProduct>> GetProductsByCategory(Guid categoryId);
         Task<CatalogProduct?> GetProduct(Guid id);
         Task<CatalogProduct?> GetProductByNo(string productNo);
+        Task<CatalogProduct?> GetProductBySlug(string slug);
+        Task<IEnumerable<ProductImage>> GetProductImages(Guid productId);
         Task<bool> CategoryExists(Guid categoryId);
     }
 }

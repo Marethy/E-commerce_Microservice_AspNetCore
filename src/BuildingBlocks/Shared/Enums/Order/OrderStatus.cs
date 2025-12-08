@@ -2,10 +2,13 @@
 {
     public enum OrderStatus
     {
-        New = 1, // start with 1, 0 is used for filter All = 0
-        Pending, // order is pending, not any activities for a period time.
-        Paid, // order is paid
-        Shipping, // order is on the shipping
-        Fulfilled // order is fulfilled
+        New = 1,
+        Pending = 2,
+        Confirmed = 3,
+        Paid = 4,
+        Shipped = 5,
+        Delivered = 6,
+        Cancelled = 7,
+        Fulfilled = 8
     }
 }

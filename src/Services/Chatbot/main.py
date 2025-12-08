@@ -1,6 +1,8 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from routers.chat import router as chat_router
+from routers.sessions import router as sessions_router
 from config import config
 import logging
 
@@ -11,10 +13,22 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info(f"Starting {config.APP_NAME} v{config.APP_VERSION}")
+    logger.info(f"Product API: {config.PRODUCT_API_URL}")
+    logger.info(f"Basket API: {config.BASKET_API_URL}")
+    logger.info(f"Order API: {config.ORDER_API_URL}")
+
+    yield
+
+    logger.info(f"Shutting down {config.APP_NAME}")
+
 app = FastAPI(
     title=config.APP_NAME,
     version=config.APP_VERSION,
-    description="AI-powered chatbot for E-commerce platform with LangGraph orchestration"
+    lifespan=lifespan,
+    description="AI-powered chatbot for E-commerce platform"
 )
 
 # CORS middleware
@@ -28,7 +42,10 @@ app.add_middleware(
 
 # Include routers
 app.include_router(chat_router, prefix="/api/v1", tags=["chat"])
+app.include_router(sessions_router, prefix="/api/v1", tags=["sessions"])
 
+
+# ============== Standard Endpoints ==============
 @app.get("/")
 async def root():
     return {
@@ -36,6 +53,7 @@ async def root():
         "version": config.APP_VERSION,
         "status": "running"
     }
+
 
 @app.get("/health")
 async def health_check():
@@ -46,17 +64,6 @@ async def health_check():
         "version": config.APP_VERSION
     }
 
-@app.on_event("startup")
-async def startup_event():
-    logger.info(f"Starting {config.APP_NAME} v{config.APP_VERSION}")
-    logger.info(f"Product API: {config.PRODUCT_API_URL}")
-    logger.info(f"Basket API: {config.BASKET_API_URL}")
-    logger.info(f"Order API: {config.ORDER_API_URL}")
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    logger.info(f"Shutting down {config.APP_NAME}")
-
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=80)
