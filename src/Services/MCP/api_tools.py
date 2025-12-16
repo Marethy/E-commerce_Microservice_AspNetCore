@@ -244,6 +244,28 @@ class CustomerAPITools:
         except Exception as e:
             logger.error(f"Error getting customer: {e}")
             return {"isSuccess": False, "message": str(e)}
+    
+    @staticmethod
+    async def get_user_info(token: str) -> Dict[str, Any]:
+        """
+        Get current user info from JWT token.
+        Parses the token to extract user identity and returns customer profile.
+        """
+        try:
+            if not token:
+                return {"isSuccess": False, "message": "Token is required"}
+            
+            headers = {"Authorization": f"Bearer {token}"}
+            
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.post(
+                    f"{CUSTOMER_API_URL}/api/Customers/user-info",
+                    headers=headers
+                )
+                return response.json()
+        except Exception as e:
+            logger.error(f"Error getting user info: {e}")
+            return {"isSuccess": False, "message": str(e)}
 
 
 # Tool registry for MCP discovery
@@ -368,6 +390,17 @@ ECOMMERCE_TOOLS = {
                 "username": {"type": "string", "description": "Username", "required": True}
             },
             "required": ["username"]
+        }
+    },
+    "get_user_info": {
+        "function": CustomerAPITools.get_user_info,
+        "description": "Get current user's profile information from JWT token. Use this when user asks about their own profile/info.",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "token": {"type": "string", "description": "JWT Bearer token (required)", "required": True}
+            },
+            "required": ["token"]
         }
     }
 }

@@ -15,6 +15,11 @@ namespace Customer.API.Repositories.Interfaces
             return await FindByCondition(x => x.UserName == username).FirstOrDefaultAsync();
         }
 
+        public async Task<Entities.Customer> GetCustomerByEmailAsync(string email)
+        {
+            return await FindByCondition(x => x.Email == email).FirstOrDefaultAsync();
+        }
+
         public async Task<IEnumerable<Entities.Customer>> GetCustomersAsync()
         {
             return await FindAll().ToListAsync();

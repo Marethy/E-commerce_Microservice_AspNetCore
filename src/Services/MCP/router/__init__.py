@@ -144,9 +144,16 @@ class SemanticRouter:
             action_type="api_call"
         ),
         ToolDescription(
-            name="add_to_cart",
-            description="Add item to shopping cart, add product to basket.",
-            keywords=["cart", "basket", "add", "buy", "purchase", "giỏ hàng", "thêm", "mua"],
+            name="add_to_cart_ui",
+            description="Click the 'Add to Cart' button on product page. Visually add product to shopping cart through UI interaction.",
+            keywords=["add to cart", "click add", "button cart", "add button", "thêm vào giỏ", "nhấn thêm", "click mua", "bấm giỏ hàng"],
+            category="ui",
+            action_type="click"
+        ),
+        ToolDescription(
+            name="add_to_cart_api",
+            description="Add item to shopping cart via API (no UI). Use when UI interaction is not possible or fails.",
+            keywords=["api cart", "backend cart", "direct add cart", "cart api"],
             category="api",
             action_type="api_call"
         ),

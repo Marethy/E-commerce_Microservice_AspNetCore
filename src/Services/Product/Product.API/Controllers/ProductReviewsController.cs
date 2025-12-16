@@ -10,6 +10,7 @@ using Shared.Common.Constants;
 using Shared.DTOs.Product;
 using Shared.SeedWork.ApiResult;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net;
 
 namespace Product.API.Controllers;
@@ -48,12 +49,75 @@ public class ProductReviewsController : ControllerBase
 
     [HttpGet("product/{productId:guid}")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(ApiResult<List<ProductReviewDto>>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<ApiResult<List<ProductReviewDto>>>> GetReviewsByProduct([Required] Guid productId)
+    [ProducesResponseType(typeof(ApiResult<object>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<object>>> GetReviewsByProduct(
+        [Required] Guid productId,
+        [FromQuery] int page = 0,
+        [FromQuery] int size = 20,
+        [FromQuery] string? sortBy = null,
+        [FromQuery] string? order = null)
     {
-        var reviews = await _repository.GetReviewsByProduct(productId);
-        var result = _mapper.Map<List<ProductReviewDto>>(reviews);
-        return Ok(new ApiSuccessResult<List<ProductReviewDto>>(result));
+        var allReviews = await _repository.GetReviewsByProduct(productId);
+        
+        // Convert to List for manipulation
+        List<ProductReview> filteredReviews = allReviews.ToList();
+
+        // Apply sorting
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            var sortByLower = sortBy.ToLower();
+            var isAscending = order?.ToLower() == "asc";
+
+            if (sortByLower == "rating")
+            {
+                filteredReviews = isAscending
+                    ? filteredReviews.OrderBy(r => r.Rating).ToList()
+                    : filteredReviews.OrderByDescending(r => r.Rating).ToList();
+            }
+            else if (sortByLower == "date" || sortByLower == "reviewdate")
+            {
+                filteredReviews = isAscending
+                    ? filteredReviews.OrderBy(r => r.ReviewDate).ToList()
+                    : filteredReviews.OrderByDescending(r => r.ReviewDate).ToList();
+            }
+            else if (sortByLower == "helpful" || sortByLower == "helpfulvotes")
+            {
+                filteredReviews = isAscending
+                    ? filteredReviews.OrderBy(r => r.HelpfulVotes).ToList()
+                    : filteredReviews.OrderByDescending(r => r.HelpfulVotes).ToList();
+            }
+            else
+            {
+                filteredReviews = filteredReviews.OrderByDescending(r => r.ReviewDate).ToList();
+            }
+        }
+        else
+        {
+            // Default: sort by date descending
+            filteredReviews = filteredReviews.OrderByDescending(r => r.ReviewDate).ToList();
+        }
+
+        // Apply pagination
+        var totalElements = filteredReviews.Count;
+        var totalPages = (int)Math.Ceiling(totalElements / (double)size);
+        var paginatedReviews = filteredReviews
+            .Skip(page * size)
+            .Take(size)
+            .ToList();
+
+        var reviewDtos = _mapper.Map<List<ProductReviewDto>>(paginatedReviews);
+
+        var result = new
+        {
+            content = reviewDtos,
+            page,
+            size,
+            totalElements,
+            totalPages,
+            last = page >= totalPages - 1
+        };
+
+        return Ok(new ApiSuccessResult<object>(result));
  }
 
     [HttpGet("user/{userId}")]
@@ -88,11 +152,22 @@ public class ProductReviewsController : ControllerBase
         var averageRating = await _repository.GetAverageRatingByProduct(productId);
  var reviewCount = await _repository.GetReviewCountByProduct(productId);
 
+        // ✅ Get rating breakdown
+        var reviews = await _repository.GetReviewsByProduct(productId);
+        var ratingBreakdown = new
+        {
+            oneStar = reviews.Count(r => r.Rating == 1),
+            twoStar = reviews.Count(r => r.Rating == 2),
+            threeStar = reviews.Count(r => r.Rating == 3),
+            fourStar = reviews.Count(r => r.Rating == 4),
+            fiveStar = reviews.Count(r => r.Rating == 5)
+        };
+
         var result = new
         {
-          ProductId = productId,
- AverageRating = Math.Round(averageRating, 2),
-        ReviewCount = reviewCount
+          averageRating = Math.Round(averageRating, 2),
+        totalReviews = reviewCount,
+            ratingBreakdown
         };
 
         return Ok(new ApiSuccessResult<object>(result));

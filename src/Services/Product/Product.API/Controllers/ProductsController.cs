@@ -48,6 +48,33 @@ public class ProductsController : ControllerBase
         return Ok(new ApiSuccessResult<List<ProductDto>>(result));
     }
 
+    [HttpGet("search")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<PagedProductResponse>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<PagedProductResponse>>> SearchProducts(
+        [FromQuery] ProductFilterDto filter,
+        [FromQuery] int page = 0,
+        [FromQuery] int size = 20)
+    {
+        var (items, totalCount) = await _repository.SearchProducts(filter, page, size);
+        var products = _mapper.Map<List<ProductDto>>(items);
+        
+        var response = new PagedProductResponse
+        {
+            Content = products,
+            Meta = new PageMetadata
+            {
+                Page = page,
+                Size = size,
+                TotalElements = totalCount,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)size),
+                Last = (page + 1) * size >= totalCount
+            }
+        };
+
+        return Ok(new ApiSuccessResult<PagedProductResponse>(response));
+    }
+
     [HttpGet("summary")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<List<ProductSummaryDto>>), (int)HttpStatusCode.OK)]

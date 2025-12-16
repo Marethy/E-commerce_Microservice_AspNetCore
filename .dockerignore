@@ -1,0 +1,78 @@
+﻿# ==============================
+# 1. CORE & IDE (Hệ thống & Code Editor)
+# ==============================
+**/.classpath
+**/.dockerignore
+**/.env
+**/.git
+**/.gitignore
+**/.project
+**/.settings
+**/.toolstarget
+**/.vs
+**/.vscode
+**/*.*proj.user
+**/*.dbmdl
+**/*.jfm
+**/azds.yaml
+**/charts
+**/docker-compose*
+**/Dockerfile*
+**/secrets.dev.yaml
+**/values.dev.yaml
+LICENSE
+README.md
+
+# Giữ lại git info (nếu bạn cần build version dựa trên git commit),
+# nếu không cần thì có thể comment 4 dòng dưới để build nhanh hơn.
+!**/.gitignore
+!.git/HEAD
+!.git/config
+!.git/packed-refs
+!.git/refs/heads/**
+
+# ==============================
+# 2. .NET BUILD OUTPUT (Quan trọng)
+# ==============================
+**/bin
+**/obj
+**/TestResults
+**/node_modules
+**/npm-debug.log
+
+# ==============================
+# 3. SETTINGS & SECRETS
+# ==============================
+# Chặn file cấu hình Development để tránh lộ info khi deploy
+**/appsettings.Development.json
+
+# Các file appsettings cụ thể bạn yêu cầu bỏ qua:
+src/WebApps/WebHealthStatus/appsettings.json
+src/Services/Inventory/Inventory.Grpc/appsettings.json
+
+# ==============================
+# 4. PYTHON (Cho Chatbot & MCP)
+# ==============================
+# Rất quan trọng để image Python nhỏ gọn và không lỗi
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.Python
+**/*.so
+**/*.egg
+**/*.egg-info
+**/dist
+**/build
+**/.venv
+**/venv
+**/ENV
+**/env
+**/.pytest_cache
+**/.mypy_cache
+
+# ==============================
+# 5. OS FILES (File rác hệ điều hành)
+# ==============================
+.DS_Store
+Thumbs.db

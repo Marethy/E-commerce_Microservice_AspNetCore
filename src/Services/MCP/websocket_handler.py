@@ -77,7 +77,7 @@ class ConnectionManager:
             elements=state.get("elements", []),
             timestamp=datetime.now().isoformat()
         )
-        logger.debug(f"Updated UI state for {user_id}: {state.get('url', 'N/A')}")
+        logger.info(f"Updated UI state for {user_id}: {state.get('url', 'N/A')} with {len(state.get('elements', []))} elements")
     
     def get_ui_state(self, user_id: str) -> Optional[dict]:
         """Get latest UI state for a user"""
@@ -102,11 +102,13 @@ class ConnectionManager:
         future = asyncio.get_event_loop().create_future()
         self.action_results[action_id] = future
         
-        # Send action to client
+        # Send action to client - use format expected by useMCPConnection
         message = {
-            "type": "action",
-            "id": action_id,
-            "payload": action
+            "type": "action_request",
+            "data": {
+                "id": action_id,
+                **action
+            }
         }
         
         success = await self.send_message(user_id, message)
@@ -142,13 +144,14 @@ async def handle_client_message(user_id: str, data: dict):
     message_type = data.get("type")
     
     if message_type == "ui_state":
-        # Client sending UI state update
-        manager.update_ui_state(user_id, data.get("payload", {}))
+        # Client sending UI state update - client uses "data" key
+        payload = data.get("data") or data.get("payload", {})
+        manager.update_ui_state(user_id, payload)
     
     elif message_type == "action_result":
-        # Client sending action execution result
-        action_id = data.get("id")
-        result = data.get("payload", {})
+        # Client sending action execution result - client uses "actionId" and "data"
+        action_id = data.get("actionId") or data.get("id")
+        result = data.get("data") or data.get("payload", {})
         if action_id:
             manager.set_action_result(action_id, result)
     

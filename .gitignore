@@ -37,9 +37,6 @@ wwwroot/
 .env
 .env.*
 
-# Docker files
-.dockerignore
-
 # Backup & system files
 *.bak
 *.swp

@@ -26,6 +26,16 @@ class PlaywrightSession:
 
 
 class PlaywrightMCPServer:
+    # Domain whitelist for security
+    ALLOWED_DOMAINS = [
+        "localhost",
+        "127.0.0.1",
+        "localhost:5173",
+        "127.0.0.1:5173",
+        "host.docker.internal",
+        "host.docker.internal:5173",
+    ]
+    
     def __init__(self, embedding_service: Optional[EmbeddingService] = None):
         self.embedding_service = embedding_service or EmbeddingService()
         self.router = SemanticRouter(self.embedding_service)
@@ -90,6 +100,53 @@ class PlaywrightMCPServer:
             await self._browser_manager.close_session(user_id)
             logger.info(f"Closed session for {user_id}")
     
+    async def execute_client_action(
+        self,
+        user_id: str,
+        action: dict,
+        timeout: float = 30.0
+    ) -> dict:
+        """Execute action via WebSocket on client's browser, fallback to server-side"""
+        from websocket_handler import manager
+        import uuid
+        
+        # Check if client is connected
+        if manager.is_connected(user_id):
+            try:
+                action_id = str(uuid.uuid4())
+                action_with_id = {"id": action_id, **action}
+                
+                logger.info(f"Executing action via WebSocket for {user_id}: {action}")
+                result = await manager.execute_action(user_id, action_id, action_with_id, timeout)
+                
+                return result
+                
+            except Exception as e:
+                logger.warning(f"WebSocket execution failed for {user_id}: {e}")
+                # Continue to fallback
+        
+        # Fallback to server-side Playwright execution
+        logger.info(f"No WebSocket connection, using server-side Playwright for {user_id}")
+        session = self._sessions.get(user_id)
+        if session:
+            try:
+                result = await session.executor.execute(
+                    action=action.get("action", ""),
+                    selector=action.get("selector", ""),
+                    value=action.get("value"),
+                    **action.get("options", {})
+                )
+                # Convert ActionResult to dict, with screenshot as base64
+                import base64
+                result_dict = result.to_dict() if hasattr(result, 'to_dict') else result
+                if hasattr(result, 'screenshot') and result.screenshot:
+                    result_dict["screenshot"] = base64.b64encode(result.screenshot).decode('utf-8')
+                return result_dict
+            except Exception as e:
+                return {"success": False, "error": str(e)}
+        
+        return {"success": False, "error": "No session and no WebSocket connection"}
+    
     # ============== Phase 1: Intent Routing ==============
     
     async def route_intent(
@@ -115,21 +172,97 @@ class PlaywrightMCPServer:
         user_id: str,
         max_elements: int = 100
     ) -> list[UIElement]:
+        # Try to get client elements first via WebSocket
+        from websocket_handler import manager as ws_manager
+        
+        if ws_manager.is_connected(user_id):
+            ui_state = ws_manager.get_ui_state(user_id)
+            if ui_state and ui_state.get('elements'):
+                logger.info(f"Using client UI state for {user_id} (WebSocket connected)")
+                try:
+                    # Parse client elements
+                    elements = self._parse_client_elements(ui_state['elements'])
+                    
+                    # Ensure session exists (but don't create browser if using client state)
+                    session = self._sessions.get(user_id)
+                    if not session:
+                        # Create minimal session without browser (will use client browser)
+                        logger.info(f"Creating minimal session for client-driven user {user_id}")
+                        session = PlaywrightSession(
+                            user_id=user_id,
+                            browser_session=None,  # No server-side browser needed
+                            scanner=None,
+                            executor=None
+                        )
+                        self._sessions[user_id] = session
+                    
+                    # Update session state from client
+                    session.elements = elements
+                    session.element_resolver = ElementResolver(elements)
+                    session.last_url = ui_state.get('url', '')  # Set from client UI state
+                    session.last_snapshot_time = asyncio.get_event_loop().time()
+                    
+                    logger.info(f"Captured {len(elements)} elements from client for {user_id}")
+                    return elements[:max_elements]
+                except Exception as e:
+                    logger.warning(f"Failed to parse client elements for {user_id}: {e}")
+                    # Fall through to server-side scanning
+        
+        # Fallback: server-side Playwright scanning
+        logger.info(f"Using server-side Playwright for {user_id} (client not connected)")
+        
         session = self._sessions.get(user_id)
         if not session:
-            logger.error(f"No session found for {user_id}")
-            return []
+            try:
+                session = await self.create_session(user_id, start_url="http://host.docker.internal:5173")
+            except Exception as e:
+                logger.error(f"Failed to create session for {user_id}: {e}")
+                return []
         
-        # Capture snapshot
+        # Capture snapshot from server-side browser
         elements = await session.scanner.capture_snapshot(max_elements)
         
         # Update session state
         session.elements = elements
         session.element_resolver = ElementResolver(elements)
-        session.last_url = session.browser_session.page.url
+        if session.browser_session and session.browser_session.page:
+            session.last_url = session.browser_session.page.url
         session.last_snapshot_time = asyncio.get_event_loop().time()
         
-        logger.info(f"Captured {len(elements)} elements for {user_id}")
+        logger.info(f"Captured {len(elements)} elements from server for {user_id}")
+        
+        return elements
+    
+    def _parse_client_elements(self, client_elements: list[dict]) -> list[UIElement]:
+        """Convert client element dicts to UIElement objects"""
+        elements = []
+        
+        for el_dict in client_elements:
+            try:
+                elements.append(UIElement(
+                    id=el_dict.get('id', ''),
+                    selector=el_dict.get('selector', ''),
+                    type=el_dict.get('type', 'interactive'),
+                    description=el_dict.get('description', ''),
+                    text=el_dict.get('text', ''),
+                    aria_label=el_dict.get('ariaLabel'),
+                    placeholder=el_dict.get('placeholder'),
+                    test_id=None,
+                    name=None,
+                    value=el_dict.get('value'),
+                    is_visible=el_dict.get('visible', True),
+                    is_enabled=True,
+                    rect={},
+                    attributes={
+                        'aria-label': el_dict.get('ariaLabel', ''),
+                        'href': el_dict.get('href', '')
+                    },
+                    options=[],
+                    context=''
+                ))
+            except Exception as e:
+                logger.warning(f"Failed to parse client element {el_dict.get('id', 'unknown')}: {e}")
+                continue
         
         return elements
     
@@ -141,10 +274,17 @@ class PlaywrightMCPServer:
     ) -> dict:
         session = self._sessions.get(user_id)
         if not session:
-            return {"tools": [], "error": "No session found"}
+            try:
+                logger.info(f"Auto-creating session for user {user_id}")
+                session = await self.create_session(user_id, start_url=None)
+            except Exception as e:
+                logger.error(f"Failed to auto-create session: {e}")
+                return {"tools": [], "error": f"Failed to create session: {str(e)}"}
         
-        # Check if we need to refresh snapshot
-        current_url = session.browser_session.page.url
+        # Get page state safely
+        page_state = await self.get_page_state(user_id)
+        current_url = page_state.get("url", session.last_url if hasattr(session, 'last_url') else "")
+        
         should_refresh = (
             force_refresh or
             not session.elements or
@@ -157,8 +297,8 @@ class PlaywrightMCPServer:
         
         # Get page context
         context = {
-            "url": session.browser_session.page.url,
-            "title": await session.browser_session.page.title(),
+            "url": page_state.get("url", ""),
+            "title": page_state.get("title", ""),
         }
         
         # If query provided, use semantic routing to prioritize tools
@@ -223,7 +363,10 @@ class PlaywrightMCPServer:
     ) -> dict:
         session = self._sessions.get(user_id)
         if not session:
-            return {"success": False, "error": "No session found"}
+            try:
+                session = await self.create_session(user_id, start_url="http://host.docker.internal:5173")
+            except Exception as e:
+                return {"success": False, "error": f"Failed to create session: {str(e)}"}
         
         # Parse tool name to get action
         action = self._parse_tool_action(tool_name)
@@ -233,10 +376,13 @@ class PlaywrightMCPServer:
         element_id = arguments.get("element_id")
         
         if element_id and session.element_resolver:
+            logger.info(f"Resolving element_id: {element_id} for user {user_id}")
             element = session.element_resolver.resolve(element_id)
             if element:
                 selector = element.selector
+                logger.info(f"Resolved {element_id} to selector: {selector}")
             else:
+                logger.error(f"Element '{element_id}' not found in resolver")
                 return {"success": False, "error": f"Element '{element_id}' not found"}
         elif arguments.get("selector"):
             selector = arguments["selector"]
@@ -312,6 +458,23 @@ class PlaywrightMCPServer:
         if not session:
             return {"success": False, "error": "No session found"}
         
+        # Validate domain against whitelist
+        from urllib.parse import urlparse
+        parsed = urlparse(url)
+        
+        # Build domain with port
+        domain = parsed.hostname or ""
+        if parsed.port:
+            domain = f"{domain}:{parsed.port}"
+        
+        # Check whitelist
+        if domain and domain not in self.ALLOWED_DOMAINS:
+            logger.warning(f"Navigation blocked: {domain} not in allowed domains")
+            return {
+                "success": False,
+                "error": f"Navigation blocked: domain '{domain}' not allowed. Only localhost:5173 is permitted."
+            }
+        
         result = await session.executor.execute(
             action="navigate",
             selector="",
@@ -326,18 +489,27 @@ class PlaywrightMCPServer:
         return result.to_dict()
     
     async def get_page_state(self, user_id: str) -> dict:
+        """Get current page state (URL, title)"""
+        from websocket_handler import manager as ws_manager
+        
+        # Try to get state from WebSocket client first
+        if ws_manager.is_connected(user_id):
+            ui_state = ws_manager.get_ui_state(user_id)
+            if ui_state:
+                return {
+                    "url": ui_state.get("url", ""),
+                    "title": ui_state.get("title", "")
+                }
+        
+        # Fallback: get from server-side browser session
         session = self._sessions.get(user_id)
-        if not session:
-            return {"error": "No session found"}
+        if session and session.browser_session and session.browser_session.page:
+            return {
+                "url": session.browser_session.page.url,
+                "title": await session.browser_session.page.title()
+            }
         
-        page = session.browser_session.page
-        
-        return {
-            "url": page.url,
-            "title": await page.title(),
-            "element_count": len(session.elements),
-            "last_snapshot_time": session.last_snapshot_time
-        }
+        return {"url": "", "title": ""}
     
     async def take_screenshot(
         self,
@@ -408,12 +580,15 @@ class PlaywrightMCPServer:
                 options=options
             )
             
+            # Get page state safely
+            page_state = await self.get_page_state(user_id)
+            
             return {
                 "success": result.success,
                 "error": result.error,
                 "newState": {
-                    "url": session.browser_session.page.url,
-                    "title": await session.browser_session.page.title()
+                    "url": page_state.get("url", ""),
+                    "title": page_state.get("title", "")
                 }
             }
         except Exception as e:

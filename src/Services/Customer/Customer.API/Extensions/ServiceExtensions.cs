@@ -59,7 +59,8 @@ namespace Customer.API.Extensions
         {
             services.AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
                 .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>))
-                .AddScoped<ICustomerRepository, CustomerRepository>();
+                .AddScoped<ICustomerRepository, CustomerRepository>()
+                .AddScoped<INotificationRepository, NotificationRepository>();
 
             return services;
         }

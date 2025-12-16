@@ -34,6 +34,14 @@ class ActionExecutor:
         self.page = page
         self._default_timeout = 10000  # 10 seconds
     
+    def _is_cart_related_action(self, action: str, selector: str, value: Optional[str]) -> bool:
+        """Detect if action is related to cart/checkout for auto-screenshot"""
+        cart_keywords = ["cart", "basket", "giỏ", "checkout", "buy", "purchase", "mua", "thanh toán", "add-to-cart"]
+        
+        # Check action context
+        text_to_check = f"{action} {selector} {value or ''}".lower()
+        return any(keyword in text_to_check for keyword in cart_keywords)
+    
     async def execute(
         self,
         action: str,
@@ -69,7 +77,20 @@ class ActionExecutor:
             )
         
         try:
-            return await handler(selector, value, options)
+            # Execute action
+            result = await handler(selector, value, options)
+            
+            # Auto-screenshot for cart-related actions
+            if result.success and self._is_cart_related_action(action, selector, value):
+                logger.info(f"Cart-related action detected, capturing screenshot")
+                try:
+                    screenshot = await self.page.screenshot()
+                    result.screenshot = screenshot
+                except Exception as e:
+                    logger.warning(f"Failed to capture auto-screenshot: {e}")
+            
+            return result
+            
         except PlaywrightTimeout as e:
             return ActionResult(
                 success=False,
