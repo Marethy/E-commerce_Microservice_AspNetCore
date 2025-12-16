@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tmcp.proto\x12\x03mcp\"1\n\x0fGetToolsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\r\n\x05query\x18\x02 \x01(\t\"D\n\x04Tool\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x19\n\x11parameters_schema\x18\x03 \x01(\t\"N\n\x10GetToolsResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x18\n\x05tools\x18\x02 \x03(\x0b\x32\t.mcp.Tool\x12\x0f\n\x07\x63ontext\x18\x03 \x01(\t\"P\n\x12\x45xecuteToolRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x11\n\ttool_name\x18\x02 \x01(\t\x12\x16\n\x0e\x61rguments_json\x18\x03 \x01(\t\"E\n\x13\x45xecuteToolResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0e\n\x06result\x18\x02 \x01(\t\x12\r\n\x05\x65rror\x18\x03 \x01(\t2\x8f\x01\n\nMCPService\x12?\n\x10GetRelevantTools\x12\x14.mcp.GetToolsRequest\x1a\x15.mcp.GetToolsResponse\x12@\n\x0b\x45xecuteTool\x12\x17.mcp.ExecuteToolRequest\x1a\x18.mcp.ExecuteToolResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tmcp.proto\x12\x03mcp\"E\n\x0fGetToolsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\r\n\x05query\x18\x02 \x01(\t\x12\x12\n\nauth_token\x18\x03 \x01(\t\"D\n\x04Tool\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\x12\x19\n\x11parameters_schema\x18\x03 \x01(\t\"N\n\x10GetToolsResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x18\n\x05tools\x18\x02 \x03(\x0b\x32\t.mcp.Tool\x12\x0f\n\x07\x63ontext\x18\x03 \x01(\t\"d\n\x12\x45xecuteToolRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x11\n\ttool_name\x18\x02 \x01(\t\x12\x16\n\x0e\x61rguments_json\x18\x03 \x01(\t\x12\x12\n\nauth_token\x18\x04 \x01(\t\"E\n\x13\x45xecuteToolResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0e\n\x06result\x18\x02 \x01(\t\x12\r\n\x05\x65rror\x18\x03 \x01(\t\"=\n\x16GetPageElementsRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12\x12\n\nauth_token\x18\x02 \x01(\t\"Y\n\tUIElement\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04type\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x0c\n\x04text\x18\x04 \x01(\t\x12\x0f\n\x07\x63ontext\x18\x05 \x01(\t\"\x84\x01\n\x17GetPageElementsResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12 \n\x08\x65lements\x18\x02 \x03(\x0b\x32\x0e.mcp.UIElement\x12\x13\n\x0b\x63urrent_url\x18\x03 \x01(\t\x12\x12\n\npage_title\x18\x04 \x01(\t\x12\r\n\x05\x65rror\x18\x05 \x01(\t2\xdd\x01\n\nMCPService\x12?\n\x10GetRelevantTools\x12\x14.mcp.GetToolsRequest\x1a\x15.mcp.GetToolsResponse\x12@\n\x0b\x45xecuteTool\x12\x17.mcp.ExecuteToolRequest\x1a\x18.mcp.ExecuteToolResponse\x12L\n\x0fGetPageElements\x12\x1b.mcp.GetPageElementsRequest\x1a\x1c.mcp.GetPageElementsResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,15 +32,21 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'mcp_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
   _globals['_GETTOOLSREQUEST']._serialized_start=18
-  _globals['_GETTOOLSREQUEST']._serialized_end=67
-  _globals['_TOOL']._serialized_start=69
-  _globals['_TOOL']._serialized_end=137
-  _globals['_GETTOOLSRESPONSE']._serialized_start=139
-  _globals['_GETTOOLSRESPONSE']._serialized_end=217
-  _globals['_EXECUTETOOLREQUEST']._serialized_start=219
-  _globals['_EXECUTETOOLREQUEST']._serialized_end=299
-  _globals['_EXECUTETOOLRESPONSE']._serialized_start=301
-  _globals['_EXECUTETOOLRESPONSE']._serialized_end=370
-  _globals['_MCPSERVICE']._serialized_start=373
-  _globals['_MCPSERVICE']._serialized_end=516
+  _globals['_GETTOOLSREQUEST']._serialized_end=87
+  _globals['_TOOL']._serialized_start=89
+  _globals['_TOOL']._serialized_end=157
+  _globals['_GETTOOLSRESPONSE']._serialized_start=159
+  _globals['_GETTOOLSRESPONSE']._serialized_end=237
+  _globals['_EXECUTETOOLREQUEST']._serialized_start=239
+  _globals['_EXECUTETOOLREQUEST']._serialized_end=339
+  _globals['_EXECUTETOOLRESPONSE']._serialized_start=341
+  _globals['_EXECUTETOOLRESPONSE']._serialized_end=410
+  _globals['_GETPAGEELEMENTSREQUEST']._serialized_start=412
+  _globals['_GETPAGEELEMENTSREQUEST']._serialized_end=473
+  _globals['_UIELEMENT']._serialized_start=475
+  _globals['_UIELEMENT']._serialized_end=564
+  _globals['_GETPAGEELEMENTSRESPONSE']._serialized_start=567
+  _globals['_GETPAGEELEMENTSRESPONSE']._serialized_end=699
+  _globals['_MCPSERVICE']._serialized_start=702
+  _globals['_MCPSERVICE']._serialized_end=923
 # @@protoc_insertion_point(module_scope)

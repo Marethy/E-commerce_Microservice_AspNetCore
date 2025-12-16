@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from protos import mcp_pb2 as mcp__pb2
+import mcp_pb2 as mcp__pb2
 
 GRPC_GENERATED_VERSION = '1.76.0'
 GRPC_VERSION = grpc.__version__
@@ -44,6 +44,11 @@ class MCPServiceStub(object):
                 request_serializer=mcp__pb2.ExecuteToolRequest.SerializeToString,
                 response_deserializer=mcp__pb2.ExecuteToolResponse.FromString,
                 _registered_method=True)
+        self.GetPageElements = channel.unary_unary(
+                '/mcp.MCPService/GetPageElements',
+                request_serializer=mcp__pb2.GetPageElementsRequest.SerializeToString,
+                response_deserializer=mcp__pb2.GetPageElementsResponse.FromString,
+                _registered_method=True)
 
 
 class MCPServiceServicer(object):
@@ -61,6 +66,12 @@ class MCPServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetPageElements(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_MCPServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -73,6 +84,11 @@ def add_MCPServiceServicer_to_server(servicer, server):
                     servicer.ExecuteTool,
                     request_deserializer=mcp__pb2.ExecuteToolRequest.FromString,
                     response_serializer=mcp__pb2.ExecuteToolResponse.SerializeToString,
+            ),
+            'GetPageElements': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPageElements,
+                    request_deserializer=mcp__pb2.GetPageElementsRequest.FromString,
+                    response_serializer=mcp__pb2.GetPageElementsResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -129,6 +145,33 @@ class MCPService(object):
             '/mcp.MCPService/ExecuteTool',
             mcp__pb2.ExecuteToolRequest.SerializeToString,
             mcp__pb2.ExecuteToolResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetPageElements(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/mcp.MCPService/GetPageElements',
+            mcp__pb2.GetPageElementsRequest.SerializeToString,
+            mcp__pb2.GetPageElementsResponse.FromString,
             options,
             channel_credentials,
             insecure,

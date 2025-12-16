@@ -27,8 +27,13 @@ def _get_history(session_id: str) -> list[dict]:
 async def chat_endpoint(request: ChatRequest, background_tasks: BackgroundTasks):
     try:
         history = _get_history(request.session_id)
-        user_id = request.session_id
         
+        # For MCP calls (browser automation), always use session_id
+        # This must match the userId used in WebSocket connection
+        mcp_user_id = request.session_id
+        
+        # For API calls (if needed), use username if authenticated
+        user_id = request.session_id
         if request.user_token:
             username = extract_username(request.user_token)
             if username:
@@ -41,7 +46,8 @@ async def chat_endpoint(request: ChatRequest, background_tasks: BackgroundTasks)
             step_messages = []
             
             try:
-                async for event in stream_chat(user_id, request.message, history[:-1], request.user_token):
+                # Pass mcp_user_id (session_id) to agent for browser automation
+                async for event in stream_chat(mcp_user_id, request.message, history[:-1], request.user_token):
                     yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
                     
                     if event.get("type") == "thinking":
