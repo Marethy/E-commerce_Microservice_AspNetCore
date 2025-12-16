@@ -192,8 +192,8 @@ namespace Product.API.Persistence
                         Summary = "Latest flagship smartphone with advanced features",
                         Description = "High-performance smartphone with 6.7-inch display, triple camera system, and 5G connectivity.",
                         ShortDescription = "Premium flagship smartphone",
-                        Price = 999.99m,
-                        OriginalPrice = 1199.99m,
+                        Price = 24499755m,        // 999.99 USD = 24,499,755 VND
+                        OriginalPrice = 29399755m, // 1199.99 USD = 29,399,755 VND
                         DiscountPercentage = 17,
                         Slug = "smartphone-pro-max",
                         CategoryId = SeedIds.ElectronicsId,
@@ -212,8 +212,8 @@ namespace Product.API.Persistence
                         Summary = "Premium noise-cancelling wireless earbuds",
                         Description = "High-quality wireless earbuds with active noise cancellation, 24-hour battery life.",
                         ShortDescription = "Premium wireless earbuds",
-                        Price = 199.99m,
-                        OriginalPrice = 249.99m,
+                        Price = 4899755m,         // 199.99 USD = 4,899,755 VND
+                        OriginalPrice = 6124755m, // 249.99 USD = 6,124,755 VND
                         DiscountPercentage = 20,
                         Slug = "wireless-earbuds",
                         CategoryId = SeedIds.ElectronicsId,
@@ -232,7 +232,7 @@ namespace Product.API.Persistence
                         Summary = "High-performance gaming laptop",
                         Description = "Powerful gaming laptop with RTX graphics, 16GB RAM, and 1TB SSD.",
                         ShortDescription = "Gaming powerhouse",
-                        Price = 1599.99m,
+                        Price = 39199755m,        // 1599.99 USD = 39,199,755 VND
                         Slug = "gaming-laptop",
                         CategoryId = SeedIds.ElectronicsId,
                         BrandId = SeedIds.TechPlusId,
@@ -252,7 +252,7 @@ namespace Product.API.Persistence
                         Summary = "Timeless denim jacket for casual wear",
                         Description = "100% cotton denim jacket with classic fit.",
                         ShortDescription = "Classic denim style",
-                        Price = 79.99m,
+                        Price = 1959755m,         // 79.99 USD = 1,959,755 VND
                         Slug = "classic-denim-jacket",
                         CategoryId = SeedIds.ClothingId,
                         SellerId = SeedIds.MarketplaceVendorId,
@@ -269,7 +269,7 @@ namespace Product.API.Persistence
                         Summary = "Comfortable running shoes for daily exercise",
                         Description = "Lightweight running shoes with cushioned sole and breathable mesh upper.",
                         ShortDescription = "Premium running shoes",
-                        Price = 129.99m,
+                        Price = 3184755m,         // 129.99 USD = 3,184,755 VND
                         Slug = "running-shoes",
                         CategoryId = SeedIds.ClothingId,
                         BrandId = SeedIds.SportWearId,
@@ -289,7 +289,7 @@ namespace Product.API.Persistence
                         Summary = "Essential guide for software craftsmanship",
                         Description = "Learn the principles of writing clean, maintainable code.",
                         ShortDescription = "Software craftsmanship guide",
-                        Price = 49.99m,
+                        Price = 1224755m,         // 49.99 USD = 1,224,755 VND
                         Slug = "clean-code-handbook",
                         CategoryId = SeedIds.BooksId,
                         BrandId = SeedIds.OReillybooksId,
@@ -307,7 +307,7 @@ namespace Product.API.Persistence
                         Summary = "Elements of reusable object-oriented software",
                         Description = "Classic book on software design patterns.",
                         ShortDescription = "Design patterns bible",
-                        Price = 59.99m,
+                        Price = 1469755m,         // 59.99 USD = 1,469,755 VND
                         Slug = "design-patterns",
                         CategoryId = SeedIds.BooksId,
                         BrandId = SeedIds.OReillybooksId,
@@ -327,7 +327,7 @@ namespace Product.API.Persistence
                         Summary = "Central control for smart home devices",
                         Description = "Control all your smart home devices from one central hub.",
                         ShortDescription = "Smart home control center",
-                        Price = 149.99m,
+                        Price = 3674755m,         // 149.99 USD = 3,674,755 VND
                         Slug = "smart-home-hub",
                         CategoryId = SeedIds.HomeGardenId,
                         BrandId = SeedIds.SmartHomeCoid,
@@ -347,7 +347,7 @@ namespace Product.API.Persistence
                         Summary = "Non-slip yoga mat for all fitness levels",
                         Description = "High-quality yoga mat with superior grip and cushioning.",
                         ShortDescription = "Premium yoga mat",
-                        Price = 39.99m,
+                        Price = 979755m,          // 39.99 USD = 979,755 VND
                         Slug = "yoga-mat-premium",
                         CategoryId = SeedIds.SportsId,
                         BrandId = SeedIds.SportWearId,

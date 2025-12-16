@@ -11,7 +11,8 @@ WORKDIR /src
 # Copy Directory.Packages.props (central package management)
 COPY ["Directory.Packages.props", "."]
 
-# Copy project files with correct restructured paths
+# A. COPY PROJECT FILES (.CSPROJ) & RESTORE
+# Giữ nguyên phần này để tận dụng cache của NuGet packages
 COPY ["src/Services/Identity/IDP/IDP.csproj", "src/Services/Identity/IDP/"]
 COPY ["src/Services/Identity/Infrastructure/IDP.Infrastructure.csproj", "src/Services/Identity/Infrastructure/"]
 COPY ["src/Services/Identity/Presentation/IDP.Presentation.csproj", "src/Services/Identity/Presentation/"]
@@ -26,8 +27,14 @@ COPY ["src/BuildingBlocks/Common.Logging/Common.Logging.csproj", "src/BuildingBl
 # Restore dependencies
 RUN dotnet restore "src/Services/Identity/IDP/IDP.csproj"
 
-# Copy everything else
-COPY . .
+# B. COPY SOURCE CODE (ĐÃ SỬA)
+# Thay vì "COPY . ." (copy toàn bộ repo), chỉ copy source code của Identity và BuildingBlocks.
+
+# 1. Copy toàn bộ source code liên quan đến Identity (Bao gồm IDP, Infra, Presentation, Shared của Identity)
+COPY ["src/Services/Identity/", "src/Services/Identity/"]
+
+# 2. Copy source code của BuildingBlocks (Thư viện dùng chung)
+COPY ["src/BuildingBlocks/", "src/BuildingBlocks/"]
 
 # Build project
 WORKDIR "/src/src/Services/Identity/IDP"

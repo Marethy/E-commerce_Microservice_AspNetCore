@@ -146,6 +146,42 @@ class MCPServicer(mcp_pb2_grpc.MCPServiceServicer):
                 result="",
                 error=str(e)
             )
+    
+    async def GetPageElements(self, request, context):
+        try:
+            playwright_server = await get_playwright_mcp_server()
+            elements = await playwright_server.capture_snapshot(request.user_id)
+            
+            page_state = await playwright_server.get_page_state(request.user_id)
+            
+            ui_elements = []
+            for el in elements:
+                ui_elements.append(mcp_pb2.UIElement(
+                    id=el.id,
+                    type=el.type,
+                    description=el.description,
+                    text=el.text[:100] if el.text else "",
+                    context=el.context or ""
+                ))
+            
+            return mcp_pb2.GetPageElementsResponse(
+                success=True,
+                elements=ui_elements,
+                current_url=page_state.get("url", ""),
+                page_title=page_state.get("title", ""),
+                error=""
+            )
+        except Exception as e:
+            import traceback
+            logger.error(f"GetPageElements error: {e}")
+            logger.error(f"Full traceback:\n{traceback.format_exc()}")
+            return mcp_pb2.GetPageElementsResponse(
+                success=False,
+                elements=[],
+                current_url="",
+                page_title="",
+                error=str(e)
+            )
 
 
 async def serve_grpc():

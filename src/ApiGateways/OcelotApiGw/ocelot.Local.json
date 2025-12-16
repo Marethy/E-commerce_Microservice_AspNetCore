@@ -6,92 +6,170 @@
     // ==================== IDENTITY SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/account/register",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/register",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/login",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/login",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/me",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/account/me",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/change-password",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/change-password",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/logout",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/logout",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     // Frontend uses /auth/* - map to /api/account/*
     {
       "UpstreamPathTemplate": "/auth/login",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/login",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/auth/register",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/register",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/auth/change-password",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/change-password",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/auth/logout",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/logout",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/user/me",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/account/me",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6001 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6001
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     // ==================== PRODUCT SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/products",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/products",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -104,36 +182,61 @@
         "DurationOfBreak": 1000,
         "TimeoutValue": 5000
       },
-      "FileCacheOptions": { "TtlSeconds": 15 },
+      "FileCacheOptions": {
+        "TtlSeconds": 15
+      },
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/products/slug/{slug}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/products/slug/{slug}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/products/category/{categoryId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/products/category/{categoryId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/products/{id}/images",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/products/{id}/images",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/products/{any}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/products/{any}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -146,557 +249,1084 @@
     },
     {
       "UpstreamPathTemplate": "/api/products/{any}",
-      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/products/{any}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== CATEGORIES ====================
     {
       "UpstreamPathTemplate": "/api/categories",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/categories",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/hierarchy",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/hierarchy",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/roots",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/roots",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/product/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/product/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}/subcategories",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}/subcategories",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}/path",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}/path",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}/hierarchy",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}/hierarchy",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}/has-subcategories",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}/has-subcategories",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== WISHLIST ====================
     {
       "UpstreamPathTemplate": "/api/wishlist",
-      "UpstreamHttpMethod": [ "GET", "POST", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/wishlist",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/count",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/count",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/check/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/check/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/with-prices",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/with-prices",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/analytics/stats",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/analytics/stats",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/analytics/most-wishlisted",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/analytics/most-wishlisted",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/{productId}",
-      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // Frontend uses /wishlist - map to /api/wishlist
     {
       "UpstreamPathTemplate": "/wishlist",
-      "UpstreamHttpMethod": [ "GET", "POST", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/wishlist",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/count",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/count",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/check/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/check/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/with-prices",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/with-prices",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/analytics/stats",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/analytics/stats",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/analytics/most-wishlisted",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/analytics/most-wishlisted",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/{productId}",
-      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== PRODUCT REVIEWS ====================
     // Alias: /api/reviews -> /api/productreviews
     {
       "UpstreamPathTemplate": "/api/reviews",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/productreviews",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/reviews/product/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/product/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/reviews/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/productreviews",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/product/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/product/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/product/{productId}/statistics",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/product/{productId}/statistics",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/user/{userId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/user/{userId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/{id}/helpful",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/{id}/helpful",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/{id}/replies",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/{id}/replies",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== BRANDS ====================
     {
       "UpstreamPathTemplate": "/api/brands",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/brands",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/brands/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/brands/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== SELLERS ====================
     {
       "UpstreamPathTemplate": "/api/sellers",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/sellers",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/sellers/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/sellers/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
-      "SwaggerKey": "product-service"
-    },
-    // ==================== WISHLIST (Product Service) ====================
-    {
-      "UpstreamPathTemplate": "/api/wishlist",
-      "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/wishlist",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
-      "SwaggerKey": "product-service"
-    },
-    {
-      "UpstreamPathTemplate": "/api/wishlist/{productId}",
-      "UpstreamHttpMethod": [ "POST", "DELETE" ],
-      "DownstreamPathTemplate": "/api/wishlist/{productId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
-      "SwaggerKey": "product-service"
-    },
-    {
-      "UpstreamPathTemplate": "/api/wishlist/check/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/wishlist/check/{productId}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
-      "SwaggerKey": "product-service"
-    },
-    {
-      "UpstreamPathTemplate": "/api/wishlist/clear",
-      "UpstreamHttpMethod": [ "DELETE" ],
-      "DownstreamPathTemplate": "/api/wishlist/clear",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
-      "SwaggerKey": "product-service"
-    },
-    // Alias: /api/wishlists -> /api/wishlist
-    {
-      "UpstreamPathTemplate": "/api/wishlists/{username}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/wishlist",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
-      "SwaggerKey": "product-service"
-    },
-    {
-      "UpstreamPathTemplate": "/api/wishlists",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
-      "DownstreamPathTemplate": "/api/wishlist",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6002 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== CUSTOMER SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/customers/{username}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/customers/{username}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6003 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    // ==================== NOTIFICATIONS ====================
+    {
+      "UpstreamPathTemplate": "/api/notifications",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/notifications",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/notifications/unread-count",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/notifications/unread-count",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/notifications/mark-read",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/notifications/mark-read",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/notifications/mark-all-read",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/notifications/mark-all-read",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/notifications/admin/send",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/notifications/admin/send",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/notifications/admin/broadcast",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/notifications/admin/broadcast",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/notifications/{id}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/notifications/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/notifications/{id}/read",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/notifications/{id}/read",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
       "SwaggerKey": "customer-service"
     },
     // ==================== BASKET SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/baskets",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/baskets",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6004 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/{username}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/baskets/{username}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6004 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/{username}/count",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/baskets/{username}/count",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6004 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/{username}/validate",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/baskets/{username}/validate",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6004 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/{username}/merge",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/baskets/{username}/merge",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6004 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/checkout",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/baskets/checkout",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6004 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6004
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     // ==================== ORDER SERVICE ====================
     // Alias: /api/orders -> /api/v1/orders
     {
       "UpstreamPathTemplate": "/api/orders",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/orders/user/{userName}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/users/{userName}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/orders/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/orders/{id}/cancel",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/cancel",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/admin",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/admin",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/admin/stats",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/admin/stats",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/admin/export",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/admin/export",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/check-purchase/{productNo}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/check-purchase/{productNo}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/users/{userName}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/users/{userName}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/status",
-      "UpstreamHttpMethod": [ "PATCH" ],
+      "UpstreamHttpMethod": [
+        "PATCH"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/status",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/cancel",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/cancel",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/invoice",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/invoice",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/receipt",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/receipt",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/email-invoice",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/email-invoice",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "host.docker.internal", "Port": 6005 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     // ==================== INVENTORY SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/inventory/items/{any}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/inventory/items/{any}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -709,7 +1339,9 @@
     },
     {
       "UpstreamPathTemplate": "/api/inventory/purchase/{any}",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/inventory/purchase/{any}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -722,7 +1354,10 @@
     },
     {
       "UpstreamPathTemplate": "/api/inventory/{any}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/inventory/{any}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -736,7 +1371,9 @@
     // Chatbot API: http://chatbot-api/api/v1/chat
     {
       "UpstreamPathTemplate": "/api/chat",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/chat",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -761,7 +1398,10 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/sessions",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/sessions",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -774,7 +1414,11 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/sessions/{sessionId}",
-      "UpstreamHttpMethod": [ "GET", "PATCH", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PATCH",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/v1/sessions/{sessionId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -787,7 +1431,9 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/sessions/{sessionId}/messages",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/sessions/{sessionId}/messages",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -800,7 +1446,9 @@
     },
     {
       "UpstreamPathTemplate": "/api/v1/chat/{sessionId}",
-      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/v1/chat/{sessionId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -813,7 +1461,9 @@
     },
     {
       "UpstreamPathTemplate": "/api/chat/{sessionId}",
-      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/v1/chat/{sessionId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -884,7 +1534,7 @@
     {
       "Key": "inventory-service",
       "TransformByOcelotConfig": false,
-      "Config": [ 
+      "Config": [
         {
           "Name": "Inventory API",
           "Version": "v1",

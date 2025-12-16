@@ -5,6 +5,7 @@ package mcp;
 service MCPService {
     rpc GetRelevantTools(GetToolsRequest) returns (GetToolsResponse);
     rpc ExecuteTool(ExecuteToolRequest) returns (ExecuteToolResponse);
+    rpc GetPageElements(GetPageElementsRequest) returns (GetPageElementsResponse);
 }
 
 message GetToolsRequest {
@@ -36,4 +37,25 @@ message ExecuteToolResponse {
     bool success = 1;
     string result = 2;
     string error = 3;
+}
+
+message GetPageElementsRequest {
+    string user_id = 1;
+    string auth_token = 2;
+}
+
+message UIElement {
+    string id = 1;
+    string type = 2;
+    string description = 3;
+    string text = 4;
+    string context = 5;
+}
+
+message GetPageElementsResponse {
+    bool success = 1;
+    repeated UIElement elements = 2;
+    string current_url = 3;
+    string page_title = 4;
+    string error = 5;
 }
