@@ -76,6 +76,35 @@ async def execute_tool(user_id: str, tool_name: str, arguments: dict, auth_token
         return {"success": False, "result": {}, "error": str(e)}
 
 
+async def get_page_elements(user_id: str, auth_token: str = None) -> dict:
+    try:
+        stub = await get_mcp_stub()
+        response = await stub.GetPageElements(
+            mcp_pb2.GetPageElementsRequest(user_id=user_id, auth_token=auth_token or "")
+        )
+        
+        elements = []
+        for el in response.elements:
+            elements.append({
+                "id": el.id,
+                "type": el.type,
+                "description": el.description,
+                "text": el.text,
+                "context": el.context
+            })
+        
+        return {
+            "success": response.success,
+            "elements": elements,
+            "current_url": response.current_url,
+            "page_title": response.page_title,
+            "error": response.error
+        }
+    except Exception as e:
+        logger.error(f"get_page_elements error: {e}")
+        return {"success": False, "elements": [], "error": str(e)}
+
+
 async def close():
     global _channel, _stub
     if _channel:
