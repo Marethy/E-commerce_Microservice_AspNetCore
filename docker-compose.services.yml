@@ -1,0 +1,332 @@
+services:
+  # ============================================================
+  # .NET MICROSERVICES
+  # ============================================================
+  
+  identity-api:
+    image: ${DOCKER_REGISTRY-}identity-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Identity/IDP/Dockerfile
+    container_name: identity-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings__IdentitySqlConnection=Server=identitydb,1433;Database=IdentityDb;User Id=sa;Password=${SA_PASSWORD};MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True"
+      - "IdentityServer__BaseUrl=http://localhost:6001"
+      - "IdentityServer__IssuerUri=http://localhost:6001"
+      - "JwtSettings__Key=${JWT_SECRET_KEY}"
+      - "JwtSettings__Issuer=${JWT_ISSUER}"
+      - "JwtSettings__Audience=${JWT_AUDIENCE}"
+      - "JwtSettings__ExpirationInMinutes=${JWT_EXPIRATION_MINUTES}"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
+      - "SMTPEmailSetting__SMTPServer=smtp.gmail.com"
+      - "SMTPEmailSetting__DisplayName=E-commerce Microservice"
+      - "SMTPEmailSetting__EnableVerifacation=false"
+      - "SMTPEmailSetting__From=ecommercemicroservice@gmail.com"
+      - "SMTPEmailSetting__UseSsl=true"
+      - "SMTPEmailSetting__Port=587"
+      - "SMTPEmailSetting__Username=khiemmm2004@gmail.com"
+      - "SMTPEmailSetting__Password=ewrn cvot wuoo peft"
+    ports:
+      - "6001:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  product-api:
+    image: ${DOCKER_REGISTRY-}product-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Product/Product.API/Dockerfile
+    container_name: product-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings__ConnectionString=server=productdb;port=5432;database=${POSTGRES_DB_PRODUCT};uid=${POSTGRES_USER};pwd=${POSTGRES_PASSWORD}"
+      - "JwtSettings__Key=${JWT_SECRET_KEY}"
+      - "JwtSettings__Issuer=${JWT_ISSUER}"
+      - "JwtSettings__Audience=${JWT_AUDIENCE}"
+      - "JwtSettings__ExpirationInMinutes=${JWT_EXPIRATION_MINUTES}"
+      - "ApiConfiguration__ApiBaseUrl=http://product-api"
+      - "ApiConfiguration__IdentityServerBaseUrl=http://localhost:6001"
+      - "ApiConfiguration__IssuerUri=http://localhost:6001"
+      - "ClipSearchService__BaseUrl=http://clip-search-api:80"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
+      - "SEED_DATA_PATH=/app/seed_data"
+    volumes:
+      - ../clean:/app/seed_data:ro
+    ports:
+      - "6002:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  customer-api:
+    image: ${DOCKER_REGISTRY-}customer-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Customer/Customer.API/Dockerfile
+    container_name: customer-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings__ConnectionString=server=customerdb;port=5432;database=${POSTGRES_DB_CUSTOMER};uid=${POSTGRES_USER};pwd=${POSTGRES_PASSWORD}"
+      - "JwtSettings__Key=${JWT_SECRET_KEY}"
+      - "JwtSettings__Issuer=${JWT_ISSUER}"
+      - "JwtSettings__Audience=${JWT_AUDIENCE}"
+      - "JwtSettings__ExpirationInMinutes=${JWT_EXPIRATION_MINUTES}"
+      - "ApiConfiguration__ApiBaseUrl=http://customer-api"
+      - "ApiConfiguration__IdentityServerBaseUrl=http://localhost:6001"
+      - "ApiConfiguration__IssuerUri=http://localhost:6001"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
+    ports:
+      - "6003:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  basket-api:
+    image: ${DOCKER_REGISTRY-}basket-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Basket/Basket.API/Dockerfile
+    container_name: basket-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "CacheSettings__ConnectionString=basketdb:6379"
+      - "GrpcSettings__DiscountUrl=http://discount-grpc"
+      - "GrpcSettings__InventoryUrl=http://inventory-grpc:5001"
+      - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "JwtSettings__Key=${JWT_SECRET_KEY}"
+      - "JwtSettings__Issuer=${JWT_ISSUER}"
+      - "JwtSettings__Audience=${JWT_AUDIENCE}"
+      - "JwtSettings__ExpirationInMinutes=${JWT_EXPIRATION_MINUTES}"
+      - "ApiConfiguration__ApiBaseUrl=http://basket-api"
+      - "ApiConfiguration__IdentityServerBaseUrl=http://localhost:6001"
+      - "ApiConfiguration__IssuerUri=http://localhost:6001"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
+    ports:
+      - "6004:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  order-api:
+    image: ${DOCKER_REGISTRY-}order-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Ordering/Ordering.API/Dockerfile
+    container_name: order-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings__OrderingConnectionString=Server=orderdb,1433;Database=OrderDb;User Id=sa;Password=${SA_PASSWORD};MultipleActiveResultSets=true;Encrypt=True;TrustServerCertificate=True"
+      - "EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "JwtSettings__Key=${JWT_SECRET_KEY}"
+      - "JwtSettings__Issuer=${JWT_ISSUER}"
+      - "JwtSettings__Audience=${JWT_AUDIENCE}"
+      - "JwtSettings__ExpirationInMinutes=${JWT_EXPIRATION_MINUTES}"
+      - "ApiConfiguration__ApiBaseUrl=http://order-api"
+      - "ApiConfiguration__IdentityServerBaseUrl=http://localhost:6001"
+      - "ApiConfiguration__IssuerUri=http://localhost:6001"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
+      - "EmailSettings__FromAddress=ecommercemicroservice@gmail.com"
+      - "EmailSettings__ApiKey=xkeysib-f0a3e0c7c7e94b5bf5e5963a3f0e3b3a3c7e94b3-9999"
+      - "EmailSettings__FromName=E-commerce Microservice"
+    ports:
+      - "6005:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  inventory-product-api:
+    image: ${DOCKER_REGISTRY-}inventory-product-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Inventory/Inventory.Product.API/Dockerfile
+    container_name: inventory-product-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings__ConnectionString=mongodb://admin:admin@inventorydb:27017"
+      - "DatabaseSettings__DatabaseName=InventoryDb"
+      - "JwtSettings__Key=${JWT_SECRET_KEY}"
+      - "JwtSettings__Issuer=${JWT_ISSUER}"
+      - "JwtSettings__Audience=${JWT_AUDIENCE}"
+      - "JwtSettings__ExpirationInMinutes=${JWT_EXPIRATION_MINUTES}"
+      - "ApiConfiguration__ApiBaseUrl=http://inventory-product-api"
+      - "ApiConfiguration__IdentityServerBaseUrl=http://localhost:6001"
+      - "ApiConfiguration__IssuerUri=http://localhost:6001"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
+    ports:
+      - "6006:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  inventory-grpc:
+    image: ${DOCKER_REGISTRY-}inventory-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Inventory/Inventory.Grpc/Dockerfile
+    container_name: inventory-grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_HTTP_PORTS=80
+      - "MongoDbSettings__ConnectionString=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@inventorydb:27017/InventoryDb?authSource=admin"
+      - "MongoDbSettings__DatabaseName=InventoryDb"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
+      - "Kestrel__EndpointDefaults__Protocols=Http2"
+    ports:
+      - "6007:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  apigw-ocelot:
+    image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/ApiGateways/OcelotApiGw/Dockerfile
+    container_name: apigw-ocelot
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "IdentityServerUrl=http://identity-api"
+      - "JwtSettings__Key=${JWT_SECRET_KEY}"
+      - "JwtSettings__Issuer=${JWT_ISSUER}"
+      - "JwtSettings__Audience=${JWT_AUDIENCE}"
+    ports:
+      - "5000:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  hangfire-api:
+    image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/ScheduledJob/Hangfire.API/Dockerfile
+    container_name: hangfire-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "HangFireSettings__Storage__ConnectionString=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@hangfiredb:27017/hangfire-webapi?authSource=admin"
+      - "ElasticConfiguration__Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration__Username=elastic"
+      - "ElasticConfiguration__Password=admin"
+      - "JwtSettings__Key=${JWT_SECRET_KEY}"
+      - "JwtSettings__Issuer=${JWT_ISSUER}"
+      - "JwtSettings__Audience=${JWT_AUDIENCE}"
+      - "JwtSettings__ExpirationInMinutes=${JWT_EXPIRATION_MINUTES}"
+    ports:
+      - "6008:80"
+    restart: always
+    networks:
+      - microservices-network
+  
+  webstatus:
+    image: ${DOCKER_REGISTRY-}webstatus:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/WebApps/WebHealthStatus/Dockerfile
+    container_name: webstatus
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "HealthChecksUI__HealthChecks__0__Name=Identity Health Check"
+      - "HealthChecksUI__HealthChecks__0__Uri=http://identity-api/hc"
+      - "HealthChecksUI__HealthChecks__1__Name=Product Health Check"
+      - "HealthChecksUI__HealthChecks__1__Uri=http://product-api/hc"
+      - "HealthChecksUI__HealthChecks__2__Name=Customer Health Check"
+      - "HealthChecksUI__HealthChecks__2__Uri=http://customer-api/hc"
+      - "HealthChecksUI__HealthChecks__3__Name=Basket Health Check"
+      - "HealthChecksUI__HealthChecks__3__Uri=http://basket-api/hc"
+      - "HealthChecksUI__HealthChecks__4__Name=Ordering Health Check"
+      - "HealthChecksUI__HealthChecks__4__Uri=http://order-api/hc"
+      - "HealthChecksUI__HealthChecks__5__Name=Inventory Health Check"
+      - "HealthChecksUI__HealthChecks__5__Uri=http://inventory-product-api/hc"
+      - "HealthChecksUI__HealthChecks__6__Name=Scheduled Job Health Check"
+      - "HealthChecksUI__HealthChecks__6__Uri=http://hangfire-api/hc"
+      - "HealthChecksUI__HealthChecks__7__Name=Chatbot Health Check"
+      - "HealthChecksUI__HealthChecks__7__Uri=http://chatbot-api/health"
+    ports:
+        - "6010:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  # ============================================================
+  # PYTHON SERVICES
+  # ============================================================
+  
+  clip-search-api:
+    image: ${DOCKER_REGISTRY-}clip-search-api:latest
+    build:
+      context: ./src/Services/ClipSearch
+      dockerfile: Dockerfile
+    container_name: clip-search-api
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_USER=elastic
+      - ELASTICSEARCH_PASSWORD=admin
+      - ELASTICSEARCH_INDEX=products
+    ports:
+      - "6011:80"
+    restart: always
+    networks:
+      - microservices-network
+
+  chatbot-api:
+    image: ${DOCKER_REGISTRY-}chatbot-api:latest
+    build:
+      context: .
+      dockerfile: src/Services/Chatbot/Dockerfile
+    container_name: chatbot-api
+    environment:
+      - XAI_API_KEY=${XAI_API_KEY:-}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - API_GATEWAY_URL=http://apigw-ocelot:80
+      - PRODUCT_API_URL=http://product-api:80
+      - BASKET_API_URL=http://basket-api:80
+      - ORDER_API_URL=http://order-api:80
+      - CUSTOMER_API_URL=http://customer-api:80
+      - REDIS_HOST=basketdb
+      - REDIS_PORT=6379
+      - REDIS_DB=1
+      - SQLITE_DB_PATH=/app/data/chatbot.db
+      - APP_NAME=E-commerce Chatbot Service
+      - APP_VERSION=4.0.0
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - chatbot-data:/app/data
+    ports:
+      - "6009:80"
+    restart: always
+    networks:
+      - microservices-network
+
+volumes:
+  chatbot-data:
+
+networks:
+  microservices-network:
+    driver: bridge

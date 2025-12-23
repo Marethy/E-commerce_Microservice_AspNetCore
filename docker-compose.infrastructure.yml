@@ -1,0 +1,187 @@
+services:
+  # ============================================================
+  # DATABASES
+  # ============================================================
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: orderdb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - orderdb_data:/var/opt/mssql
+    restart: always
+    networks:
+      - microservices-network
+
+  identitydb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: identitydb
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+    ports:
+      - "1434:1433"
+    volumes:
+      - identitydb_data:/var/opt/mssql
+    restart: always
+    networks:
+      - microservices-network
+
+  productdb:
+    image: postgres:alpine
+    container_name: productdb
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB_PRODUCT}
+    ports:
+      - "5432:5432"
+    volumes:
+      - productdb_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - microservices-network
+
+  customerdb:
+    image: postgres:alpine
+    container_name: customerdb
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB_CUSTOMER}
+    ports:
+      - "5433:5432"
+    volumes:
+      - customerdb_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - microservices-network
+
+  inventorydb:
+    image: mongo
+    container_name: inventorydb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - "27017:27017"
+    volumes:
+      - inventorydb_data:/data/db
+    restart: always
+    networks:
+      - microservices-network
+
+  hangfiredb:
+    image: mongo
+    container_name: hangfiredb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - "27018:27017"
+    volumes:
+      - hangfiredb_data:/data/db
+    restart: always
+    networks:
+      - microservices-network
+
+  # ============================================================
+  # CACHE & MESSAGE QUEUE
+  # ============================================================
+  basketdb:
+    image: redis:alpine
+    container_name: basketdb
+    ports:
+      - "6379:6379"
+    volumes:
+      - basketdb_data:/data
+    restart: always
+    networks:
+      - microservices-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USERNAME}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: always
+    networks:
+      - microservices-network
+
+  # ============================================================
+  # SEARCH & MONITORING
+  # ============================================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.2
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    restart: always
+    networks:
+      - microservices-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.2
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    restart: always
+    networks:
+      - microservices-network
+
+  # ============================================================
+  # CONTAINER MANAGEMENT
+  # ============================================================
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    command: -H unix:///var/run/docker.sock
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: always
+    networks:
+      - microservices-network
+
+volumes:
+  orderdb_data:
+  identitydb_data:
+  productdb_data:
+  customerdb_data:
+  basketdb_data:
+  inventorydb_data:
+  hangfiredb_data:
+  rabbitmq_data:
+  elasticsearch_data:
+  portainer_data:
+
+networks:
+  microservices-network:
+    driver: bridge
