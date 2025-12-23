@@ -55,6 +55,7 @@
 	<PackageVersion Include="Hangfire.SqlServer" Version="1.8.20" />
 	<PackageVersion Include="Hangfire.PostgreSql" Version="1.9.2" />
 	<PackageVersion Include="Hangfire.Mongo" Version="1.11.6" />
+	<PackageVersion Include="Hangfire.Console" Version="1.4.2" />
 	<PackageVersion Include="Hangfire.Console.Extensions" Version="2.1.0" />
 
 	<!-- PDF & Excel Generation -->

@@ -6,7 +6,7 @@ namespace Shared.SeedWork.ApiResult
     {
         public bool IsSuccess { get; set; }
         public T Data { get; set; }
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
         
         /// <summary>
         /// Timestamp for tracking request completion (useful for AI analytics)
@@ -16,13 +16,13 @@ namespace Shared.SeedWork.ApiResult
         /// <summary>
         /// Correlation ID for distributed tracing across microservices
         /// </summary>
-        public string CorrelationId { get; set; }
+        public string CorrelationId { get; set; } = string.Empty;
         
         /// <summary>
         /// List of validation or error messages
         /// </summary>
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public List<string> Errors { get; set; }
+        public List<string>? Errors { get; set; }
 
         // Default constructor for creating an empty result
         public ApiResult()

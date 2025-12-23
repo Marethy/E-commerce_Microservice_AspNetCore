@@ -2,7 +2,7 @@
 {
     public class ApiErrorResult<T> : ApiResult<T>
     {
-        public List<string> Errors { get; set; }
+        public new List<string> Errors { get; set; } = new();
 
         public ApiErrorResult() : this("Something went wrong")
         {
