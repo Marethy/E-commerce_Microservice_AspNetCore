@@ -13,7 +13,7 @@ public class ScheduledJobsController(IBackgroundJobService backgroundJobService)
     public IActionResult SendReminderEmail(ReminderEmailDto model)
     {
         var jobId = backgroundJobService.SendMailContent(model.Email, model.Subject, model.Content, model.EnqueueAt);
-        return Ok(jobId);
+        return Ok(new { jobId, message = "Reminder email scheduled successfully" });
     }
 
     [HttpDelete]
@@ -21,6 +21,6 @@ public class ScheduledJobsController(IBackgroundJobService backgroundJobService)
     public IActionResult DeleteJob(string id)
     {
         var result = backgroundJobService.ScheduledJobService.Delete(id);
-        return Ok(result);
+        return Ok(new { success = result, message = result ? "Job deleted successfully" : "Job not found" });
     }
 }

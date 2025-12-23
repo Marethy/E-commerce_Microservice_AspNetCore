@@ -104,7 +104,8 @@ namespace Hangfire.API.Extensions
             services
                 .AddScoped<IScheduledJobService, HangfireService>()
                 .AddScoped<IBackgroundJobService, BackgroundJobService>()
-                .AddScoped<ISMTPEmailService, SMTPEmailService>();
+                .AddScoped<ISMTPEmailService, SMTPEmailService>()
+                .AddScoped<IJobMonitorService, JobMonitorService>();
 
             return services;
         }

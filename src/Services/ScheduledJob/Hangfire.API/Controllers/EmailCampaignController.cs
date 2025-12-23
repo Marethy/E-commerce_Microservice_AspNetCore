@@ -58,6 +58,7 @@ model.Email,
         
 return Ok(new 
   { 
+    jobId = jobIds.Count > 0 ? string.Join(",", jobIds) : null,
     totalScheduled = jobIds.Count, 
        jobIds,
         message = $"Bulk promotional emails scheduled for {model.ScheduledAt}"
