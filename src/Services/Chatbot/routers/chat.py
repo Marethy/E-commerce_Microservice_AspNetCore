@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from fastapi.responses import StreamingResponse
 from models.chat import ChatRequest
-from utils.jwt_helper import extract_username
+from utils.jwt_helper import extract_username, extract_user_id
 from database import db_service
 from agent import stream_chat
 import json
@@ -25,83 +25,54 @@ def _get_history(session_id: str) -> list[dict]:
 
 @router.post("/chat")
 async def chat_endpoint(request: ChatRequest, background_tasks: BackgroundTasks):
+    if not request.user_token:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    
+    user_id = extract_user_id(request.user_token)
+    username = extract_username(request.user_token)
+    
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    
+    is_valid, error = db_service.validate_session_owner(request.session_id, user_id)
+    if not is_valid:
+        raise HTTPException(status_code=403, detail=error)
+    
     try:
         history = _get_history(request.session_id)
         
-        # For MCP calls (browser automation), always use session_id
-        # This must match the userId used in WebSocket connection
-        mcp_user_id = request.session_id
-        
-        # For API calls (if needed), use username if authenticated
-        user_id = request.session_id
-        if request.user_token:
-            username = extract_username(request.user_token)
-            if username:
-                user_id = username
-        
-        background_tasks.add_task(db_service.add_message, request.session_id, "user", request.message)
+        background_tasks.add_task(
+            db_service.add_message, request.session_id, "user", request.message, user_id
+        )
         history.append({"role": "user", "content": request.message})
 
         async def generate():
-            step_messages = []
+            content_parts = []
+            tool_calls_log = []
             
             try:
-                # Pass mcp_user_id (session_id) to agent for browser automation
-                async for event in stream_chat(mcp_user_id, request.message, history[:-1], request.user_token):
+                async for event in stream_chat(user_id, username, request.message, history[:-1], request.user_token, request.session_id):
                     yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
                     
-                    if event.get("type") == "thinking":
-                        step_messages.append({
-                            "role": "assistant",
-                            "content": event.get("content", ""),
-                            "step_type": "thinking"
-                        })
-                    elif event.get("type") == "searching":
-                        step_messages.append({
-                            "role": "assistant", 
-                            "content": event.get("content", ""),
-                            "step_type": "searching"
-                        })
-                    elif event.get("type") == "executing":
-                        step_messages.append({
-                            "role": "assistant",
-                            "content": f"Executing: {event.get('tool')}",
-                            "step_type": "executing",
-                            "tool_name": event.get("tool"),
-                            "tool_args": event.get("args")
-                        })
-                    elif event.get("type") == "executed":
-                        step_messages.append({
-                            "role": "assistant",
-                            "content": event.get("result", "") if event.get("success") else f"Error: {event.get('error')}",
-                            "step_type": "executed",
-                            "tool_name": event.get("tool"),
-                            "success": event.get("success")
-                        })
+                    if event.get("type") == "executing":
+                        tool_calls_log.append({"tool": event.get("tool"), "args": event.get("args")})
                     elif event.get("type") == "content":
-                        step_messages.append({
-                            "role": "assistant",
-                            "content": event.get("content", ""),
-                            "step_type": "response"
-                        })
+                        content_parts.append(event.get("content", ""))
                 
                 yield f"data: {json.dumps({'type': 'done'})}\n\n"
                 
-                for step_msg in step_messages:
-                    step_type = step_msg.pop("step_type")
-                    metadata = {k: v for k, v in step_msg.items() if k not in ["role", "content"]}
-                    
+                final_content = "".join(content_parts)
+                if final_content:
                     background_tasks.add_task(
                         db_service.add_message,
                         request.session_id,
                         "assistant",
-                        step_msg["content"],
-                        tool_calls=json.dumps({"step_type": step_type, **metadata}, ensure_ascii=False) if metadata or step_type != "response" else None
+                        final_content,
+                        user_id,
+                        tool_calls=json.dumps(tool_calls_log, ensure_ascii=False) if tool_calls_log else None
                     )
-                
-                final_response = next((m["content"] for m in reversed(step_messages) if m.get("step_type") == "response"), "")
-                if final_response:
-                    history.append({"role": "assistant", "content": final_response})
+                    history.append({"role": "assistant", "content": final_content})
+                    
             except Exception as e:
                 logger.exception("Error in chat stream")
                 yield f"data: {json.dumps({'type': 'error', 'content': str(e)})}\n\n"

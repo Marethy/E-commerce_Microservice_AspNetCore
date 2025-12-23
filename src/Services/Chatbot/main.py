@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from routers.chat import router as chat_router
 from routers.sessions import router as sessions_router
+from websocket_mcp import handle_mcp_websocket
 from config import config
 import logging
 
@@ -19,9 +20,13 @@ async def lifespan(app: FastAPI):
     logger.info(f"Product API: {config.PRODUCT_API_URL}")
     logger.info(f"Basket API: {config.BASKET_API_URL}")
     logger.info(f"Order API: {config.ORDER_API_URL}")
+    
+    from utils.redis_manager import redis_manager
+    await redis_manager.connect()
 
     yield
 
+    await redis_manager.disconnect()
     logger.info(f"Shutting down {config.APP_NAME}")
 
 app = FastAPI(
@@ -63,6 +68,13 @@ async def health_check():
         "service": config.APP_NAME,
         "version": config.APP_VERSION
     }
+
+
+# ============== WebSocket Endpoint ==============
+@app.websocket("/ws/mcp")
+async def websocket_mcp_endpoint(websocket: WebSocket, userId: str):
+    """WebSocket endpoint for MCP UI state synchronization"""
+    await handle_mcp_websocket(websocket, userId)
 
 if __name__ == "__main__":
     import uvicorn
