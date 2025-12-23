@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán thành công</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header::before {
+            content: '✓';
+            display: block;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            line-height: 80px;
+            font-size: 50px;
+            color: white;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .greeting strong {
+            color: #667eea;
+        }
+
+        .message {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .order-summary {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .order-summary h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .order-summary h2::before {
+            content: '📦';
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .order-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .order-detail:last-child {
+            border-bottom: none;
+            padding-top: 20px;
+            margin-top: 10px;
+            border-top: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .order-detail .label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .order-detail .value {
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .order-detail.total .value {
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        .payment-info {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .payment-info h3 {
+            color: #28a745;
+            font-size: 16px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .payment-info h3::before {
+            content: '✓';
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #28a745;
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            text-align: center;
+            line-height: 24px;
+            font-size: 14px;
+        }
+
+        .payment-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .payment-detail .label {
+            color: #666;
+        }
+
+        .payment-detail .value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .cta-button {
+            text-align: center;
+            margin: 35px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ddd, transparent);
+            margin: 30px 0;
+        }
+
+        .help-section {
+            background: #fff9e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .help-section h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .help-section p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .help-section a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #999;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+
+        .social-links {
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                border-radius: 0;
+            }
+
+            .header, .content, .footer {
+                padding: 30px 20px;
+            }
+
+            .order-summary {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Thanh toán thành công!</h1>
+            <p>Đơn hàng của bạn đã được xác nhận</p>
+        </div>
+
+        <div class="content">
+            <div class="greeting">
+                Xin chào <strong>[userName]</strong>,
+            </div>
+
+            <div class="message">
+                Cảm ơn bạn đã đặt hàng tại <strong>KhiemCompany</strong>! Chúng tôi rất vui mừng thông báo rằng 
+                thanh toán của bạn đã được xử lý thành công và đơn hàng của bạn đang được chuẩn bị.
+            </div>
+
+            <div class="order-summary">
+                <h2>Thông tin đơn hàng</h2>
+                <div class="order-detail">
+                    <span class="label">Mã đơn hàng:</span>
+                    <span class="value">#[orderId]</span>
+                </div>
+                <div class="order-detail">
+                    <span class="label">Ngày đặt:</span>
+                    <span class="value">[orderDate]</span>
+                </div>
+                <div class="order-detail">
+                    <span class="label">Trạng thái:</span>
+                    <span class="value" style="color: #28a745;">Đã thanh toán</span>
+                </div>
+                <div class="order-detail total">
+                    <span class="label">Tổng tiền:</span>
+                    <span class="value">[amount] [currency]</span>
+                </div>
+            </div>
+
+            <div class="payment-info">
+                <h3>Thông tin thanh toán</h3>
+                <div class="payment-detail">
+                    <span class="label">Phương thức:</span>
+                    <span class="value">[paymentMethod]</span>
+                </div>
+                <div class="payment-detail">
+                    <span class="label">Mã giao dịch:</span>
+                    <span class="value">[transactionId]</span>
+                </div>
+                <div class="payment-detail">
+                    <span class="label">Thời gian:</span>
+                    <span class="value">[paymentTime]</span>
+                </div>
+            </div>
+
+            <div class="cta-button">
+                <a href="[orderTrackingUrl]" class="btn">Theo dõi đơn hàng</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="help-section">
+                <h3>💬 Cần hỗ trợ?</h3>
+                <p>Nếu bạn có bất kỳ câu hỏi nào về đơn hàng, vui lòng liên hệ với chúng tôi:</p>
+                <p>📧 Email: <a href="mailto:support@khiemcompany.com">support@khiemcompany.com</a></p>
+                <p>📞 Hotline: <a href="tel:1900xxxx">1900 xxxx</a></p>
+            </div>
+
+            <div class="message">
+                <strong>Lưu ý:</strong> Đơn hàng của bạn sẽ được giao trong vòng 2-3 ngày làm việc. 
+                Bạn sẽ nhận được email xác nhận khi đơn hàng được giao cho đơn vị vận chuyển.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>KhiemCompany - Mua sắm trực tuyến dễ dàng</strong></p>
+            <div class="social-links">
+                <a href="#">Facebook</a> | 
+                <a href="#">Instagram</a> | 
+                <a href="#">Twitter</a>
+            </div>
+            <p>&copy; 2025 KhiemCompany. All rights reserved.</p>
+            <p style="margin-top: 15px; font-size: 12px;">
+                Email này được gửi tự động. Vui lòng không trả lời email này.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
