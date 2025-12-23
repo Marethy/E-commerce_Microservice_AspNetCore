@@ -7,6 +7,7 @@ namespace Product.API.Entities
     /// </summary>
     public class Seller : AuditableEntity<Guid>
     {
+        public int? ExternalId { get; set; } // Original Tiki seller ID
         public string Name { get; set; } = string.Empty;
         public bool IsOfficial { get; set; }
         public string? Email { get; set; }

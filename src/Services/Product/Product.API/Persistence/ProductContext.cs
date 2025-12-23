@@ -18,6 +18,7 @@ namespace Product.API.Persistence
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductSpecification> ProductSpecifications { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,6 +83,10 @@ namespace Product.API.Persistence
 
                 entity.HasIndex(x => x.Slug)
                       .HasDatabaseName("IX_Products_Slug");
+
+                entity.HasIndex(x => x.ExternalId)
+                      .IsUnique()
+                      .HasDatabaseName("IX_Products_ExternalId");
                 
                 entity.HasOne(p => p.Category)
                       .WithMany(c => c.Products)
@@ -122,6 +127,10 @@ namespace Product.API.Persistence
                 entity.HasIndex(x => x.Name)
                       .IsUnique()
                       .HasDatabaseName("IX_Categories_Name");
+
+                entity.HasIndex(x => x.ExternalId)
+                      .IsUnique()
+                      .HasDatabaseName("IX_Categories_ExternalId");
 
                 // Self-referencing relationship
                 entity.HasOne(c => c.Parent)
@@ -202,6 +211,9 @@ namespace Product.API.Persistence
                 entity.HasIndex(x => x.Slug)
                       .IsUnique()
                       .HasDatabaseName("IX_Brands_Slug");
+
+                entity.HasIndex(x => x.ExternalId)
+                      .HasDatabaseName("IX_Brands_ExternalId");
             });
 
             // Configure Seller
@@ -229,6 +241,9 @@ namespace Product.API.Persistence
 
                 entity.HasIndex(x => x.Name)
                       .HasDatabaseName("IX_Sellers_Name");
+
+                entity.HasIndex(x => x.ExternalId)
+                      .HasDatabaseName("IX_Sellers_ExternalId");
             });
 
             // Configure ProductImage
@@ -288,6 +303,34 @@ namespace Product.API.Persistence
 
                 entity.HasIndex(x => new { x.ProductId, x.SpecGroup, x.SpecName })
                       .HasDatabaseName("IX_ProductSpecifications_Product_Group_Name");
+            });
+
+            // Configure ProductVariant
+            modelBuilder.Entity<ProductVariant>(entity =>
+            {
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
+                      .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.ProductId)
+                      .HasColumnType("uuid")
+                      .IsRequired();
+
+                entity.Property(e => e.AttributeName)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                entity.Property(e => e.AttributeValue)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.HasOne(v => v.Product)
+                      .WithMany(p => p.Variants)
+                      .HasForeignKey(v => v.ProductId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(x => new { x.ProductId, x.AttributeName, x.AttributeValue })
+                      .HasDatabaseName("IX_ProductVariants_Product_Attribute");
             });
 
             // Configure ProductCategory (Many-to-Many)
