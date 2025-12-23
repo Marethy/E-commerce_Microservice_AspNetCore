@@ -1,4 +1,4 @@
-﻿{
+{
   "GlobalConfiguration": {
     "BaseUrl": "http://apigw-ocelot"
   },
@@ -13,8 +13,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -28,8 +28,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -43,8 +43,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -58,8 +58,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -73,8 +73,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -89,8 +89,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -104,8 +104,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -119,8 +119,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -134,8 +134,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -149,8 +149,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6001
+          "Host": "identity-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "identity-service"
@@ -166,8 +166,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "RateLimitOptions": {
@@ -196,8 +196,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -211,8 +211,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -226,8 +226,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -241,8 +241,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -257,8 +257,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -274,8 +274,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -289,8 +289,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -304,8 +304,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -319,8 +319,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -336,8 +336,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -351,8 +351,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -366,8 +366,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -381,8 +381,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -396,8 +396,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -414,8 +414,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -429,8 +429,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -444,8 +444,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -459,8 +459,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -474,8 +474,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -489,8 +489,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -504,8 +504,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -522,8 +522,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -537,8 +537,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -552,8 +552,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -567,8 +567,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -582,8 +582,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -597,8 +597,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -612,8 +612,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -630,8 +630,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -645,8 +645,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -662,8 +662,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -678,8 +678,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -693,8 +693,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -708,8 +708,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -723,8 +723,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -740,8 +740,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -755,8 +755,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -771,8 +771,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -788,8 +788,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -805,8 +805,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -822,8 +822,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -839,8 +839,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
@@ -855,8 +855,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -871,8 +871,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -886,8 +886,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -901,8 +901,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -916,8 +916,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -931,8 +931,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -946,8 +946,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -961,8 +961,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -976,8 +976,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "customer-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "customer-service"
@@ -992,8 +992,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "basket-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "basket-service"
@@ -1008,8 +1008,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "basket-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "basket-service"
@@ -1023,8 +1023,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "basket-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "basket-service"
@@ -1038,8 +1038,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "basket-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "basket-service"
@@ -1053,8 +1053,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "basket-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "basket-service"
@@ -1068,8 +1068,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "basket-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "basket-service"
@@ -1086,8 +1086,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1101,8 +1101,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1118,8 +1118,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1133,8 +1133,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1148,8 +1148,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1163,8 +1163,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1178,8 +1178,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1193,8 +1193,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1208,8 +1208,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1223,8 +1223,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1240,8 +1240,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1255,8 +1255,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1270,8 +1270,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1285,8 +1285,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1300,8 +1300,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1315,8 +1315,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "order-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "order-service"
@@ -1331,8 +1331,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6006
+          "Host": "inventory-product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "inventory-service"
@@ -1346,8 +1346,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6006
+          "Host": "inventory-product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "inventory-service"
@@ -1362,8 +1362,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6006
+          "Host": "inventory-product-api",
+            "Port": 80
         }
       ],
       "SwaggerKey": "inventory-service"
@@ -1473,6 +1473,101 @@
         }
       ],
       "SwaggerKey": "chatbot-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/jobmonitor/jobs",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/jobmonitor/jobs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6008
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/jobmonitor/jobs/{jobId}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/jobmonitor/jobs/{jobId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6008
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/jobmonitor/jobs/{jobId}/requeue",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/jobmonitor/jobs/{jobId}/requeue",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6008
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/jobmonitor/statistics",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/jobmonitor/statistics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6008
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/emailcampaign/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/emailcampaign/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6008
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/scheduledjobs/{everything}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/scheduledjobs/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6008
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
     }
   ],
   "SwaggerEndPoints": [
