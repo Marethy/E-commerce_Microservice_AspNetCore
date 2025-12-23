@@ -3,6 +3,8 @@ using Customer.API.Persistence;
 using Customer.API.Repositories;
 using Customer.API.Repositories.Interfaces;
 using Infrastructure.Common;
+using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Npgsql;
@@ -30,6 +32,7 @@ namespace Customer.API.Extensions
             services.AddConfigurationSettings();
             services.ConfigureCustomerContext();
             services.AddInfrastructureServices();
+            services.ConfigureAuthenticationHandler();
             services.ConfigureHealthChecks();
             services.AddAutoMapper(cfg => cfg.AddProfile(new CustomerMappingProfile()));
 
@@ -41,6 +44,9 @@ namespace Customer.API.Extensions
             var configuration = services.BuildServiceProvider().GetRequiredService<IConfiguration>();
             var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
             services.AddSingleton(databaseSettings);
+
+            var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
+            services.AddSingleton(jwtSettings);
 
             return services;
         }

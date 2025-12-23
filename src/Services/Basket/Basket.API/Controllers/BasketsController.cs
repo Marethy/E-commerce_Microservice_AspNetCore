@@ -47,14 +47,10 @@ namespace Basket.API.Controllers
         /// <returns></returns>
         [HttpGet("{username}")]
         [ProducesResponseType(typeof(ApiResult<Cart>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<ApiResult<Cart>>> GetBasketByUserName(string username)
         {
-            var basket = await _repository.GetBasketByUserName(username);
-            if (basket == null)
-                return NotFound(new ApiErrorResult<Cart>($"Basket for user '{username}' not found"));
+            var basket = await _repository.GetBasketByUserName(username) ?? new Cart(username);
             
-            // 🧠 Track basket view
             await TrackActivityAsync(username, UserActivityActions.View, UserActivityEntityTypes.Basket, username,
                 new Dictionary<string, object>
                 {

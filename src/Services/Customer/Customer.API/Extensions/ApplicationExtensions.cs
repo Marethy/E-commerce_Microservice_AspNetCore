@@ -15,6 +15,7 @@ public static class ApplicationExtensions
 
         app.UseRouting();
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
