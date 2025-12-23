@@ -1,12 +1,7 @@
-"""JWT Token Helper for extracting user information"""
 import jwt
 from typing import Optional, Dict, Any
 
 def decode_token_without_verification(token: str) -> Optional[Dict[str, Any]]:
-    """
-    Decode JWT token without signature verification (for extracting claims)
-    WARNING: This should only be used after the token has been validated by the backend
-    """
     try:
         # Remove 'Bearer ' prefix if present
         if token.startswith("Bearer "):
@@ -25,8 +20,6 @@ def extract_username(token: str) -> Optional[str]:
     if not decoded:
         return None
     
-    # Try different possible username claims
-    # IdentityServer4 typically uses 'sub' or 'name' or 'unique_name'
     username = (
         decoded.get("sub") or 
         decoded.get("name") or 
@@ -38,15 +31,18 @@ def extract_username(token: str) -> Optional[str]:
     return username
 
 def extract_user_id(token: str) -> Optional[str]:
-    """Extract user ID from JWT token"""
     decoded = decode_token_without_verification(token)
     if not decoded:
         return None
     
-    return decoded.get("sub") or decoded.get("uid")
+    # Log để debug
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"JWT payload: {decoded}")
+    
+    return decoded.get("sub") or decoded.get("uid") or decoded.get("id")
 
 def extract_email(token: str) -> Optional[str]:
-    """Extract email from JWT token"""
     decoded = decode_token_without_verification(token)
     if not decoded:
         return None
@@ -54,5 +50,4 @@ def extract_email(token: str) -> Optional[str]:
     return decoded.get("email")
 
 def get_token_claims(token: str) -> Optional[Dict[str, Any]]:
-    """Get all claims from token"""
     return decode_token_without_verification(token)
