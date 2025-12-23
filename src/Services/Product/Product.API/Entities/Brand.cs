@@ -7,6 +7,7 @@ namespace Product.API.Entities
     /// </summary>
     public class Brand : AuditableEntity<Guid>
     {
+        public int? ExternalId { get; set; } // Original Tiki brand ID
         public string Name { get; set; } = string.Empty;
         public string Slug { get; set; } = string.Empty;
         public string? CountryOfOrigin { get; set; }

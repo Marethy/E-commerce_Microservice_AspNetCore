@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product.API.Entities;
 using Product.API.Repositories.Interfaces;
+using Product.API.Services.Interfaces;
 using Shared.Common.Constants;
 using Shared.DTOs.Product;
 using Shared.SeedWork.ApiResult;
@@ -19,11 +20,15 @@ namespace Product.API.Controllers;
 public class CategoriesController : ControllerBase
 {
     private readonly ICategoryRepository _repository;
+    private readonly IProductRepository _productRepository;
+    private readonly IClipSearchService _clipSearchService;
     private readonly IMapper _mapper;
 
-    public CategoriesController(ICategoryRepository repository, IMapper mapper)
+    public CategoriesController(ICategoryRepository repository, IProductRepository productRepository, IClipSearchService clipSearchService, IMapper mapper)
     {
         _repository = repository;
+        _productRepository = productRepository;
+        _clipSearchService = clipSearchService;
         _mapper = mapper;
     }
 
@@ -249,5 +254,78 @@ public class CategoriesController : ControllerBase
         var categories = await _repository.GetCategoriesByProductIdAsync(productId);
         var result = _mapper.Map<List<CategoryDto>>(categories);
         return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
+    }
+
+    [HttpGet("{categoryId:guid}/products")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<PagedProductResponse>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResult<PagedProductResponse>>> GetCategoryProducts(
+        [Required] Guid categoryId,
+        [FromQuery] ProductFilterDto filter,
+        [FromQuery] int page = 0,
+        [FromQuery] int size = 20,
+        [FromQuery] bool includeSubcategories = false)
+    {
+        var category = await _repository.GetCategory(categoryId);
+        if (category == null)
+            return NotFound(new ApiErrorResult<PagedProductResponse>($"Category with ID {categoryId} not found"));
+
+        List<Guid> categoryIds;
+        if (includeSubcategories)
+        {
+            var subcategories = await _repository.GetSubcategoriesAsync(categoryId);
+            categoryIds = subcategories.Select(c => c.Id).ToList();
+            categoryIds.Add(categoryId);
+        }
+        else
+        {
+            categoryIds = new List<Guid> { categoryId };
+        }
+
+        filter.CategoryIds = categoryIds;
+
+        if (!string.IsNullOrEmpty(filter.Q))
+        {
+            var (productIds, totalFromElastic) = await _clipSearchService.SearchProductIdsAsync(filter.Q, page, size);
+            
+            filter.ProductIds = productIds;
+            var (products, totalCount) = await _productRepository.SearchProducts(filter, 0, productIds.Count);
+            
+            var productDtos = _mapper.Map<List<ProductDto>>(products);
+            
+            var response = new PagedProductResponse
+            {
+                Content = productDtos,
+                Meta = new PageMetadata
+                {
+                    Page = page,
+                    Size = size,
+                    TotalElements = totalFromElastic,
+                    TotalPages = (int)Math.Ceiling(totalFromElastic / (double)size),
+                    Last = (page + 1) * size >= totalFromElastic
+                }
+            };
+
+            return Ok(new ApiSuccessResult<PagedProductResponse>(response));
+        }
+
+        var (allProducts, total) = await _productRepository.SearchProducts(filter, page, size);
+        var allProductDtos = _mapper.Map<List<ProductDto>>(allProducts);
+        
+        var responseNoQuery = new PagedProductResponse
+        {
+            Content = allProductDtos,
+            Meta = new PageMetadata
+            {
+                Page = page,
+                Size = size,
+                TotalElements = total,
+                TotalPages = (int)Math.Ceiling(total / (double)size),
+                Last = (page + 1) * size >= total
+            }
+        };
+
+        return Ok(new ApiSuccessResult<PagedProductResponse>(responseNoQuery));
     }
 }

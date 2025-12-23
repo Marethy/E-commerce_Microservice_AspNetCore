@@ -13,6 +13,7 @@ namespace Shared.DTOs.Product
         public List<Guid>? BrandIds { get; set; }
         public List<string>? BrandNames { get; set; }
         public List<Guid>? CategoryIds { get; set; }
+        public List<Guid>? ProductIds { get; set; }
         public string? InventoryStatus { get; set; }
         public string? SortBy { get; set; } // "price", "rating", "sales", "created"
         public string? SortDirection { get; set; } // "asc", "desc"

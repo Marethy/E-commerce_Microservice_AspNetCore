@@ -70,8 +70,21 @@ namespace Product.API.Extensions
                     .AddScoped<ISellerRepository, SellerRepository>()
                     .AddScoped<IWishlistRepository, WishlistRepository>();
 
+            // Register CLIP Search HTTP Client
+            services.AddHttpClient("ClipSearch", (serviceProvider, client) =>
+            {
+                var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+                var baseUrl = configuration["ClipSearchService:BaseUrl"] ?? "http://clip-search-api:80";
+                client.BaseAddress = new Uri(baseUrl);
+                client.Timeout = TimeSpan.FromSeconds(30);
+            });
+
             // Register services
             services.AddScoped<Product.API.Services.Interfaces.IProductStatsService, Product.API.Services.ProductStatsService>();
+            services.AddScoped<Product.API.Services.Interfaces.IClipSearchService, Product.API.Services.ClipSearchService>();
+            
+            // Register background service for product indexing
+            services.AddHostedService<Product.API.Services.ProductIndexingService>();
         }
 
         private static void ConfigureHealthChecks(this IServiceCollection services)

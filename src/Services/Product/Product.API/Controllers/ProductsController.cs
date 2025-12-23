@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product.API.Entities;
 using Product.API.Repositories.Interfaces;
+using Product.API.Services.Interfaces;
 using Shared.Common.Constants;
 using Shared.DTOs.Product;
 using Shared.SeedWork.ApiResult;
@@ -21,17 +22,20 @@ public class ProductsController : ControllerBase
     private readonly IProductRepository _repository;
     private readonly IBrandRepository _brandRepository;
     private readonly ISellerRepository _sellerRepository;
+    private readonly IClipSearchService _clipSearchService;
     private readonly IMapper _mapper;
 
     public ProductsController(
         IProductRepository repository,
         IBrandRepository brandRepository,
-      ISellerRepository sellerRepository,
-    IMapper mapper)
+        ISellerRepository sellerRepository,
+        IClipSearchService clipSearchService,
+        IMapper mapper)
     {
         _repository = repository;
         _brandRepository = brandRepository;
-  _sellerRepository = sellerRepository;
+        _sellerRepository = sellerRepository;
+        _clipSearchService = clipSearchService;
         _mapper = mapper;
     }
 
@@ -56,23 +60,48 @@ public class ProductsController : ControllerBase
         [FromQuery] int page = 0,
         [FromQuery] int size = 20)
     {
-        var (items, totalCount) = await _repository.SearchProducts(filter, page, size);
-        var products = _mapper.Map<List<ProductDto>>(items);
-        
-        var response = new PagedProductResponse
+        if (!string.IsNullOrEmpty(filter.Q))
         {
-            Content = products,
+            var (productIds, totalFromElastic) = await _clipSearchService.SearchProductIdsAsync(filter.Q, page, size);
+            
+            filter.ProductIds = productIds;
+            var (products, totalCount) = await _repository.SearchProducts(filter, 0, productIds.Count);
+            
+            var productDtos = _mapper.Map<List<ProductDto>>(products);
+            
+            var response = new PagedProductResponse
+            {
+                Content = productDtos,
+                Meta = new PageMetadata
+                {
+                    Page = page,
+                    Size = size,
+                    TotalElements = totalFromElastic,
+                    TotalPages = (int)Math.Ceiling(totalFromElastic / (double)size),
+                    Last = (page + 1) * size >= totalFromElastic
+                }
+            };
+
+            return Ok(new ApiSuccessResult<PagedProductResponse>(response));
+        }
+        
+        var (allProducts, total) = await _repository.SearchProducts(filter, page, size);
+        var allProductDtos = _mapper.Map<List<ProductDto>>(allProducts);
+        
+        var responseNoQuery = new PagedProductResponse
+        {
+            Content = allProductDtos,
             Meta = new PageMetadata
             {
                 Page = page,
                 Size = size,
-                TotalElements = totalCount,
-                TotalPages = (int)Math.Ceiling(totalCount / (double)size),
-                Last = (page + 1) * size >= totalCount
+                TotalElements = total,
+                TotalPages = (int)Math.Ceiling(total / (double)size),
+                Last = (page + 1) * size >= total
             }
         };
 
-        return Ok(new ApiSuccessResult<PagedProductResponse>(response));
+        return Ok(new ApiSuccessResult<PagedProductResponse>(responseNoQuery));
     }
 
     [HttpGet("summary")]

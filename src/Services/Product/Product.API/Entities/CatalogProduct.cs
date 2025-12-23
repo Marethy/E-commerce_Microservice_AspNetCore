@@ -4,6 +4,7 @@ namespace Product.API.Entities
 {
     public class CatalogProduct : AuditableEntity<Guid>
     {
+        public long ExternalId { get; set; } // Original Tiki product ID
         public string No { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string Summary { get; set; } = string.Empty;
@@ -40,6 +41,7 @@ namespace Product.API.Entities
         public ICollection<ProductReview> Reviews { get; set; } = [];
         public ICollection<ProductImage> Images { get; set; } = [];
         public ICollection<ProductSpecification> Specifications { get; set; } = [];
+        public ICollection<ProductVariant> Variants { get; set; } = [];
         
         // Many-to-many with Category
         public ICollection<ProductCategory> ProductCategories { get; set; } = [];
