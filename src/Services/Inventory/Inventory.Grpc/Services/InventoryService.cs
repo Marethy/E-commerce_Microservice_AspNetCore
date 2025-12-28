@@ -11,16 +11,27 @@ public class InventoryService(ILogger logger, IInventoryRepository inventoryRepo
 
     public override async Task<StockModel> GetStock(GetStockRequest request, ServerCallContext context)
     {
-        logger.Information($"BEGIN Get Stock of ItemNo: {request.ItemNo}");
-
-        var stockQuantity = await inventoryRepository.GetStockQuantity(request.ItemNo);
-        var result = new StockModel()
+        try
         {
-            Quantity = stockQuantity
-        };
+            logger.Information($"BEGIN Get Stock of ItemNo: {request.ItemNo}");
 
-        logger.Information($"END Get Stock of ItemNo: {request.ItemNo} - Quantity: {result.Quantity}");
+            var stockQuantity = await inventoryRepository.GetStockQuantity(request.ItemNo);
+            
+            logger.Information($"Retrieved stock quantity: {stockQuantity} for ItemNo: {request.ItemNo}");
+            
+            var result = new StockModel()
+            {
+                Quantity = stockQuantity
+            };
 
-        return result;
+            logger.Information($"END Get Stock of ItemNo: {request.ItemNo} - Quantity: {result.Quantity}");
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, $"ERROR getting stock for ItemNo: {request.ItemNo}. Exception: {ex.Message}");
+            throw new RpcException(new Status(StatusCode.Internal, $"Failed to get stock: {ex.Message}"));
+        }
     }
 }
