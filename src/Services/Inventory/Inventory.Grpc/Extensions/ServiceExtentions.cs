@@ -20,9 +20,15 @@ public static class ServiceExtensions
         if (settings == null || string.IsNullOrEmpty(settings.ConnectionString))
             throw new ArgumentNullException("DatabaseSettings is not configured");
 
+        var connectionString = settings.ConnectionString;
         var databaseName = settings.DatabaseName;
-        var mongodbConnectionString = settings.ConnectionString + "/" + databaseName +
-                                      "?authSource=admin";
+
+        if (connectionString.Contains("?authSource=") || connectionString.Contains("&authSource="))
+        {
+            return connectionString;
+        }
+
+        var mongodbConnectionString = connectionString + "/" + databaseName + "?authSource=admin";
         return mongodbConnectionString;
     }
 

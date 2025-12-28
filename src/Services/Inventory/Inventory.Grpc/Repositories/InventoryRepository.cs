@@ -11,9 +11,10 @@ public class InventoryRepository(IMongoClient client, MongoDbSettings settings) 
 {
     public async Task<int> GetStockQuantity(string itemNo)
     {
-        var total =Collection.AsQueryable()
-                              .Where(x => x.ItemNo.Equals(itemNo))
-                              .Sum(x => x.Quantity);
+        var filter = Builders<InventoryEntry>.Filter.Eq(x => x.ItemNo, itemNo);
+        var cursor = await Collection.FindAsync(filter);
+        var items = await cursor.ToListAsync();
+        var total = items.Sum(x => x.Quantity);
         return total;
     }
 }
