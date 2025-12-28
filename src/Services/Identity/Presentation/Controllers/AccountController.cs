@@ -88,14 +88,35 @@ public class AccountController : ControllerBase
         if (!result.Succeeded)
             return BadRequest(result.Errors);
 
-        await _userManager.AddToRoleAsync(user, "Administrator");
+        await _userManager.AddToRoleAsync(user, "Customer");
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var userPermissions = await _repositoryManager.Permission.GetPermissionsByUser(user);
+        var permissions = userPermissions.Select(p => $"{p.Function}.{p.Command}").Distinct().ToList();
+
+        var userInfo = new UserInfoDto
+        {
+            Id = user.Id,
+            Username = user.UserName!,
+            Email = user.Email!,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Roles = roles,
+            Permissions = permissions
+        };
+
+        var tokenResponse = _tokenService.GenerateToken(userInfo);
 
         var response = new AuthResponse
         {
             IsSuccess = true,
-            Message = "User registered successfully with Administrator role",
+            Message = "User registered successfully",
+            Token = tokenResponse.Token,
+            ExpiresIn = tokenResponse.ExpiresIn,
             Username = user.UserName,
-            Email = user.Email
+            Email = user.Email,
+            Roles = roles.ToList(),
+            Permissions = permissions
         };
 
         return CreatedAtAction(nameof(UserInfo), null, response);
@@ -144,7 +165,8 @@ public class AccountController : ControllerBase
             ExpiresIn = tokenResponse.ExpiresIn,
             Username = user.UserName,
             Email = user.Email,
-            Roles = roles.ToList()
+            Roles = roles.ToList(),
+            Permissions = permissions
         };
 
         return Ok(response);
