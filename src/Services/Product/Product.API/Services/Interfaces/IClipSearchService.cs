@@ -8,6 +8,6 @@ namespace Product.API.Services.Interfaces
         Task IndexProductAsync(CatalogProduct product);
         Task BulkIndexProductsAsync(List<CatalogProduct> products);
         Task DeleteProductIndexAsync(Guid productId);
-        Task<(List<Guid> ProductIds, int Total)> SearchProductIdsAsync(string? query, int page, int size);
+        Task<(List<Guid> ProductIds, int Total)> SearchProductIdsAsync(string? query, int page, int size, byte[]? imageBytes = null);
     }
 }

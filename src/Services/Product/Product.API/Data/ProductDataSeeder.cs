@@ -53,7 +53,8 @@ namespace Product.API.Data
                 var jsonContent = await File.ReadAllTextAsync(jsonFile);
                 var products = JsonSerializer.Deserialize<List<JsonProduct>>(jsonContent, new JsonSerializerOptions
                 {
-                    PropertyNameCaseInsensitive = true
+                    PropertyNameCaseInsensitive = true,
+                    PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower
                 });
 
                 if (products == null)
@@ -175,71 +176,51 @@ namespace Product.API.Data
                         }
 
                         var productCategories = new List<Guid>();
+                        Guid primaryCategoryId = Guid.Empty;
+                        
                         if (jsonProduct.Categories != null && jsonProduct.Categories.Any())
                         {
-                            foreach (var cat in jsonProduct.Categories)
-                            {
-                                Guid catId;
-                                
-                                if (categoryCache.TryGetValue(cat.Name, out var cachedCatId))
-                                {
-                                    catId = cachedCatId;
-                                }
-                                else
-                                {
-                                    var existingCategory = await _context.Categories
-                                        .FirstOrDefaultAsync(c => c.Name == cat.Name);
-                                    
-                                    if (existingCategory != null)
-                                    {
-                                        catId = existingCategory.Id;
-                                        categoryCache[cat.Name] = catId;
-                                    }
-                                    else
-                                    {
-                                        var newCategory = new Category
-                                        {
-                                            Id = Guid.NewGuid(),
-                                            ExternalId = negativeExternalId--,
-                                            Name = cat.Name,
-                                            Url = cat.Url,
-                                            Level = 0
-                                        };
-                                        _context.Categories.Add(newCategory);
-                                        catId = newCategory.Id;
-                                        categoryCache[cat.Name] = catId;
-                                    }
-                                }
-                                productCategories.Add(catId);
-                            }
-                        }
-
-                        Guid mainCategoryId;
-                        if (categoryCache.TryGetValue(categoryName, out var cachedMainCatId))
-                        {
-                            mainCategoryId = cachedMainCatId;
-                        }
+                            // Process category hierarchy and get the leaf (most specific) category
+                            primaryCategoryId = await ProcessCategoryHierarchy(
+                                jsonProduct.Categories,
+                                categoryCache);
+                            
+                            // Only add the leaf category - hierarchy is implicit through ParentId chain
+                            productCategories.Add(primaryCategoryId);
+                         }
                         else
                         {
-                            var mainCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName);
-                            if (mainCategory == null)
+                            // Fallback: use category from filename if product has no categories
+                            Guid mainCategoryId;
+                            if (categoryCache.TryGetValue(categoryName, out var cachedMainCatId))
                             {
-                                mainCategory = new Category
-                                {
-                                    Id = Guid.NewGuid(),
-                                    ExternalId = negativeExternalId--,
-                                    Name = categoryName,
-                                    Level = 0
-                                };
-                                _context.Categories.Add(mainCategory);
-                                mainCategoryId = mainCategory.Id;
-                                categoryCache[categoryName] = mainCategoryId;
+                                mainCategoryId = cachedMainCatId;
                             }
                             else
                             {
-                                mainCategoryId = mainCategory.Id;
-                                categoryCache[categoryName] = mainCategoryId;
+                                var mainCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName && c.ParentId == null);
+                                if (mainCategory == null)
+                                {
+                                    mainCategory = new Category
+                                    {
+                                        Id = Guid.NewGuid(),
+                                        ExternalId = negativeExternalId--,
+                                        Name = categoryName,
+                                        Level = 0,
+                                        ParentId = null
+                                    };
+                                    _context.Categories.Add(mainCategory);
+                                    mainCategoryId = mainCategory.Id;
+                                    categoryCache[categoryName] = mainCategoryId;
+                                }
+                                else
+                                {
+                                    mainCategoryId = mainCategory.Id;
+                                    categoryCache[categoryName] = mainCategoryId;
+                                }
                             }
+                            primaryCategoryId = mainCategoryId;
+                            productCategories.Add(primaryCategoryId);
                         }
 
                         var product = new CatalogProduct
@@ -248,16 +229,15 @@ namespace Product.API.Data
                             ExternalId = jsonProduct.Id,
                             No = $"TIKI-{jsonProduct.Id}",
                             Name = TruncateString(jsonProduct.Name, 250),
-                            Summary = TruncateString(jsonProduct.ShortDescription ?? "", 500),
+                            Summary = StripHtmlTags(TruncateString(jsonProduct.ShortDescription ?? "", 500)),
                             Description = jsonProduct.Description ?? "",
-                            ShortDescription = TruncateString(jsonProduct.ShortDescription ?? "", 1000),
                             Price = jsonProduct.Price ?? 0,
                             OriginalPrice = jsonProduct.OriginalPrice,
                             RatingAverage = (decimal)(jsonProduct.RatingAverage ?? 0),
                             ReviewCount = jsonProduct.ReviewCount ?? 0,
                             AllTimeQuantitySold = jsonProduct.AllTimeQuantitySold ?? 0,
                             InventoryStatus = !string.IsNullOrEmpty(jsonProduct.InventoryStatus) ? jsonProduct.InventoryStatus : "IN_STOCK",
-                            CategoryId = mainCategoryId,
+                            CategoryId = primaryCategoryId,
                             BrandId = brandId,
                             SellerId = sellerId,
                             StockQuantity = 100
@@ -271,15 +251,6 @@ namespace Product.API.Data
                             {
                                 ProductId = product.Id,
                                 CategoryId = catId
-                            });
-                        }
-
-                        if (!productCategories.Contains(mainCategoryId))
-                        {
-                            _context.ProductCategories.Add(new ProductCategory
-                            {
-                                ProductId = product.Id,
-                                CategoryId = mainCategoryId
                             });
                         }
 
@@ -357,20 +328,36 @@ namespace Product.API.Data
 
             if (_clipSearchService != null && totalProducts > 0)
             {
-                Console.WriteLine($"\nIndexing {totalProducts} products to Elasticsearch in batches...");
+                Console.WriteLine($"\nIndexing {totalProducts} products to Elasticsearch in batches of 1000...");
                 
-                var allProducts = await _context.Products
-                    .Include(p => p.Brand)
-                    .Include(p => p.Category)
-                    .Include(p => p.Specifications)
-                    .ToListAsync();
-
-                const int batchSize = 50;
-                for (int i = 0; i < allProducts.Count; i += batchSize)
+                const int batchSize = 1000;
+                int skip = 0;
+                int indexed = 0;
+                
+                while (true)
                 {
-                    var batch = allProducts.Skip(i).Take(batchSize).ToList();
+                    var batch = await _context.Products
+                        .Include(p => p.Brand)
+                        .Include(p => p.Category)
+                        .Include(p => p.Specifications)
+                        .Include(p => p.Images)
+                        .OrderBy(p => p.Id)
+                        .Skip(skip)
+                        .Take(batchSize)
+                        .AsNoTracking()
+                        .ToListAsync();
+                    
+                    if (batch.Count == 0) break;
+                    
+                    // Send to ClipSearch for embedding generation:
+                    // - name
+                    // - description  
+                    // - short_description
+                    // - images (all images, ClipSearch will compute average embedding)
                     await _clipSearchService.BulkIndexProductsAsync(batch);
-                    Console.WriteLine($"  Indexed {Math.Min(i + batchSize, allProducts.Count)}/{allProducts.Count} products to Elasticsearch");
+                    indexed += batch.Count;
+                    skip += batchSize;
+                    Console.WriteLine($"  Indexed {indexed}/{totalProducts} products to Elasticsearch");
                 }
                 
                 Console.WriteLine("Elasticsearch indexing completed!");
@@ -385,6 +372,108 @@ namespace Product.API.Data
         {
             if (string.IsNullOrEmpty(value)) return string.Empty;
             return value.Length <= maxLength ? value : value.Substring(0, maxLength);
+        }
+
+        private string StripHtmlTags(string html)
+        {
+            if (string.IsNullOrEmpty(html)) return string.Empty;
+            
+            // Simple regex to remove HTML tags
+            var stripped = System.Text.RegularExpressions.Regex.Replace(html, "<.*?>", string.Empty);
+            
+            // Decode HTML entities
+            stripped = System.Net.WebUtility.HtmlDecode(stripped);
+            
+            // Clean up multiple spaces and trim
+            stripped = System.Text.RegularExpressions.Regex.Replace(stripped, @"\s+", " ").Trim();
+            
+            return stripped;
+        }
+
+        private async Task<Guid> GetOrCreateCategory(
+            string name,
+            int externalId,
+            string? url,
+            Guid? parentId,
+            int level,
+            Dictionary<string, Guid> categoryCache)
+        {
+            // Create composite key: name + parentId to handle same names under different parents
+            var cacheKey = parentId.HasValue ? $"{name}|{parentId.Value}" : name;
+
+            if (categoryCache.TryGetValue(cacheKey, out var cachedId))
+            {
+                return cachedId;
+            }
+
+            // Check if category exists in database
+            Category? existingCategory;
+            if (parentId.HasValue)
+            {
+                existingCategory = await _context.Categories
+                    .FirstOrDefaultAsync(c => c.Name == name && c.ParentId == parentId);
+            }
+            else
+            {
+                existingCategory = await _context.Categories
+                    .FirstOrDefaultAsync(c => c.Name == name && c.ParentId == null);
+            }
+
+            if (existingCategory != null)
+            {
+                categoryCache[cacheKey] = existingCategory.Id;
+                return existingCategory.Id;
+            }
+
+            // Create new category
+            var newCategory = new Category
+            {
+                Id = Guid.NewGuid(),
+                ExternalId = externalId,
+                Name = name,
+                Url = url,
+                ParentId = parentId,
+                Level = level
+            };
+
+            _context.Categories.Add(newCategory);
+            categoryCache[cacheKey] = newCategory.Id;
+
+            return newCategory.Id;
+        }
+
+        private async Task<Guid> ProcessCategoryHierarchy(
+            List<JsonCategory> categories,
+            Dictionary<string, Guid> categoryCache)
+        {
+            if (categories == null || categories.Count == 0)
+            {
+                throw new ArgumentException("Categories list cannot be null or empty");
+            }
+
+            Guid? parentId = null;
+            Guid leafCategoryId = Guid.Empty;
+
+            // Process categories in order: first is root, each subsequent is child of previous
+            for (int i = 0; i < categories.Count; i++)
+            {
+                var category = categories[i];
+                int level = i; // Level 0 for root, 1 for first child, etc.
+
+                leafCategoryId = await GetOrCreateCategory(
+                    category.Name,
+                    category.Id,
+                    category.Url,
+                    parentId,
+                    level,
+                    categoryCache);
+
+                // Set this category as parent for next iteration
+                parentId = leafCategoryId;
+            }
+
+            // Return the leaf (most specific) category ID
+            return leafCategoryId;
         }
     }
 

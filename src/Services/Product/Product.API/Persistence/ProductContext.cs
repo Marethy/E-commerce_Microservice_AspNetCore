@@ -57,9 +57,6 @@ namespace Product.API.Persistence
                 
                 entity.Property(e => e.Summary)
                       .HasMaxLength(500);
-
-                entity.Property(e => e.ShortDescription)
-                      .HasMaxLength(1000);
                 
                 entity.Property(e => e.Price)
                       .HasPrecision(18, 2);
@@ -124,15 +121,13 @@ namespace Product.API.Persistence
                 entity.Property(e => e.Url)
                       .HasMaxLength(500);
 
-                entity.HasIndex(x => x.Name)
+                entity.HasIndex(x => new { x.Name, x.ParentId })
                       .IsUnique()
-                      .HasDatabaseName("IX_Categories_Name");
+                      .HasDatabaseName("IX_Categories_Name_ParentId");
 
                 entity.HasIndex(x => x.ExternalId)
-                      .IsUnique()
                       .HasDatabaseName("IX_Categories_ExternalId");
 
-                // Self-referencing relationship
                 entity.HasOne(c => c.Parent)
                       .WithMany(c => c.Children)
                       .HasForeignKey(c => c.ParentId)
@@ -333,17 +328,15 @@ namespace Product.API.Persistence
                       .HasDatabaseName("IX_ProductVariants_Product_Attribute");
             });
 
-            // Configure ProductCategory (Many-to-Many)
+            // Configure ProductCategory (Many-to-Many junction table)
             modelBuilder.Entity<ProductCategory>(entity =>
             {
+                entity.ToTable("ProductCategories");
+                
+                // Composite primary key
                 entity.HasKey(pc => new { pc.ProductId, pc.CategoryId });
 
-                entity.Property(e => e.ProductId)
-                      .HasColumnType("uuid");
-
-                entity.Property(e => e.CategoryId)
-                      .HasColumnType("uuid");
-
+                // Configure foreign keys and relationships
                 entity.HasOne(pc => pc.Product)
                       .WithMany(p => p.ProductCategories)
                       .HasForeignKey(pc => pc.ProductId)
@@ -353,6 +346,10 @@ namespace Product.API.Persistence
                       .WithMany(c => c.ProductCategories)
                       .HasForeignKey(pc => pc.CategoryId)
                       .OnDelete(DeleteBehavior.Cascade);
+
+                // Create index on CategoryId for reverse lookups
+                entity.HasIndex(pc => pc.CategoryId)
+                      .HasDatabaseName("IX_ProductCategories_CategoryId");
             });
 
             // Configure Wishlist

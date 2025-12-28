@@ -29,16 +29,7 @@ namespace Product.API.Services
                     id = product.Id.ToString(),
                     name = product.Name,
                     description = product.Description,
-                    shortDescription = product.ShortDescription,
-                    specifications,
-                    price = product.Price,
-                    brandId = product.BrandId?.ToString(),
-                    brandName = product.Brand?.Name,
-                    categoryId = product.CategoryId.ToString(),
-                    categoryName = product.Category?.Name,
-                    inventoryStatus = product.InventoryStatus,
-                    ratingAverage = product.RatingAverage,
-                    quantitySoldLast30Days = product.QuantitySoldLast30Days
+                    shortDescription = product.Summary
                 };
 
                 var response = await _httpClient.PostAsJsonAsync("/index-product", request);
@@ -61,18 +52,7 @@ namespace Product.API.Services
                     id = product.Id.ToString(),
                     name = product.Name,
                     description = product.Description,
-                    shortDescription = product.ShortDescription,
-                    specifications = product.Specifications != null && product.Specifications.Any()
-                        ? string.Join(" ", product.Specifications.Select(s => $"{s.SpecName}: {s.SpecValue}"))
-                        : null,
-                    price = product.Price,
-                    brandId = product.BrandId?.ToString(),
-                    brandName = product.Brand?.Name,
-                    categoryId = product.CategoryId.ToString(),
-                    categoryName = product.Category?.Name,
-                    inventoryStatus = product.InventoryStatus,
-                    ratingAverage = product.RatingAverage,
-                    quantitySoldLast30Days = product.QuantitySoldLast30Days
+                    shortDescription = product.Summary
                 }).ToList();
 
                 var response = await _httpClient.PostAsJsonAsync("/bulk-index-products", requests);
@@ -102,13 +82,14 @@ namespace Product.API.Services
             }
         }
 
-        public async Task<(List<Guid> ProductIds, int Total)> SearchProductIdsAsync(string? query, int page, int size)
+        public async Task<(List<Guid> ProductIds, int Total)> SearchProductIdsAsync(string? query, int page, int size, byte[]? imageBytes = null)
         {
             try
             {
                 var request = new
                 {
                     query,
+                    image = imageBytes != null ? Convert.ToBase64String(imageBytes) : null,
                     page,
                     size
                 };
@@ -138,8 +119,6 @@ namespace Product.API.Services
         {
             public List<string> ProductIds { get; set; } = new();
             public int Total { get; set; }
-            public int Page { get; set; }
-            public int Size { get; set; }
         }
     }
 }

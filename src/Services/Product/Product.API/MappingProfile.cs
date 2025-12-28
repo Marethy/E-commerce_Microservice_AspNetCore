@@ -15,14 +15,19 @@ namespace Product.API
             
             // Product mappings
             CreateMap<CatalogProduct, ProductDto>()
+                .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.Summary))
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : null))
                 .ForMember(dest => dest.SellerName, opt => opt.MapFrom(src => src.Seller != null ? src.Seller.Name : null))
+                .ForMember(dest => dest.IsSellerOfficial, opt => opt.MapFrom(src => src.Seller != null ? src.Seller.IsOfficial : (bool?)null))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
                 .ForMember(dest => dest.Specifications, opt => opt.MapFrom(src => src.Specifications));
 
             CreateMap<CatalogProduct, ProductSummaryDto>()
+                .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.Summary))
                 .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : null))
+                .ForMember(dest => dest.IsSellerOfficial, opt => opt.MapFrom(src => src.Seller != null ? src.Seller.IsOfficial : (bool?)null))
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
                 .ForMember(dest => dest.PrimaryImageUrl, opt => opt.MapFrom(src => 
                     src.Images.OrderBy(i => i.Position).FirstOrDefault(i => i.IsPrimary) != null 
                         ? src.Images.OrderBy(i => i.Position).FirstOrDefault(i => i.IsPrimary)!.Url 

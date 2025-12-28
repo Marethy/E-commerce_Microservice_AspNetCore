@@ -15,42 +15,56 @@ public class CategoryRepository : RepositoryBase<Category, Guid, ProductContext>
     }
 
     public async Task<IEnumerable<Category>> GetCategories()
-        => await FindAll().ToListAsync();
+        => await FindAll()
+            .AsNoTracking()
+            .ToListAsync();
 
     public async Task<Category?> GetCategory(Guid id)
-        => await GetByIdAsync(id);
+        => await FindByCondition(x => x.Id == id)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
 
     public async Task<Category?> GetCategoryByName(string name)
-        => await FindByCondition(x => x.Name == name).FirstOrDefaultAsync();
+        => await FindByCondition(x => x.Name == name)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
 
     public async Task<bool> CategoryExistsAsync(Guid id)
         => await FindByCondition(x => x.Id == id).AnyAsync();
 
     public async Task<IEnumerable<Category>> GetCategoriesWithProducts()
-        => await FindAll(false, x => x.Products).ToListAsync();
+        => await FindAll(false, x => x.Products)
+            .AsNoTracking()
+            .ToListAsync();
+
     // ===== HIERARCHY METHODS =====
     public async Task<IEnumerable<Category>> GetRootCategoriesAsync()
         => await FindByCondition(x => x.ParentId == null)
-            .Include(x => x.Children)
+            .AsNoTracking()
             .OrderBy(x => x.Name)
             .ToListAsync();
 
     public async Task<IEnumerable<Category>> GetSubcategoriesAsync(Guid parentId)
         => await FindByCondition(x => x.ParentId == parentId)
             .Include(x => x.Children)
+            .AsNoTracking()
             .OrderBy(x => x.Name)
             .ToListAsync();
 
     public async Task<IEnumerable<Category>> GetCategoryPathAsync(Guid categoryId)
     {
         var path = new List<Category>();
-        var current = await GetByIdAsync(categoryId);
+        var current = await FindByCondition(x => x.Id == categoryId)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
         
         while (current != null)
         {
             path.Insert(0, current);
             if (current.ParentId.HasValue)
-                current = await GetByIdAsync(current.ParentId.Value);
+                current = await FindByCondition(x => x.Id == current.ParentId.Value)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
             else
                 break;
         }
@@ -58,11 +72,18 @@ public class CategoryRepository : RepositoryBase<Category, Guid, ProductContext>
         return path;
     }
 
+    public async Task<Category?> GetCategoryWithChildrenAsync(Guid categoryId)
+        => await FindByCondition(x => x.Id == categoryId)
+            .Include(x => x.Children)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
     public async Task<Category?> GetCategoryWithHierarchyAsync(Guid categoryId)
         => await FindByCondition(x => x.Id == categoryId)
             .Include(x => x.Children)
                 .ThenInclude(x => x.Children)
                     .ThenInclude(x => x.Children)
+            .AsNoTracking()
             .FirstOrDefaultAsync();
 
     public async Task<bool> HasSubcategoriesAsync(Guid categoryId)
@@ -72,6 +93,7 @@ public class CategoryRepository : RepositoryBase<Category, Guid, ProductContext>
         => await FindAll()
             .Include(x => x.ProductCategories)
             .Where(x => x.ProductCategories.Any(pc => pc.ProductId == productId))
+            .AsNoTracking()
             .ToListAsync();
 
     public async Task<IEnumerable<Category>> GetFullHierarchyAsync()
@@ -80,6 +102,7 @@ public class CategoryRepository : RepositoryBase<Category, Guid, ProductContext>
                 .ThenInclude(x => x.Children)
                     .ThenInclude(x => x.Children)
                         .ThenInclude(x => x.Children)
+            .AsNoTracking()
             .OrderBy(x => x.Name)
             .ToListAsync();
 }

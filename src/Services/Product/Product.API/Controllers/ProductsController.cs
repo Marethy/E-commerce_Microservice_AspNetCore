@@ -58,16 +58,45 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<ApiResult<PagedProductResponse>>> SearchProducts(
         [FromQuery] ProductFilterDto filter,
         [FromQuery] int page = 0,
-        [FromQuery] int size = 20)
+        [FromQuery] int size = 20,
+        [FromQuery] bool? discount = null,
+        [FromQuery] int? minDiscount = null)
     {
+        // Apply discount filter if provided
+        if (discount.HasValue && discount.Value)
+        {
+            filter.HasDiscount = true;
+        }
+
+        // Apply minimum discount percentage filter if provided
+        if (minDiscount.HasValue && minDiscount.Value > 0)
+        {
+            filter.MinDiscountPercentage = minDiscount.Value;
+        }
+
         if (!string.IsNullOrEmpty(filter.Q))
         {
             var (productIds, totalFromElastic) = await _clipSearchService.SearchProductIdsAsync(filter.Q, page, size);
             
-            filter.ProductIds = productIds;
-            var (products, totalCount) = await _repository.SearchProducts(filter, 0, productIds.Count);
+            if (productIds.Count == 0)
+            {
+                return Ok(new ApiSuccessResult<PagedProductResponse>(new PagedProductResponse
+                {
+                    Content = new List<ProductDto>(),
+                    Meta = new PageMetadata { Page = page, Size = size, TotalElements = 0, TotalPages = 0, Last = true }
+                }));
+            }
             
-            var productDtos = _mapper.Map<List<ProductDto>>(products);
+            filter.ProductIds = productIds;
+            var (products, _) = await _repository.SearchProducts(filter, 0, productIds.Count);
+            
+            var productList = products.ToList();
+            var orderedProducts = productIds
+                .Select(id => productList.FirstOrDefault(p => p.Id == id))
+                .Where(p => p != null)
+                .ToList();
+            
+            var productDtos = _mapper.Map<List<ProductDto>>(orderedProducts);
             
             var response = new PagedProductResponse
             {
@@ -102,6 +131,179 @@ public class ProductsController : ControllerBase
         };
 
         return Ok(new ApiSuccessResult<PagedProductResponse>(responseNoQuery));
+    }
+
+    [HttpPost("search")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<PagedProductResponse>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<PagedProductResponse>>> SearchProductsAdvanced([FromBody] ProductSearchRequestDto request)
+    {
+        var filter = request.Filter ?? new ProductFilterDto();
+        var page = request.Page;
+        var size = request.Size;
+
+        // Check if we have query or image for CLIP search
+        if (!string.IsNullOrEmpty(request.Query) || !string.IsNullOrEmpty(request.ImageBase64))
+        {
+            byte[]? imageBytes = null;
+            if (!string.IsNullOrEmpty(request.ImageBase64))
+            {
+                try
+                {
+                    imageBytes = Convert.FromBase64String(request.ImageBase64);
+                }
+                catch (FormatException)
+                {
+                    return BadRequest(new ApiErrorResult<PagedProductResponse>("Invalid base64 image format"));
+                }
+            }
+
+            var (productIds, totalFromElastic) = await _clipSearchService.SearchProductIdsAsync(request.Query, page, size, imageBytes);
+            
+            if (productIds.Count == 0)
+            {
+                return Ok(new ApiSuccessResult<PagedProductResponse>(new PagedProductResponse
+                {
+                    Content = new List<ProductDto>(),
+                    Meta = new PageMetadata { Page = page, Size = size, TotalElements = 0, TotalPages = 0, Last = true }
+                }));
+            }
+            
+            filter.ProductIds = productIds;
+            var (products, _) = await _repository.SearchProducts(filter, 0, productIds.Count);
+            
+            var productList = products.ToList();
+            var orderedProducts = productIds
+                .Select(id => productList.FirstOrDefault(p => p.Id == id))
+                .Where(p => p != null)
+                .ToList();
+            
+            var productDtos = _mapper.Map<List<ProductDto>>(orderedProducts);
+            
+            var response = new PagedProductResponse
+            {
+                Content = productDtos,
+                Meta = new PageMetadata
+                {
+                    Page = page,
+                    Size = size,
+                    TotalElements = totalFromElastic,
+                    TotalPages = (int)Math.Ceiling(totalFromElastic / (double)size),
+                    Last = (page + 1) * size >= totalFromElastic
+                }
+            };
+
+            return Ok(new ApiSuccessResult<PagedProductResponse>(response));
+        }
+        
+        // No query or image, use regular filter search
+        var (allProducts, total) = await _repository.SearchProducts(filter, page, size);
+        var allProductDtos = _mapper.Map<List<ProductDto>>(allProducts);
+        
+        var responseNoQuery = new PagedProductResponse
+        {
+            Content = allProductDtos,
+            Meta = new PageMetadata
+            {
+                Page = page,
+                Size = size,
+                TotalElements = total,
+                TotalPages = (int)Math.Ceiling(total / (double)size),
+                Last = (page + 1) * size >= total
+            }
+        };
+
+        return Ok(new ApiSuccessResult<PagedProductResponse>(responseNoQuery));
+    }
+
+    [HttpGet("top-rated")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<PagedProductResponse>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<PagedProductResponse>>> GetTopRatedProducts(
+        [FromQuery] ProductFilterDto filter,
+        [FromQuery] int page = 0,
+        [FromQuery] int size = 20)
+    {
+        filter.SortBy = "rating";
+        filter.SortDirection = "desc";
+        
+        var (products, total) = await _repository.SearchProducts(filter, page, size);
+        var productDtos = _mapper.Map<List<ProductDto>>(products);
+        
+        var response = new PagedProductResponse
+        {
+            Content = productDtos,
+            Meta = new PageMetadata
+            {
+                Page = page,
+                Size = size,
+                TotalElements = total,
+                TotalPages = (int)Math.Ceiling(total / (double)size),
+                Last = (page + 1) * size >= total
+            }
+        };
+
+        return Ok(new ApiSuccessResult<PagedProductResponse>(response));
+    }
+
+    [HttpGet("new-arrivals")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<PagedProductResponse>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<PagedProductResponse>>> GetNewArrivals(
+        [FromQuery] ProductFilterDto filter,
+        [FromQuery] int page = 0,
+        [FromQuery] int size = 20)
+    {
+        filter.SortBy = "created";
+        filter.SortDirection = "desc";
+        
+        var (products, total) = await _repository.SearchProducts(filter, page, size);
+        var productDtos = _mapper.Map<List<ProductDto>>(products);
+        
+        var response = new PagedProductResponse
+        {
+            Content = productDtos,
+            Meta = new PageMetadata
+            {
+                Page = page,
+                Size = size,
+                TotalElements = total,
+                TotalPages = (int)Math.Ceiling(total / (double)size),
+                Last = (page + 1) * size >= total
+            }
+        };
+
+        return Ok(new ApiSuccessResult<PagedProductResponse>(response));
+    }
+
+    [HttpGet("top-selling")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<PagedProductResponse>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<PagedProductResponse>>> GetTopSellingProducts(
+        [FromQuery] ProductFilterDto filter,
+        [FromQuery] int page = 0,
+        [FromQuery] int size = 20)
+    {
+        filter.SortBy = "sales";
+        filter.SortDirection = "desc";
+        
+        var (products, total) = await _repository.SearchProducts(filter, page, size);
+        var productDtos = _mapper.Map<List<ProductDto>>(products);
+        
+        var response = new PagedProductResponse
+        {
+            Content = productDtos,
+            Meta = new PageMetadata
+            {
+                Page = page,
+                Size = size,
+                TotalElements = total,
+                TotalPages = (int)Math.Ceiling(total / (double)size),
+                Last = (page + 1) * size >= total
+            }
+        };
+
+        return Ok(new ApiSuccessResult<PagedProductResponse>(response));
     }
 
     [HttpGet("summary")]
