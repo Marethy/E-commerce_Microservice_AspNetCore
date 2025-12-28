@@ -24,7 +24,7 @@ namespace Ordering.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<OrderContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+                options.UseSqlServer(configuration.GetConnectionString("OrderingConnectionString"),
                     sqlServerOptionsAction: sqlOptions =>
                     {
                         sqlOptions.MigrationsAssembly(typeof(OrderContext).GetTypeInfo().Assembly.GetName().Name);
