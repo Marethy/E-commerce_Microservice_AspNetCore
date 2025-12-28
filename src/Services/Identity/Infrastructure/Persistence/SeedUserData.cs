@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Security.Claims;
 using IDP.Infrastructure.Common;
 using IDP.Infrastructure.Entities;
+using Microsoft.Data.SqlClient;
 
 namespace IDP.Infrastructure.Persistence;
 
@@ -38,7 +39,12 @@ public class SeedUserData
             await using var context = scope.ServiceProvider.GetRequiredService<TeduIdentityContext>();
             context.Database.SetConnectionString(connectionString);
             await context.Database.MigrateAsync();
-            Console.WriteLine("? Database migration completed");
+            Console.WriteLine("✓ Database migration completed");
+
+            // Create stored procedures
+            Console.WriteLine("Creating stored procedures...");
+            await CreateStoredProceduresAsync(context);
+            Console.WriteLine("✓ Stored procedures created");
 
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             
@@ -103,13 +109,22 @@ public class SeedUserData
         var agentRole = await roleManager.FindByNameAsync("Agent");
 
         // ADMINISTRATOR - Full Access to Everything
-        AddFullPermissions(permissions, adminRole.Id, "PRODUCT", "ORDER", "CUSTOMER", "INVENTORY", "BASKET", "PAYMENT", "SHIPPING", "REPORTING");
+        if (adminRole != null)
+        {
+            AddFullPermissions(permissions, adminRole.Id, "PRODUCT", "ORDER", "CUSTOMER", "INVENTORY", "BASKET", "PAYMENT", "SHIPPING", "REPORTING");
+        }
 
         // CUSTOMER - Full Access to Everything (for testing)
-        AddFullPermissions(permissions, customerRole.Id, "PRODUCT", "ORDER", "CUSTOMER", "INVENTORY", "BASKET", "PAYMENT", "SHIPPING", "REPORTING");
+        if (customerRole != null)
+        {
+            AddFullPermissions(permissions, customerRole.Id, "PRODUCT", "ORDER", "CUSTOMER", "INVENTORY", "BASKET", "PAYMENT", "SHIPPING", "REPORTING");
+        }
 
         // AGENT - Full Access to Everything (for testing)
-        AddFullPermissions(permissions, agentRole.Id, "PRODUCT", "ORDER", "CUSTOMER", "INVENTORY", "BASKET", "PAYMENT", "SHIPPING", "REPORTING");
+        if (agentRole != null)
+        {
+            AddFullPermissions(permissions, agentRole.Id, "PRODUCT", "ORDER", "CUSTOMER", "INVENTORY", "BASKET", "PAYMENT", "SHIPPING", "REPORTING");
+        }
 
         await context.Permissions.AddRangeAsync(permissions);
         await context.SaveChangesAsync();
@@ -170,6 +185,122 @@ public class SeedUserData
         if (!result.Succeeded)
         {
             throw new Exception(result.Errors.First().Description);
+        }
+    }
+
+    private static async Task CreateStoredProceduresAsync(TeduIdentityContext context)
+    {
+        try
+        {
+            // 1. Create table type first
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF EXISTS (SELECT * FROM sys.types WHERE is_table_type = 1 AND name = 'Permission')
+                    DROP TYPE [dbo].[Permission];
+                
+                CREATE TYPE [dbo].[Permission] AS TABLE(
+                    [Function] VARCHAR(50) NOT NULL,
+                    [Command] VARCHAR(50) NOT NULL,
+                    [RoleId] VARCHAR(50) NOT NULL
+                );
+            ");
+
+            // 2. Get_Permission_By_RoleId
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'Get_Permission_By_RoleId')
+                    DROP PROCEDURE [Get_Permission_By_RoleId];
+            ");
+            
+            await context.Database.ExecuteSqlRawAsync(@"
+                CREATE PROCEDURE [Get_Permission_By_RoleId] @roleId varchar(50) null
+                AS
+                BEGIN
+                    SET NOCOUNT ON;
+                    SELECT * FROM [Identity].Permissions WHERE RoleId = @roleId
+                END
+            ");
+
+            // 3. Create_Permission
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'Create_Permission')
+                    DROP PROCEDURE [Create_Permission];
+            ");
+            
+            await context.Database.ExecuteSqlRawAsync(@"
+                CREATE PROCEDURE [Create_Permission] 
+                    @roleId VARCHAR(50) NULL,
+                    @function VARCHAR(50) NULL,
+                    @command VARCHAR(50) NULL,
+                    @newId BIGINT OUTPUT
+                AS
+                BEGIN
+                    SET XACT_ABORT ON;
+                    BEGIN TRAN
+                        BEGIN TRY 
+                            IF NOT EXISTS (SELECT * FROM [Identity].Permissions WHERE [RoleId] = @roleId AND [Function] = @function AND [Command] = @command)
+                            BEGIN
+                                INSERT INTO [Identity].Permissions ([RoleId], [Function], [Command]) VALUES (@roleId, @function, @command)
+                                SET @newId = SCOPE_IDENTITY();
+                            END
+                        COMMIT
+                        END TRY
+                        BEGIN CATCH 
+                            ROLLBACK
+                            DECLARE @ErrorMessage VARCHAR(2000)
+                            SELECT @ErrorMessage = 'ERROR: ' + ERROR_MESSAGE() 
+                            RAISERROR(@ErrorMessage, 16, 1)
+                        END CATCH
+                END
+            ");
+
+            // 4. Delete_Permission
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'Delete_Permission')
+                    DROP PROCEDURE [Delete_Permission];
+            ");
+            
+            await context.Database.ExecuteSqlRawAsync(@"
+                CREATE PROCEDURE [Delete_Permission] 
+                    @roleId VARCHAR(50) NULL,
+                    @function VARCHAR(50) NULL,
+                    @command VARCHAR(50) NULL
+                AS
+                BEGIN
+                    DELETE FROM [Identity].Permissions WHERE [RoleId] = @roleId AND [Function] = @function AND [Command] = @command
+                END
+            ");
+
+            // 5. Update_Permissions_By_RoleId
+            await context.Database.ExecuteSqlRawAsync(@"
+                IF EXISTS (SELECT * FROM sys.objects WHERE type = 'P' AND name = 'Update_Permissions_By_RoleId')
+                    DROP PROCEDURE [Update_Permissions_By_RoleId];
+            ");
+            
+            await context.Database.ExecuteSqlRawAsync(@"
+                CREATE PROCEDURE [Update_Permissions_By_RoleId] 
+                    @roleId VARCHAR(50) NULL,
+                    @permissions Permission READONLY
+                AS
+                BEGIN
+                    SET XACT_ABORT ON;
+                    BEGIN TRAN
+                        BEGIN TRY
+                            DELETE FROM [Identity].Permissions WHERE RoleId = @roleId
+                            INSERT INTO [Identity].Permissions SELECT [Function], [Command], [RoleId] FROM @permissions
+                        COMMIT
+                        END TRY
+                        BEGIN CATCH
+                            ROLLBACK
+                            DECLARE @ErrorMessage VARCHAR(2000)
+                            SELECT @ErrorMessage = 'ERROR: ' + ERROR_MESSAGE()
+                            RAISERROR(@ErrorMessage, 16, 1)
+                        END CATCH
+                END
+            ");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Warning: Could not create stored procedures: {ex.Message}");
+            // Don't throw - allow app to continue
         }
     }
 }
