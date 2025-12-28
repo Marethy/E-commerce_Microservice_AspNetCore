@@ -94,6 +94,17 @@ async def delete_product(product_id: str):
         logger.error(f"Error deleting product {product_id}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/recreate-index")
+async def recreate_index():
+    """Recreate the Elasticsearch index - use when schema changes"""
+    try:
+        search_engine.recreate_index()
+        return {"message": "Index recreated successfully"}
+    except Exception as e:
+        logger.error(f"Error recreating index: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.post("/search", response_model=SearchResponse)
 async def search_products(request: SearchRequest):
     try:
@@ -101,9 +112,7 @@ async def search_products(request: SearchRequest):
         
         return SearchResponse(
             productIds=product_ids,
-            total=total,
-            page=request.page,
-            size=request.size
+            total=total
         )
     except Exception as e:
         logger.error(f"Error searching products: {str(e)}")
