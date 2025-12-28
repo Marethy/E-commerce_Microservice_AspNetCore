@@ -35,12 +35,9 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<List<CategoryDto>>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategories([FromQuery] bool includeProducts = false)
+    public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategories()
     {
-        var categories = includeProducts 
-            ? await _repository.GetCategoriesWithProducts()
-            : await _repository.GetCategories();
-
+        var categories = await _repository.GetCategories();
         var result = _mapper.Map<List<CategoryDto>>(categories);
         return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
     }
@@ -51,11 +48,22 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ApiResult<CategoryDto>>> GetCategoryById([Required] Guid id)
     {
-        var category = await _repository.GetCategory(id);
+        // Get category with its direct children for lazy loading
+        var category = await _repository.GetCategoryWithChildrenAsync(id);
         if (category == null)
             return NotFound(new ApiErrorResult<CategoryDto>($"Category with ID {id} not found"));
 
         var result = _mapper.Map<CategoryDto>(category);
+        
+        // Add hasChildren flag for each subcategory
+        if (result.Children != null)
+        {
+            foreach (var child in result.Children)
+            {
+                child.HasChildren = await _repository.HasSubcategoriesAsync(child.Id);
+            }
+        }
+        
         return Ok(new ApiSuccessResult<CategoryDto>(result));
     }
 
@@ -164,6 +172,17 @@ public class CategoriesController : ControllerBase
         }
         
         return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
+    }
+
+    /// <summary>
+    /// Get root categories - dedicated endpoint for frontend
+    /// </summary>
+    [HttpGet("root-categories")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<List<CategoryDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetRootCategoriesAlt()
+    {
+        return await GetRootCategories();
     }
 
     /// <summary>
@@ -289,10 +308,25 @@ public class CategoriesController : ControllerBase
         {
             var (productIds, totalFromElastic) = await _clipSearchService.SearchProductIdsAsync(filter.Q, page, size);
             
-            filter.ProductIds = productIds;
-            var (products, totalCount) = await _productRepository.SearchProducts(filter, 0, productIds.Count);
+            if (productIds.Count == 0)
+            {
+                return Ok(new ApiSuccessResult<PagedProductResponse>(new PagedProductResponse
+                {
+                    Content = new List<ProductDto>(),
+                    Meta = new PageMetadata { Page = page, Size = size, TotalElements = 0, TotalPages = 0, Last = true }
+                }));
+            }
             
-            var productDtos = _mapper.Map<List<ProductDto>>(products);
+            filter.ProductIds = productIds;
+            var (products, _) = await _productRepository.SearchProducts(filter, 0, productIds.Count);
+            
+            var productList = products.ToList();
+            var orderedProducts = productIds
+                .Select(id => productList.FirstOrDefault(p => p.Id == id))
+                .Where(p => p != null)
+                .ToList();
+            
+            var productDtos = _mapper.Map<List<ProductDto>>(orderedProducts);
             
             var response = new PagedProductResponse
             {

@@ -15,6 +15,7 @@ namespace Product.API.Repositories.Interfaces
         Task<IEnumerable<Category>> GetRootCategoriesAsync();
         Task<IEnumerable<Category>> GetSubcategoriesAsync(Guid parentId);
         Task<IEnumerable<Category>> GetCategoryPathAsync(Guid categoryId);
+        Task<Category?> GetCategoryWithChildrenAsync(Guid categoryId);
         Task<Category?> GetCategoryWithHierarchyAsync(Guid categoryId);
         Task<bool> HasSubcategoriesAsync(Guid categoryId);
         Task<IEnumerable<Category>> GetCategoriesByProductIdAsync(Guid productId);

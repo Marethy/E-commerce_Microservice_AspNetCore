@@ -19,12 +19,15 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
         => await FindAll(false, x => x.Category, x => x.Brand, x => x.Seller)
                 .Include(x => x.Images)
                 .Include(x => x.Specifications)
+                .AsNoTracking()
                 .ToListAsync();
 
     public async Task<IEnumerable<CatalogProduct>> GetProductsByCategory(Guid categoryId)
         => await FindByCondition(x => x.CategoryId == categoryId, false, x => x.Category, x => x.Brand, x => x.Seller)
                 .Include(x => x.Images)
                 .Include(x => x.Specifications)
+                .AsNoTracking()
+                .Take(100)
                 .ToListAsync();
 
     public async Task<(IEnumerable<CatalogProduct> Items, int TotalCount)> SearchProducts(
@@ -34,18 +37,13 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
     {
         var query = FindAll(false, x => x.Category, x => x.Brand, x => x.Seller)
             .Include(x => x.Images)
-            .Include(x => x.Specifications)
+            .Include(x => x.ProductCategories)
+            .AsNoTracking()
             .AsQueryable();
 
-        // Search by keyword (name, description, no)
-        if (!string.IsNullOrWhiteSpace(filter.Q))
+        if (filter.ProductIds != null && filter.ProductIds.Any())
         {
-            var keyword = filter.Q.ToLower();
-            query = query.Where(x =>
-                x.Name.ToLower().Contains(keyword) ||
-                x.Description.ToLower().Contains(keyword) ||
-                x.No.ToLower().Contains(keyword)
-            );
+            query = query.Where(x => filter.ProductIds.Contains(x.Id));
         }
 
         // Filter by price range
@@ -70,20 +68,36 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
         if (filter.BrandNames != null && filter.BrandNames.Any())
             query = query.Where(x => x.Brand != null && filter.BrandNames.Contains(x.Brand.Name));
 
-        // Filter by category IDs
-        if (filter.CategoryIds != null && filter.CategoryIds.Any())
-            query = query.Where(x => filter.CategoryIds.Contains(x.CategoryId));
+        // Filter by category IDs with hierarchy support
+        if (filter.CategoryIds != null && filter.CategoryIds.Count != 0)
+        {
+            // Get all descendant categories for the selected categories (including self)
+            var allCategoryIds = await GetAllDescendantCategoryIds(filter.CategoryIds);
+            
+            query = query.Where(x => 
+                allCategoryIds.Contains(x.CategoryId) ||
+                x.ProductCategories.Any(pc => allCategoryIds.Contains(pc.CategoryId))
+            );
+        }
 
         // Filter by inventory status
         if (!string.IsNullOrWhiteSpace(filter.InventoryStatus))
         {
-            if (filter.InventoryStatus.ToLower() == "available")
+            if (filter.InventoryStatus.Equals("available", StringComparison.CurrentCultureIgnoreCase))
                 query = query.Where(x => x.StockQuantity > 0);
-            else if (filter.InventoryStatus.ToLower() == "out_of_stock")
+            else if (filter.InventoryStatus.Equals("out_of_stock", StringComparison.CurrentCultureIgnoreCase))
                 query = query.Where(x => x.StockQuantity <= 0);
         }
 
-        // Get total count before pagination
+        // Filter by discount
+        if (filter.HasDiscount.HasValue && filter.HasDiscount.Value)
+            query = query.Where(x => x.DiscountPercentage.HasValue && x.DiscountPercentage.Value > 0);
+
+        // Filter by minimum discount percentage
+        if (filter.MinDiscountPercentage.HasValue && filter.MinDiscountPercentage.Value > 0)
+            query = query.Where(x => x.DiscountPercentage.HasValue && x.DiscountPercentage.Value >= filter.MinDiscountPercentage.Value);
+
+        // Get total count before pagination (for infinite scroll support)
         var totalCount = await query.CountAsync();
 
         // Sorting
@@ -99,7 +113,7 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
             _ => query.OrderByDescending(x => x.CreatedDate) // Default: newest first
         };
 
-        // Pagination
+        // Pagination (supports infinite scroll)
         var items = await query
             .Skip(page * size)
             .Take(size)
@@ -108,17 +122,56 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
         return (items, totalCount);
     }
 
+    /// <summary>
+    /// Get all descendant category IDs for the given category IDs (including self)
+    /// Uses recursive CTE for optimal performance instead of N+1 queries
+    /// </summary>
+    private async Task<List<Guid>> GetAllDescendantCategoryIds(List<Guid> categoryIds)
+    {
+        // Use raw SQL with CTE for better performance
+        var sql = @"
+            WITH RECURSIVE category_tree AS (
+                -- Base: selected categories
+                SELECT ""Id"" FROM ""Categories"" WHERE ""Id"" = ANY(@categoryIds)
+                
+                UNION ALL
+                
+                -- Recursive: all children
+                SELECT c.""Id"" 
+                FROM ""Categories"" c
+                INNER JOIN category_tree ct ON c.""ParentId"" = ct.""Id""
+            )
+            SELECT DISTINCT ""Id"" FROM category_tree;
+        ";
+
+        var result = await _context.Categories
+            .FromSqlInterpolated($@"
+                WITH RECURSIVE category_tree AS (
+                    SELECT ""Id"" FROM ""Categories"" WHERE ""Id"" = ANY({categoryIds.ToArray()})
+                    UNION ALL
+                    SELECT c.""Id"" FROM ""Categories"" c
+                    INNER JOIN category_tree ct ON c.""ParentId"" = ct.""Id""
+                )
+                SELECT ""Id"" FROM category_tree")
+            .Select(x => x.Id)
+            .ToListAsync();
+
+        return result;
+    }
+
     public async Task<CatalogProduct?> GetProduct(Guid id)
         => await FindByCondition(x => x.Id == id, false, x => x.Category, x => x.Brand, x => x.Seller)
                 .Include(x => x.Reviews)
                 .Include(x => x.Images)
                 .Include(x => x.Specifications)
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
     
     public async Task<CatalogProduct?> GetProductByNo(string productNo)
         => await FindByCondition(x => x.No == productNo, false, x => x.Category, x => x.Brand, x => x.Seller)
                 .Include(x => x.Images)
                 .Include(x => x.Specifications)
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
     
     public async Task<CatalogProduct?> GetProductBySlug(string slug)
@@ -126,12 +179,14 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
                 .Include(x => x.Reviews)
                 .Include(x => x.Images)
                 .Include(x => x.Specifications)
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
     
     public async Task<IEnumerable<ProductImage>> GetProductImages(Guid productId)
         => await _context.ProductImages
                 .Where(x => x.ProductId == productId)
                 .OrderBy(x => x.Position)
+                .AsNoTracking()
                 .ToListAsync();
     
     public async Task<bool> CategoryExists(Guid categoryId)
