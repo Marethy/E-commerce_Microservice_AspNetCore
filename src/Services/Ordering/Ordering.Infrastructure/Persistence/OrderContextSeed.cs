@@ -57,6 +57,7 @@ namespace Ordering.Infrastructure.Persistence
                             EmailAddress = "john.doe@example.com",
                             ShippingAddress = "123 Main St, Anytown, USA",
                             InvoiceAddress = "123 Main St, Anytown, USA",
+                            Status = Shared.Enums.Order.OrderStatus.Pending,
                             CreatedDate = DateTimeOffset.UtcNow
                         },
                         new Order
@@ -68,6 +69,7 @@ namespace Ordering.Infrastructure.Persistence
                             EmailAddress = "jane.smith@example.com",
                             ShippingAddress = "456 Elm St, Othertown, USA",
                             InvoiceAddress = "456 Elm St, Othertown, USA",
+                            Status = Shared.Enums.Order.OrderStatus.Confirmed,
                             CreatedDate = DateTimeOffset.UtcNow
                         },
                         new Order
@@ -79,6 +81,7 @@ namespace Ordering.Infrastructure.Persistence
                             EmailAddress = "bob.johnson@example.com",
                             ShippingAddress = "789 Oak St, Sometown, USA",
                             InvoiceAddress = "789 Oak St, Sometown, USA",
+                            Status = Shared.Enums.Order.OrderStatus.Delivered,
                             CreatedDate = DateTimeOffset.UtcNow
                         }
                     };
