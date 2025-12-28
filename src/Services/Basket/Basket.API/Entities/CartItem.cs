@@ -19,6 +19,17 @@ namespace Basket.API.Entities
         [Range(0.01, double.MaxValue, ErrorMessage = "Item price must be greater than 0.")]
         public decimal ItemPrice { get; set; }
         public int AvailableQuanlity { get;  set; }
+
+        public decimal? OriginalPrice { get; set; }
+        
+        [StringLength(500)]
+        public string? ProductImage { get; set; }
+        
+        [StringLength(100)]
+        public string? BrandName { get; set; }
+        
+        [StringLength(500)]
+        public string? ShortDescription { get; set; }
         
     }
 }
