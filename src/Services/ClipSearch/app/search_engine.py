@@ -3,6 +3,7 @@ from transformers import CLIPModel, CLIPProcessor
 from elasticsearch import Elasticsearch
 from typing import List, Dict, Optional, Tuple
 import logging
+import numpy as np
 
 from .config import (
     ELASTICSEARCH_URL,
@@ -60,7 +61,6 @@ class SearchEngine:
     
     def generate_embedding(self, text: str) -> List[float]:
         if not text or not text.strip():
-            # Return zero vector for empty text
             return [0.0] * 512
         
         inputs = self.clip_processor(
@@ -68,7 +68,7 @@ class SearchEngine:
             return_tensors="pt", 
             padding=True,
             truncation=True,
-            max_length=77  # CLIP max tokens
+            max_length=77
         )
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         
@@ -77,10 +77,31 @@ class SearchEngine:
         
         return embeddings[0].cpu().tolist()
     
+    def generate_image_embedding(self, image_base64: str) -> List[float]:
+        import base64
+        import io
+        from PIL import Image
+        
+        try:
+            image_bytes = base64.b64decode(image_base64)
+            image = Image.open(io.BytesIO(image_bytes))
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+            
+            inputs = self.clip_processor(images=image, return_tensors="pt")
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
+            with torch.no_grad():
+                embeddings = self.clip_model.get_image_features(**inputs)
+            
+            return embeddings[0].cpu().tolist()
+        except Exception as e:
+            logger.error(f"Error generating image embedding: {e}")
+            return [0.0] * 512
+
     def _strip_html(self, html_text: Optional[str]) -> str:
         if not html_text:
             return ""
-        
         try:
             from bs4 import BeautifulSoup
             soup = BeautifulSoup(html_text, 'html.parser')
@@ -88,61 +109,41 @@ class SearchEngine:
         except Exception as e:
             logger.warning(f"Failed to parse HTML, using raw text: {e}")
             return html_text
-    
-    def _generate_weighted_embedding(
-        self, 
-        name: str, 
-        short_desc: Optional[str], 
-        description: Optional[str]
-    ) -> List[float]:
-        import numpy as np
-        
+
+    def _generate_weighted_embedding(self, name: str, short_desc: Optional[str], description: Optional[str]) -> List[float]:
         embeddings = []
         weights = []
         
-        # Name embedding (weight: 3)
         if name and name.strip():
-            name_emb = self.generate_embedding(name)
-            embeddings.append(name_emb)
+            embeddings.append(self.generate_embedding(name))
             weights.append(3.0)
         
-        # Short description embedding (weight: 2)
         if short_desc and short_desc.strip():
             short_clean = self._strip_html(short_desc)
             if short_clean:
-                short_emb = self.generate_embedding(short_clean)
-                embeddings.append(short_emb)
+                embeddings.append(self.generate_embedding(short_clean))
                 weights.append(2.0)
         
-        # Description embedding (weight: 2)
         if description and description.strip():
             desc_clean = self._strip_html(description)
             if desc_clean:
-                desc_emb = self.generate_embedding(desc_clean)
-                embeddings.append(desc_emb)
+                embeddings.append(self.generate_embedding(desc_clean))
                 weights.append(2.0)
         
         if not embeddings:
-            # Fallback to zero vector
             return [0.0] * 512
         
-        # Weighted average
         embeddings_array = np.array(embeddings)
         weights_array = np.array(weights).reshape(-1, 1)
         weighted_sum = np.sum(embeddings_array * weights_array, axis=0)
         weight_sum = np.sum(weights_array)
         
-        final_embedding = (weighted_sum / weight_sum).tolist()
-        return final_embedding
-    
+        return (weighted_sum / weight_sum).tolist()
+
     def index_product(self, product: ProductIndexRequest):
-        # Generate weighted embedding from name, shortDescription, description
         embedding = self._generate_weighted_embedding(
-            product.name,
-            product.shortDescription,
-            product.description
+            product.name, product.shortDescription, product.description
         )
-        
         doc = {
             "id": product.id,
             "name": product.name,
@@ -150,21 +151,16 @@ class SearchEngine:
             "shortDescription": product.shortDescription,
             "embedding": embedding
         }
-        
         self.es.index(index=ELASTICSEARCH_INDEX, id=product.id, document=doc)
         logger.info(f"Indexed product: {product.id}")
-    
+
     def bulk_index_products(self, products: List[ProductIndexRequest]) -> Dict:
         from elasticsearch.helpers import bulk
-        
         actions = []
         for product in products:
             embedding = self._generate_weighted_embedding(
-                product.name,
-                product.shortDescription,
-                product.description
+                product.name, product.shortDescription, product.description
             )
-            
             doc = {
                 "id": product.id,
                 "name": product.name,
@@ -172,97 +168,93 @@ class SearchEngine:
                 "shortDescription": product.shortDescription,
                 "embedding": embedding
             }
-            
-            actions.append({
-                "_index": ELASTICSEARCH_INDEX,
-                "_id": product.id,
-                "_source": doc
-            })
+            actions.append({"_index": ELASTICSEARCH_INDEX, "_id": product.id, "_source": doc})
         
         success, failed = bulk(self.es, actions, raise_on_error=False)
         logger.info(f"Bulk indexed {success} products, {len(failed)} failed")
-        
         return {"success": success, "failed": len(failed)}
 
-    
     def delete_product(self, product_id: str):
         self.es.delete(index=ELASTICSEARCH_INDEX, id=product_id, ignore=[404])
         logger.info(f"Deleted product: {product_id}")
-    
+
+    def recreate_index(self):
+        logger.info(f"Recreating index: {ELASTICSEARCH_INDEX}")
+        if self.es.indices.exists(index=ELASTICSEARCH_INDEX):
+            self.es.indices.delete(index=ELASTICSEARCH_INDEX)
+        self._create_index_if_not_exists()
+        logger.info(f"Recreated index: {ELASTICSEARCH_INDEX}")
+
     def hybrid_search(self, request: SearchRequest) -> Tuple[List[str], int]:
-        if not request.query:
+        if not request.query and not request.image:
             return [], 0
         
-        fuzzy_results = self._fuzzy_search(request.query)
-        query_embedding = self.generate_embedding(request.query)
-        vector_results = self._vector_search(query_embedding)
+        embeddings = []
+        weights = []
+        if request.query:
+            embeddings.append(self.generate_embedding(request.query))
+            weights.append(1.0)
+        if request.image:
+            embeddings.append(self.generate_image_embedding(request.image))
+            weights.append(1.0)
         
-        merged_results = self._rrf_merge(fuzzy_results, vector_results, k=RRF_K)
-        
-        total = len(merged_results)
-        start = request.page * request.size
-        end = start + request.size
-        paginated_ids = merged_results[start:end]
-        
-        return paginated_ids, total
-    
+        if len(embeddings) > 1:
+            embeddings_array = np.array(embeddings)
+            weights_array = np.array(weights).reshape(-1, 1)
+            query_embedding = (np.sum(embeddings_array * weights_array, axis=0) / np.sum(weights_array)).tolist()
+        else:
+            query_embedding = embeddings[0]
 
-    
-    def _fuzzy_search(self, query: str) -> List[Tuple[str, int]]:
-        es_query = {
-            "query": {
+        offset = request.page * request.size
+        
+        knn_param = [{
+            "field": "embedding",
+            "query_vector": query_embedding,
+            "k": 50,
+            "num_candidates": 100
+        }]
+
+        query_param = None
+        if request.query:
+            query_param = {
                 "multi_match": {
-                    "query": query,
+                    "query": request.query,
                     "fields": ["name^3", "description^2", "shortDescription^2"],
                     "fuzziness": "AUTO"
                 }
-            },
-            "size": 1000
-        }
-        
-        response = self.es.search(index=ELASTICSEARCH_INDEX, body=es_query)
-        
-        results = []
-        for rank, hit in enumerate(response['hits']['hits']):
-            results.append((hit['_source']['id'], rank))
-        
-        return results
-    
-    def _vector_search(self, embedding: List[float]) -> List[Tuple[str, int]]:
-        es_query = {
-            "query": {
-                "script_score": {
-                    "query": {"match_all": {}},
-                    "script": {
-                        "source": "cosineSimilarity(params.query_vector, 'embedding') + 1.0",
-                        "params": {"query_vector": embedding}
-                    }
+            }
+            
+        rank_param = None
+        if request.query:
+            rank_param = {
+                "rrf": {
+                    "window_size": 50,
+                    "rank_constant": 60
                 }
-            },
-            "size": 1000
-        }
-        
-        response = self.es.search(index=ELASTICSEARCH_INDEX, body=es_query)
-        
-        results = []
-        for rank, hit in enumerate(response['hits']['hits']):
-            results.append((hit['_source']['id'], rank))
-        
-        return results
-    
+            }
 
-    
-    def _rrf_merge(self, fuzzy_results: List[Tuple[str, int]], vector_results: List[Tuple[str, int]], k: int = 60) -> List[str]:
-        scores = {}
-        
-        for product_id, rank in fuzzy_results:
-            scores[product_id] = scores.get(product_id, 0) + (1.0 / (k + rank))
-        
-        for product_id, rank in vector_results:
-            scores[product_id] = scores.get(product_id, 0) + (1.0 / (k + rank))
-        
-        sorted_ids = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-        
-        return [product_id for product_id, _ in sorted_ids]
-    
-
+        try:
+            response = self.es.search(
+                index=ELASTICSEARCH_INDEX,
+                knn=knn_param,
+                query=query_param,
+                rank=rank_param,
+                size=request.size,
+                from_=offset,
+                source=["id"]
+            )
+            
+            hits = response['hits']
+            if isinstance(hits['total'], int):
+                total = hits['total']
+            else:
+                total = hits['total']['value']
+                
+            product_ids = [hit['_source']['id'] for hit in hits['hits']]
+            return product_ids, total
+            
+        except Exception as e:
+            logger.error(f"Search failed: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return [], 0

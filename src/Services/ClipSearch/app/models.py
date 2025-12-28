@@ -10,17 +10,15 @@ class ProductIndexRequest(BaseModel):
 class BulkIndexRequest(BaseModel):
     products: List[ProductIndexRequest]
 
-
 class SearchRequest(BaseModel):
     query: Optional[str] = None
+    image: Optional[str] = None  # base64 encoded image
     page: int = 0
     size: int = 20
 
 class SearchResponse(BaseModel):
     productIds: List[str]
     total: int
-    page: int
-    size: int
 
 class EmbeddingRequest(BaseModel):
     text: str

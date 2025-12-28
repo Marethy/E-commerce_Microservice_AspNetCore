@@ -9,3 +9,4 @@ pydantic==2.5.3
 httpx==0.25.2
 python-dotenv==1.0.0
 pillow==11.2.1
+beautifulsoup4==4.12.3
