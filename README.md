@@ -12,8 +12,7 @@
 ## 📋 Table of Contents
 
 - [Overview](#overview)
-- [Architecture](#architecture)
-- [Key Features](#key-features)
+- [Architecture](#architecture)- [Key Features](#key-features)
 - [Technologies](#technologies)
 - [Getting Started](#getting-started)
 - [Services](#services)
@@ -24,7 +23,7 @@
 - [Contributing](#contributing)
 - [License](#license)
 
----
+--
 
 ## 🎯 Overview
 

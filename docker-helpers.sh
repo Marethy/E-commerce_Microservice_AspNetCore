@@ -13,6 +13,7 @@ NC='\033[0m' # No Color
 # INFRASTRUCTURE (Databases, Cache, Search, etc.)
 # ============================================================
 
+
 infra-up() {
     echo -e "${CYAN}🔧 Starting infrastructure services...${NC}"
     docker-compose -f docker-compose.infrastructure.yml up -d
@@ -42,31 +43,31 @@ infra-remove() {
 
 services-up() {
     echo -e "${CYAN}🚀 Starting microservices...${NC}"
-    docker-compose -f docker-compose.services.yml -f docker-compose.override.yml up -d
+    docker-compose -f docker-compose.services.yml up -d
     echo -e "${GREEN}✅ Services started!${NC}"
 }
 
 services-rebuild() {
     echo -e "${CYAN}🔨 Rebuilding and starting microservices...${NC}"
-    docker-compose -f docker-compose.services.yml -f docker-compose.override.yml up -d --build
+    docker-compose -f docker-compose.services.yml up -d --build
     echo -e "${GREEN}✅ Services rebuilt and started!${NC}"
 }
 
 services-down() {
     echo -e "${YELLOW}⏸️  Stopping microservices...${NC}"
-    docker-compose -f docker-compose.services.yml -f docker-compose.override.yml stop
+    docker-compose -f docker-compose.services.yml stop
     echo -e "${GREEN}✅ Services stopped!${NC}"
 }
 
 services-remove() {
     echo -e "${YELLOW}🗑️  Removing microservices...${NC}"
-    docker-compose -f docker-compose.services.yml -f docker-compose.override.yml down
+    docker-compose -f docker-compose.services.yml down
     echo -e "${GREEN}✅ Services removed (infrastructure still running)!${NC}"
 }
 
 service-restart() {
     echo -e "${CYAN}🔄 Restarting $1...${NC}"
-    docker-compose -f docker-compose.services.yml -f docker-compose.override.yml restart $1
+    docker-compose -f docker-compose.services.yml restart $1
     echo -e "${GREEN}✅ $1 restarted!${NC}"
 }
 
@@ -88,9 +89,9 @@ all-down() {
 
 logs() {
     if [ -n "$1" ]; then
-        docker-compose -f docker-compose.services.yml -f docker-compose.override.yml logs -f $1
+        docker-compose -f docker-compose.services.yml logs -f $1
     else
-        docker-compose -f docker-compose.services.yml -f docker-compose.override.yml logs -f
+        docker-compose -f docker-compose.services.yml logs -f
     fi
 }
 
