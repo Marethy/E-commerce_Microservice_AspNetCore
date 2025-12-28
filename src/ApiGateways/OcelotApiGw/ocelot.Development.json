@@ -6,108 +6,330 @@
     // ==================== IDENTITY SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/account/register",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/register",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/login",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/login",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/me",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/account/me",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/change-password",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/change-password",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/refresh",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/refresh",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/api/account/logout",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/logout",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     // Frontend uses /auth/* - map to /api/account/*
     {
       "UpstreamPathTemplate": "/auth/login",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/login",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/auth/register",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/register",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/auth/change-password",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/change-password",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/auth/refresh",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/refresh",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/auth/logout",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/account/logout",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     {
       "UpstreamPathTemplate": "/user/me",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/account/me",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity-service"
+    },
+    // ==================== IDENTITY USERS (ADMIN) ====================
+    {
+      "UpstreamPathTemplate": "/api/users",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/users/{id}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/users/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/users/{id}/roles",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/users/{id}/roles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity-service"
+    },
+    // ==================== IDENTITY ROLES (ADMIN) ====================
+    {
+      "UpstreamPathTemplate": "/api/roles",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/roles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/roles/{id}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/roles/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity-service"
+    },
+    // ==================== IDENTITY PERMISSIONS (ADMIN) ====================
+    {
+      "UpstreamPathTemplate": "/api/permissions/roles/{roleId}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/permissions/roles/{roleId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/permissions/roles/{roleId}/update-permissions",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/permissions/roles/{roleId}/update-permissions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/permissions/roles/{roleId}/function/{function}/command/{command}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/permissions/roles/{roleId}/function/{function}/command/{command}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "identity-service"
     },
     // ==================== PRODUCT SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/products",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/products",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -120,474 +342,951 @@
         "DurationOfBreak": 1000,
         "TimeoutValue": 5000
       },
-      "FileCacheOptions": { "TtlSeconds": 15 },
+      "FileCacheOptions": {
+        "TtlSeconds": 15
+      },
       "SwaggerKey": "product-service"
     },
     {
-      "UpstreamPathTemplate": "/api/products/{any}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/products/{any}",
+      "UpstreamPathTemplate": "/api/products/search",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/products/search",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 6002
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "product-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/summary",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/products/summary",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/products/{any}",
-      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/products/{any}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "product-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/products/{any}",
+      "UpstreamHttpMethod": [
+        "PUT",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/products/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== CATEGORIES ====================
     {
       "UpstreamPathTemplate": "/api/categories",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/categories",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/roots",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/roots",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "product-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/categories/root-categories",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/categories/root-categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/product/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/product/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}/subcategories",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}/subcategories",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}/path",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}/path",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}/hierarchy",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}/hierarchy",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/categories/{id}/has-subcategories",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/categories/{id}/has-subcategories",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== WISHLIST ====================
     {
       "UpstreamPathTemplate": "/api/wishlist",
-      "UpstreamHttpMethod": [ "GET", "POST", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/wishlist",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/count",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/count",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/check/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/check/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/with-prices",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/with-prices",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/analytics/stats",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/analytics/stats",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/analytics/most-wishlisted",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/analytics/most-wishlisted",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/wishlist/{productId}",
-      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // Frontend uses /wishlist - map to /api/wishlist
     {
       "UpstreamPathTemplate": "/wishlist",
-      "UpstreamHttpMethod": [ "GET", "POST", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/wishlist",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/count",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/count",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/check/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/check/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/with-prices",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/with-prices",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/analytics/stats",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/analytics/stats",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/analytics/most-wishlisted",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/analytics/most-wishlisted",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/wishlist/{productId}",
-      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/wishlist/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== PRODUCT REVIEWS ====================
     {
       "UpstreamPathTemplate": "/api/productreviews",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/productreviews",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/product/{productId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/product/{productId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/product/{productId}/statistics",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/product/{productId}/statistics",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/user/{userId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/user/{userId}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/{id}/helpful",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/{id}/helpful",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/productreviews/{id}/replies",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/productreviews/{id}/replies",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== BRANDS ====================
     {
       "UpstreamPathTemplate": "/api/brands",
-      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/brands",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     {
       "UpstreamPathTemplate": "/api/brands/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/brands/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "product-service"
     },
     // ==================== CUSTOMER SERVICE ====================
     {
+      "UpstreamPathTemplate": "/api/customers",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/customers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customer-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/customers/user-info",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/customers/user-info",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customer-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/customers/by-id/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/customers/by-id/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customer-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "customer-service"
+    },
+    {
       "UpstreamPathTemplate": "/api/customers/{username}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/customers/{username}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "customer-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "customer-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "customer-service"
     },
     // ==================== BASKET SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/baskets",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/baskets",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "basket-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/{username}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/baskets/{username}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "basket-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/{username}/count",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/baskets/{username}/count",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "basket-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/{username}/validate",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/baskets/{username}/validate",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "basket-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/{username}/merge",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/baskets/{username}/merge",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "basket-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     {
       "UpstreamPathTemplate": "/api/baskets/checkout",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/baskets/checkout",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "basket-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "basket-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "basket-service"
     },
     // ==================== ORDER SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/v1/orders",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/admin",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/admin",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/admin/stats",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/admin/stats",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/admin/export",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/admin/export",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/check-purchase/{productNo}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/check-purchase/{productNo}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/users/{userName}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/users/{userName}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}",
-      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "PUT",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/status",
-      "UpstreamHttpMethod": [ "PATCH" ],
+      "UpstreamHttpMethod": [
+        "PATCH"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/status",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/cancel",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/cancel",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/invoice",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/invoice",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/receipt",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/receipt",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     {
       "UpstreamPathTemplate": "/api/v1/orders/{id}/email-invoice",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/orders/{id}/email-invoice",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "order-api", "Port": 80 }],
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "order-api",
+          "Port": 80
+        }
+      ],
       "SwaggerKey": "order-service"
     },
     // ==================== INVENTORY SERVICE ====================
     {
       "UpstreamPathTemplate": "/api/inventory/items/{any}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
       "DownstreamPathTemplate": "/api/inventory/items/{any}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 6006
+          "Host": "inventory-product-api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "inventory-service"
     },
     {
       "UpstreamPathTemplate": "/api/inventory/purchase/{any}",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/inventory/purchase/{any}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 6006
+          "Host": "inventory-product-api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "inventory-service"
     },
     {
       "UpstreamPathTemplate": "/api/inventory/{any}",
-      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "UpstreamHttpMethod": [
+        "GET",
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/inventory/{any}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 6006
+          "Host": "inventory-product-api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "inventory-service"
@@ -595,13 +1294,15 @@
     // Chatbot API: http://localhost:5009/api/v1/chat
     {
       "UpstreamPathTemplate": "/api/chat",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
       "DownstreamPathTemplate": "/api/v1/chat",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 6009
+          "Host": "chatbot-api",
+          "Port": 80
         }
       ],
       "RateLimitOptions": {
@@ -620,16 +1321,220 @@
     },
     {
       "UpstreamPathTemplate": "/api/chat/{sessionId}",
-      "UpstreamHttpMethod": [ "DELETE" ],
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
       "DownstreamPathTemplate": "/api/v1/chat/{sessionId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 6009
+          "Host": "chatbot-api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "chatbot-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/sessions",
+      "UpstreamHttpMethod": [
+        "POST",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/v1/sessions",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "chatbot-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "chatbot-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/sessions/{id}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/v1/sessions/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "chatbot-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "chatbot-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/v1/sessions/{id}/messages",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/v1/sessions/{id}/messages",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "chatbot-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "chatbot-service"
+    },
+    // ==================== HANGFIRE - JOB MONITORING ====================
+    {
+      "UpstreamPathTemplate": "/api/JobMonitor/jobs",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/JobMonitor/jobs",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/JobMonitor/jobs/{jobId}",
+      "UpstreamHttpMethod": [
+        "GET",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/JobMonitor/jobs/{jobId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/JobMonitor/jobs/{jobId}/requeue",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/JobMonitor/jobs/{jobId}/requeue",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/JobMonitor/statistics",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/JobMonitor/statistics",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    // ==================== HANGFIRE - SCHEDULED JOBS ====================
+    {
+      "UpstreamPathTemplate": "/api/ScheduledJobs/send-reminder-email",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/ScheduledJobs/send-reminder-email",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/ScheduledJobs/delete-job/{id}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/ScheduledJobs/delete-job/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    // ==================== HANGFIRE - EMAIL CAMPAIGNS ====================
+    {
+      "UpstreamPathTemplate": "/api/EmailCampaign/schedule-promotion",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/EmailCampaign/schedule-promotion",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/EmailCampaign/schedule-bulk-promotion",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/EmailCampaign/schedule-bulk-promotion",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    {
+      "UpstreamPathTemplate": "/api/EmailCampaign/cancel/{jobId}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/EmailCampaign/cancel/{jobId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
+    },
+    // ==================== HANGFIRE - WELCOME/DEMO ====================
+    {
+      "UpstreamPathTemplate": "/api/Welcome/{action}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/Welcome/{action}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "hangfire-api",
+          "Port": 80
+        }
+      ],
+      "SwaggerKey": "hangfire-service"
     }
   ],
   "SwaggerEndPoints": [
@@ -691,7 +1596,7 @@
     {
       "Key": "inventory-service",
       "TransformByOcelotConfig": false,
-      "Config": [ 
+      "Config": [
         {
           "Name": "Inventory API",
           "Version": "v1",
@@ -712,5 +1617,3 @@
     }
   ]
 }
-
-
