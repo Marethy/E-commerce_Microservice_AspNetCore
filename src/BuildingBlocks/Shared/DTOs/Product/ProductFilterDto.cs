@@ -17,5 +17,7 @@ namespace Shared.DTOs.Product
         public string? InventoryStatus { get; set; }
         public string? SortBy { get; set; } // "price", "rating", "sales", "created"
         public string? SortDirection { get; set; } // "asc", "desc"
+        public bool? HasDiscount { get; set; } // Filter products with discount (DiscountPercentage > 0)
+        public int? MinDiscountPercentage { get; set; } // Filter products with minimum discount percentage
     }
 }

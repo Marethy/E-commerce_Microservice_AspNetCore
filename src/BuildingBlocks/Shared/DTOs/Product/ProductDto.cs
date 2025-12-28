@@ -21,6 +21,7 @@
 
         public Guid? SellerId { get; set; }
         public string? SellerName { get; set; }
+        public bool? IsSellerOfficial { get; set; }
 
         // Rating & Reviews
         public decimal RatingAverage { get; set; }
@@ -57,6 +58,8 @@
         public int AllTimeQuantitySold { get; set; }
         public string InventoryStatus { get; set; } = "IN_STOCK";
         public string? PrimaryImageUrl { get; set; }
+        public List<ProductImageDto>? Images { get; set; }
         public string? BrandName { get; set; }
+        public bool? IsSellerOfficial { get; set; }
     }
 }
