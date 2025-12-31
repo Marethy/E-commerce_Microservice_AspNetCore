@@ -25,6 +25,7 @@ namespace Product.API
 
             CreateMap<CatalogProduct, ProductSummaryDto>()
                 .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.Summary))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null))
                 .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : null))
                 .ForMember(dest => dest.IsSellerOfficial, opt => opt.MapFrom(src => src.Seller != null ? src.Seller.IsOfficial : (bool?)null))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))

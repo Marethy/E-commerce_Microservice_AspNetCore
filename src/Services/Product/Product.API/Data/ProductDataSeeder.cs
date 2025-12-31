@@ -328,9 +328,9 @@ namespace Product.API.Data
 
             if (_clipSearchService != null && totalProducts > 0)
             {
-                Console.WriteLine($"\nIndexing {totalProducts} products to Elasticsearch in batches of 1000...");
+                Console.WriteLine($"\nIndexing {totalProducts} products to Elasticsearch in batches of 50...");
                 
-                const int batchSize = 1000;
+                const int batchSize = 50;
                 int skip = 0;
                 int indexed = 0;
                 

@@ -166,6 +166,12 @@ public class ProductRepository : RepositoryBase<CatalogProduct, Guid, ProductCon
                 .Include(x => x.Specifications)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
+
+    public async Task<CatalogProduct?> GetProductForUpdate(Guid id)
+        => await FindByCondition(x => x.Id == id, true, x => x.Category, x => x.Brand, x => x.Seller)
+                .Include(x => x.Images)
+                .Include(x => x.Specifications)
+                .FirstOrDefaultAsync();
     
     public async Task<CatalogProduct?> GetProductByNo(string productNo)
         => await FindByCondition(x => x.No == productNo, false, x => x.Category, x => x.Brand, x => x.Seller)

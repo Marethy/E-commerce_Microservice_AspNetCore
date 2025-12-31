@@ -31,7 +31,7 @@ namespace Product.API.Services
 
                 _logger.LogInformation("Found {Count} products to index", productList.Count);
 
-                const int batchSize = 1000;
+                const int batchSize = 50;
                 int indexed = 0;
 
                 for (int i = 0; i < productList.Count; i += batchSize)
