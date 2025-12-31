@@ -1,5 +1,5 @@
 import torch
-from transformers import CLIPModel, CLIPProcessor
+from sentence_transformers import SentenceTransformer
 from elasticsearch import Elasticsearch
 from typing import List, Dict, Optional, Tuple
 import logging
@@ -10,7 +10,8 @@ from .config import (
     ELASTICSEARCH_USER,
     ELASTICSEARCH_PASSWORD,
     ELASTICSEARCH_INDEX,
-    CLIP_MODEL_NAME,
+    IMG_MODEL_NAME,
+    TEXT_MODEL_NAME,
     RRF_K
 )
 from .models import SearchRequest, ProductIndexRequest
@@ -19,15 +20,10 @@ logger = logging.getLogger(__name__)
 
 class SearchEngine:
     def __init__(self):
-        logger.info(f"Initializing Search Engine with CLIP model: {CLIP_MODEL_NAME}")
+        logger.info(f"Initializing Search Engine with image model: {IMG_MODEL_NAME}, text model: {TEXT_MODEL_NAME}")
         
-        self.device = torch.device("cpu")
-        logger.info("Using CPU device for CLIP model")
-        
-        self.clip_model = CLIPModel.from_pretrained(CLIP_MODEL_NAME)
-        self.clip_processor = CLIPProcessor.from_pretrained(CLIP_MODEL_NAME)
-        self.clip_model.to(self.device)
-        self.clip_model.eval()
+        self.img_model = SentenceTransformer(IMG_MODEL_NAME)
+        self.text_model = SentenceTransformer(TEXT_MODEL_NAME)
         
         self.es = Elasticsearch(
             [ELASTICSEARCH_URL],
@@ -63,19 +59,8 @@ class SearchEngine:
         if not text or not text.strip():
             return [0.0] * 512
         
-        inputs = self.clip_processor(
-            text=[text], 
-            return_tensors="pt", 
-            padding=True,
-            truncation=True,
-            max_length=77
-        )
-        inputs = {k: v.to(self.device) for k, v in inputs.items()}
-        
-        with torch.no_grad():
-            embeddings = self.clip_model.get_text_features(**inputs)
-        
-        return embeddings[0].cpu().tolist()
+        embedding = self.text_model.encode(text, convert_to_tensor=False)
+        return embedding.tolist()
     
     def generate_image_embedding(self, image_base64: str) -> List[float]:
         import base64
@@ -88,13 +73,8 @@ class SearchEngine:
             if image.mode != 'RGB':
                 image = image.convert('RGB')
             
-            inputs = self.clip_processor(images=image, return_tensors="pt")
-            inputs = {k: v.to(self.device) for k, v in inputs.items()}
-            
-            with torch.no_grad():
-                embeddings = self.clip_model.get_image_features(**inputs)
-            
-            return embeddings[0].cpu().tolist()
+            embedding = self.img_model.encode(image, convert_to_tensor=False)
+            return embedding.tolist()
         except Exception as e:
             logger.error(f"Error generating image embedding: {e}")
             return [0.0] * 512
@@ -238,7 +218,7 @@ class SearchEngine:
                 index=ELASTICSEARCH_INDEX,
                 knn=knn_param,
                 query=query_param,
-                rank=rank_param,
+                # rank=rank_param,
                 size=request.size,
                 from_=offset,
                 source=["id"]
