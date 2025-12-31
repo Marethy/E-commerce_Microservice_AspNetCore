@@ -20,6 +20,8 @@ namespace Product.API.Persistence
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<ProductStatisticsCache> ProductStatisticsCache { get; set; }
+        public DbSet<CategoryStatisticsCache> CategoryStatisticsCache { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -386,6 +388,51 @@ namespace Product.API.Persistence
 
                 entity.HasIndex(x => x.UserId)
                       .HasDatabaseName("IX_Wishlists_UserId");
+            });
+
+            modelBuilder.Entity<ProductStatisticsCache>(entity =>
+            {
+                entity.Property(e => e.Id)
+                      .HasMaxLength(100)
+                      .IsRequired();
+
+                entity.Property(e => e.Value)
+                      .IsRequired();
+
+                entity.Property(e => e.LastUpdated)
+                      .IsRequired();
+
+                entity.HasIndex(x => x.LastUpdated)
+                      .HasDatabaseName("IX_ProductStatisticsCache_LastUpdated");
+            });
+
+            modelBuilder.Entity<CategoryStatisticsCache>(entity =>
+            {
+                entity.Property(e => e.Id)
+                      .HasColumnType("uuid")
+                      .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.CategoryId)
+                      .HasColumnType("uuid")
+                      .IsRequired();
+
+                entity.Property(e => e.TotalRevenue)
+                      .HasPrecision(18, 2);
+
+                entity.Property(e => e.LastUpdated)
+                      .IsRequired();
+
+                entity.HasOne(c => c.Category)
+                      .WithMany()
+                      .HasForeignKey(c => c.CategoryId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(x => x.CategoryId)
+                      .IsUnique()
+                      .HasDatabaseName("IX_CategoryStatisticsCache_CategoryId");
+
+                entity.HasIndex(x => x.LastUpdated)
+                      .HasDatabaseName("IX_CategoryStatisticsCache_LastUpdated");
             });
         }
 

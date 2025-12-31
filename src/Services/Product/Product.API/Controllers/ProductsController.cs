@@ -3,6 +3,7 @@ using Infrastructure.Identity.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Product.API.Entities;
 using Product.API.Repositories.Interfaces;
 using Product.API.Services.Interfaces;
@@ -24,19 +25,22 @@ public class ProductsController : ControllerBase
     private readonly ISellerRepository _sellerRepository;
     private readonly IClipSearchService _clipSearchService;
     private readonly IMapper _mapper;
+    private readonly Persistence.ProductContext _context;
 
     public ProductsController(
         IProductRepository repository,
         IBrandRepository brandRepository,
         ISellerRepository sellerRepository,
         IClipSearchService clipSearchService,
-        IMapper mapper)
+        IMapper mapper,
+        Persistence.ProductContext context)
     {
         _repository = repository;
         _brandRepository = brandRepository;
         _sellerRepository = sellerRepository;
         _clipSearchService = clipSearchService;
         _mapper = mapper;
+        _context = context;
     }
 
     [HttpGet]
@@ -319,6 +323,27 @@ public class ProductsController : ControllerBase
         return Ok(new ApiSuccessResult<List<ProductSummaryDto>>(result));
     }
 
+    [HttpGet("statistics")]
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(ApiResult<ProductStatisticsDto>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<ProductStatisticsDto>>> GetProductStatistics()
+    {
+        var totalProducts = await _context.Products.CountAsync();
+        var inStockProducts = await _context.Products.CountAsync(p => p.InventoryStatus != "OUT_OF_STOCK");
+        var outOfStockProducts = await _context.Products.CountAsync(p => p.InventoryStatus == "OUT_OF_STOCK");
+        var totalRevenue = await _context.Products.SumAsync(p => (decimal)p.Price * p.AllTimeQuantitySold);
+
+        var result = new ProductStatisticsDto
+        {
+            TotalProducts = totalProducts,
+            InStockProducts = inStockProducts,
+            OutOfStockProducts = outOfStockProducts,
+            TotalRevenue = totalRevenue
+        };
+
+        return Ok(new ApiSuccessResult<ProductStatisticsDto>(result));
+    }
+
  [HttpGet("{id:guid}")]
     [AllowAnonymous]
     [ProducesResponseType(typeof(ApiResult<ProductDto>), (int)HttpStatusCode.OK)]
@@ -429,7 +454,7 @@ if (!sellerExists)
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ApiResult<ProductDto>>> UpdateProduct([Required] Guid id, [FromBody] UpdateProductDto productDto)
     {
-        var product = await _repository.GetProduct(id);
+        var product = await _repository.GetProductForUpdate(id);
         if (product == null)
             return NotFound(new ApiErrorResult<ProductDto>($"Product with ID {id} not found"));
 

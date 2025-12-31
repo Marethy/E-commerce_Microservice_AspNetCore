@@ -42,6 +42,10 @@ try
         {
             var logger = services.GetService<ILogger<ProductContextSeed>>();
             ProductContextSeed.SeedProductAsync(context, logger).Wait();
+            
+            // Seed reviews after products
+            Log.Information("Seeding product reviews...");
+            ReviewSeeder.SeedReviewsAsync(context).Wait();
         });
         Log.Information("Database migration and seeding completed successfully.");
     }
