@@ -8,5 +8,6 @@ ELASTICSEARCH_USER = os.getenv("ELASTICSEARCH_USER", "elastic")
 ELASTICSEARCH_PASSWORD = os.getenv("ELASTICSEARCH_PASSWORD", "admin")
 ELASTICSEARCH_INDEX = os.getenv("ELASTICSEARCH_INDEX", "products")
 
-CLIP_MODEL_NAME = "openai/clip-vit-base-patch32"
+IMG_MODEL_NAME = "clip-ViT-B-32"
+TEXT_MODEL_NAME = "sentence-transformers/clip-ViT-B-32-multilingual-v1"
 RRF_K = 60
