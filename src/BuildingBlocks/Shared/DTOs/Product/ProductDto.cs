@@ -53,6 +53,8 @@
         public decimal? OriginalPrice { get; set; }
         public int? DiscountPercentage { get; set; }
         public string? Slug { get; set; }
+        public Guid CategoryId { get; set; }
+        public string? CategoryName { get; set; }
         public decimal RatingAverage { get; set; }
         public int ReviewCount { get; set; }
         public int AllTimeQuantitySold { get; set; }
