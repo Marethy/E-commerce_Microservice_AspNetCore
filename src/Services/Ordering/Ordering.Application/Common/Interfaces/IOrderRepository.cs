@@ -23,5 +23,8 @@ namespace Ordering.Application.Common.Interfaces
         Task<bool> CancelOrderAsync(long orderId, string? reason = null);
         Task<bool> HasUserPurchasedProductAsync(string userName, string productNo);
         Task<OrderStatistics> GetOrderStatisticsAsync();
+        Task<List<DailyRevenueDto>> GetDailyRevenueAsync(int days = 30);
+        Task<List<RevenueByStatusDto>> GetRevenueByStatusAsync();
+        Task<List<AverageOrderValueDto>> GetAverageOrderValueAsync(int days = 30);
     }
 }
