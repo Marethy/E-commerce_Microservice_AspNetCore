@@ -55,10 +55,15 @@ public class SeedUserData
             
             // Seed Users with Roles
             Console.WriteLine("Seeding users...");
-            await CreateUserAsync(scope, "Admin", "User", "123 Admin St, Wollongong", Guid.NewGuid().ToString(), "Admin@123$", "Administrator", "admin@tedu.com.vn");
-            await CreateUserAsync(scope, "Customer", "User", "456 Customer Ave, Melbourne", Guid.NewGuid().ToString(), "Customer@123$", "Customer", "customer@tedu.com.vn");
-            await CreateUserAsync(scope, "Agent", "User", "789 Agent Blvd, Sydney", Guid.NewGuid().ToString(), "Agent@123$", "Agent", "agent@tedu.com.vn");
-            Console.WriteLine("? Users seeded");
+            await CreateUserAsync(scope, "Admin", "User", "123 Admin St, Wollongong", "+84 901 234 567", Guid.NewGuid().ToString(), "Admin@123$", "Administrator", "admin@tedu.com.vn");
+            await CreateUserAsync(scope, "Customer", "User", "456 Customer Ave, Melbourne", "+84 912 345 678", Guid.NewGuid().ToString(), "Customer@123$", "Customer", "customer@tedu.com.vn");
+            await CreateUserAsync(scope, "Agent", "User", "789 Agent Blvd, Sydney", "+84 923 456 789", Guid.NewGuid().ToString(), "Agent@123$", "Agent", "agent@tedu.com.vn");
+            Console.WriteLine("✓ Users seeded");                                                   
+            
+            // Seed Bulk Users (1100 users)
+            Console.WriteLine("Seeding bulk users (1100 users)...");
+            await SeedBulkUsersAsync(scope,roleManager);
+            Console.WriteLine("✓ Bulk users seeded");
             
             // Seed Permissions
             Console.WriteLine("Seeding permissions...");
@@ -143,7 +148,7 @@ public class SeedUserData
         }
     }
 
-    private static async Task CreateUserAsync(IServiceScope scope, string firstName, string lastName, string address,
+    private static async Task CreateUserAsync(IServiceScope scope, string firstName, string lastName, string address, string phoneNumber,
                         string id, string password, string role, string email)
     {
         var userManagement = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
@@ -157,6 +162,7 @@ public class SeedUserData
                 FirstName = firstName,
                 LastName = lastName,
                 Address = address,
+                PhoneNumber = phoneNumber,
                 EmailConfirmed = true,
                 Id = id,
             };
@@ -178,6 +184,199 @@ public class SeedUserData
             }).Result;
             CheckResult(result);
         }
+    }
+
+    private static async Task SeedBulkUsersAsync(IServiceScope scope, RoleManager<IdentityRole> roleManager)
+    {
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+        
+        var existingCount = await userManager.Users.CountAsync();
+        Console.WriteLine($"  Current user count: {existingCount}. Checking integrity...");
+
+        var random = new Random(12345); // Fixed seed for consistency
+        
+        // Vietnamese names
+        var firstNames = new[] { "Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan", "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương", "Lý" };
+        var middleNames = new[] { "Văn", "Thị", "Minh", "Hữu", "Thanh", "Đức", "Quốc", "Hồng", "Thu", "Phương", "Tấn", "Ngọc", "Anh", "Bảo", "Châu" };
+        var lastNames = new[] { "An", "Bình", "Cường", "Dũng", "Hùng", "Khoa", "Long", "Nam", "Phong", "Quân", "Sơn", "Tài", "Trung", "Tuấn", "Vũ", "Hà", "Hoa", "Lan", "Mai", "Nga", "Oanh", "Phương", "Quỳnh", "Trang" };
+        
+        int created = 0;
+        int updated = 0;
+
+        // Helper to update claims
+        async Task UpdateClaimsAsync(User user, string role) {
+             var currentClaims = await userManager.GetClaimsAsync(user);
+             var nameClaim = currentClaims.FirstOrDefault(c => c.Type == SystemConstants.Claims.FirstName);
+             var lastNameClaim = currentClaims.FirstOrDefault(c => c.Type == SystemConstants.Claims.LastName);
+             
+             if (nameClaim != null) await userManager.RemoveClaimAsync(user, nameClaim);
+             if (lastNameClaim != null) await userManager.RemoveClaimAsync(user, lastNameClaim);
+             
+             await userManager.AddClaimAsync(user, new Claim(SystemConstants.Claims.FirstName, user.FirstName));
+             await userManager.AddClaimAsync(user, new Claim(SystemConstants.Claims.LastName, user.LastName));
+        }
+
+        // 1. Seed 1000 Customer users
+        Console.WriteLine("  Processing 1000 Customer users...");
+        for (int i = 1; i <= 1000; i++)
+        {
+            var username = $"user{i}";
+            var firstName = firstNames[random.Next(firstNames.Length)];
+            var middleName = middleNames[random.Next(middleNames.Length)];
+            var lastName = lastNames[random.Next(lastNames.Length)];
+            var fullName = $"{middleName} {lastName}";
+            
+            var existingUser = await userManager.FindByNameAsync(username);
+            if (existingUser == null)
+            {
+                var user = new User
+                {
+                    UserName = username,
+                    Email = $"{username}@tedu.com.vn",
+                    FirstName = firstName,
+                    LastName = fullName,
+                    Address = $"{random.Next(1, 999)} Street, District {random.Next(1, 12)}, Ho Chi Minh",
+                    PhoneNumber = $"09{random.Next(10000000, 99999999)}",
+                    EmailConfirmed = true,
+                    Id = Guid.NewGuid().ToString()
+                };
+
+                var result = await userManager.CreateAsync(user, "Password@123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Customer");
+                    await userManager.AddClaimsAsync(user, new[]
+                    {
+                        new Claim(SystemConstants.Claims.UserName, user.UserName),
+                        new Claim(SystemConstants.Claims.FirstName, user.FirstName),
+                        new Claim(SystemConstants.Claims.LastName, user.LastName),
+                        new Claim(SystemConstants.Claims.Roles, "Customer"),
+                        new Claim(JwtClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id)
+                    });
+                    created++;
+                }
+            } 
+            else 
+            {
+                if (existingUser.FirstName != firstName || existingUser.LastName != fullName) 
+                {
+                    existingUser.FirstName = firstName;
+                    existingUser.LastName = fullName;
+                    await userManager.UpdateAsync(existingUser);
+                    await UpdateClaimsAsync(existingUser, "Customer");
+                    updated++;
+                }
+            }
+            
+            if (i % 200 == 0) Console.WriteLine($"    Processed {i}/1000 Customer users...");
+        }
+
+        // 2. Seed 20 Administrator users
+        Console.WriteLine("  Processing 20 Administrator users...");
+        for (int i = 1; i <= 20; i++)
+        {
+            var username = $"admin{1000 + i}";
+            var firstName = firstNames[random.Next(firstNames.Length)];
+            var lastName = lastNames[random.Next(lastNames.Length)];
+            
+            var existingUser = await userManager.FindByNameAsync(username);
+            if (existingUser == null)
+            {
+                var user = new User
+                {
+                    UserName = username,
+                    Email = $"{username}@tedu.com.vn",
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Address = $"Admin Office {i}, District 1, Ho Chi Minh",
+                    PhoneNumber = $"09{random.Next(10000000, 99999999)}",
+                    EmailConfirmed = true,
+                    Id = Guid.NewGuid().ToString()
+                };
+
+                var result = await userManager.CreateAsync(user, "Password@123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Administrator");
+                    await userManager.AddClaimsAsync(user, new[]
+                    {
+                        new Claim(SystemConstants.Claims.UserName, user.UserName),
+                        new Claim(SystemConstants.Claims.FirstName, user.FirstName),
+                        new Claim(SystemConstants.Claims.LastName, user.LastName),
+                        new Claim(SystemConstants.Claims.Roles, "Administrator"),
+                        new Claim(JwtClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id)
+                    });
+                    created++;
+                }
+            }
+            else 
+            {
+                if (existingUser.FirstName != firstName || existingUser.LastName != lastName) 
+                {
+                    existingUser.FirstName = firstName;
+                    existingUser.LastName = lastName;
+                    await userManager.UpdateAsync(existingUser);
+                    await UpdateClaimsAsync(existingUser, "Administrator");
+                    updated++;
+                }
+            }
+        }
+
+        // 3. Seed 80 Agent users
+        Console.WriteLine("  Processing 80 Agent users...");
+        for (int i = 1; i <= 80; i++)
+        {
+            var username = $"agent{1020 + i}";
+            var firstName = firstNames[random.Next(firstNames.Length)];
+            var lastName = lastNames[random.Next(lastNames.Length)];
+            
+            var existingUser = await userManager.FindByNameAsync(username);
+            if (existingUser == null)
+            {
+                var user = new User
+                {
+                    UserName = username,
+                    Email = $"{username}@tedu.com.vn",
+                    FirstName = firstName,
+                    LastName = lastName,
+                    Address = $"Agent Office {i}, District {random.Next(1, 12)}, Ho Chi Minh",
+                    PhoneNumber = $"09{random.Next(10000000, 99999999)}",
+                    EmailConfirmed = true,
+                    Id = Guid.NewGuid().ToString()
+                };
+
+                var result = await userManager.CreateAsync(user, "Password@123");
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "Agent");
+                    await userManager.AddClaimsAsync(user, new[]
+                    {
+                        new Claim(SystemConstants.Claims.UserName, user.UserName),
+                        new Claim(SystemConstants.Claims.FirstName, user.FirstName),
+                        new Claim(SystemConstants.Claims.LastName, user.LastName),
+                        new Claim(SystemConstants.Claims.Roles, "Agent"),
+                        new Claim(JwtClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id)
+                    });
+                    created++;
+                }
+            }
+            else 
+            {
+                if (existingUser.FirstName != firstName || existingUser.LastName != lastName) 
+                {
+                    existingUser.FirstName = firstName;
+                    existingUser.LastName = lastName;
+                    await userManager.UpdateAsync(existingUser);
+                    await UpdateClaimsAsync(existingUser, "Agent");
+                    updated++;
+                }
+            }
+        }
+
+        Console.WriteLine($"  ✅ Process finished: {created} created, {updated} updated/fixed.");
     }
 
     private static void CheckResult(IdentityResult result)

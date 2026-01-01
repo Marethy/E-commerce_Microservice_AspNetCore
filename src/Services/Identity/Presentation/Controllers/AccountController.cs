@@ -61,7 +61,11 @@ public class AccountController : ControllerBase
             Message = "User info retrieved successfully",
             Username = user.UserName,
             Email = user.Email,
-            Roles = roles.ToList()
+            Roles = roles.ToList(),
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Address = user.Address
         };
 
         return Ok(response);
@@ -101,6 +105,8 @@ public class AccountController : ControllerBase
             Email = user.Email!,
             FirstName = user.FirstName,
             LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Address = user.Address,
             Roles = roles,
             Permissions = permissions
         };
@@ -116,7 +122,11 @@ public class AccountController : ControllerBase
             Username = user.UserName,
             Email = user.Email,
             Roles = roles.ToList(),
-            Permissions = permissions
+            Permissions = permissions,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Address = user.Address
         };
 
         return CreatedAtAction(nameof(UserInfo), null, response);
@@ -151,6 +161,8 @@ public class AccountController : ControllerBase
             Email = user.Email!,
             FirstName = user.FirstName,
             LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Address = user.Address,
             Roles = roles,
             Permissions = permissions
         };
@@ -166,7 +178,11 @@ public class AccountController : ControllerBase
             Username = user.UserName,
             Email = user.Email,
             Roles = roles.ToList(),
-            Permissions = permissions
+            Permissions = permissions,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Address = user.Address
         };
 
         return Ok(response);
