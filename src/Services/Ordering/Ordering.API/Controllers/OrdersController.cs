@@ -1,8 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Ordering.Application.Common.Models;
 using Ordering.Application.Features.V1.Orders;
+using Ordering.Application.Features.V1.Orders.Queries.GetAverageOrderValue;
+using Ordering.Application.Features.V1.Orders.Queries.GetDailyRevenue;
 using Ordering.Application.Features.V1.Orders.Queries.GetOrders;
+using Ordering.Application.Features.V1.Orders.Queries.GetRevenueByStatus;
 using Shared.SeedWork.ApiResult;
 using System.Net;
 
@@ -136,6 +140,59 @@ public class OrdersController : ControllerBase
         var query = new GetOrderStatisticsQuery();
         var result = await _mediator.Send(query);
         return Ok(result);
+    }
+
+    [HttpGet("admin/analytics/revenue-daily")]
+    [ProducesResponseType(typeof(ApiResult<List<DailyRevenueDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<DailyRevenueDto>>>> GetDailyRevenue(
+        [FromQuery] int days = 30)
+    {
+        var query = new GetDailyRevenueQuery(days);
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("admin/analytics/revenue-by-status")]
+    [ProducesResponseType(typeof(ApiResult<List<RevenueByStatusDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<RevenueByStatusDto>>>> GetRevenueByStatus()
+    {
+        var query = new GetRevenueByStatusQuery();
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("admin/analytics/avg-order-value")]
+    [ProducesResponseType(typeof(ApiResult<List<AverageOrderValueDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<List<AverageOrderValueDto>>>> GetAverageOrderValue(
+        [FromQuery] int days = 30)
+    {
+        var query = new GetAverageOrderValueQuery(days);
+        var result = await _mediator.Send(query);
+        return Ok(result);
+    }
+
+    // Temporary debug endpoint - remove after finding issue
+    [HttpGet("admin/analytics/debug/statuses")]
+    [ProducesResponseType(typeof(ApiResult<object>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<object>>> DebugOrderStatuses([FromServices] Ordering.Application.Common.Interfaces.IOrderRepository orderRepo)
+    {
+        var allOrders = await orderRepo.FindAll().ToListAsync();
+        var statusCounts = allOrders
+            .GroupBy(o => (int)o.Status)
+            .Select(g => new { 
+                StatusValue = g.Key, 
+                StatusName = ((Shared.Enums.Order.OrderStatus)g.Key).ToString(), 
+                Count = g.Count() 
+            })
+            .OrderBy(x => x.StatusValue)
+            .ToList();
+        
+        var result = new { 
+            TotalOrders = allOrders.Count, 
+            StatusBreakdown = statusCounts 
+        };
+        
+        return Ok(new ApiSuccessResult<object>(result));
     }
 
     [HttpGet("check-purchase/{productNo}")]

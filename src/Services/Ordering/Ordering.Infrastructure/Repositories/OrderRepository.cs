@@ -108,13 +108,95 @@ public class OrderRepository : RepositoryBase<Order, long, OrderContext>, IOrder
         return new Ordering.Application.Common.Models.OrderStatistics
         {
             Total = allOrders.Count,
+            // Count both status 0 (legacy) and status 1 as New
+            New = allOrders.Count(x => (int)x.Status == 0 || x.Status == Shared.Enums.Order.OrderStatus.New),
             Pending = allOrders.Count(x => x.Status == Shared.Enums.Order.OrderStatus.Pending),
             Confirmed = allOrders.Count(x => x.Status == Shared.Enums.Order.OrderStatus.Confirmed),
+            Paid = allOrders.Count(x => x.Status == Shared.Enums.Order.OrderStatus.Paid),
             Shipped = allOrders.Count(x => x.Status == Shared.Enums.Order.OrderStatus.Shipped),
             Delivered = deliveredOrders.Count,
             Cancelled = allOrders.Count(x => x.Status == Shared.Enums.Order.OrderStatus.Cancelled),
+            Fulfilled = allOrders.Count(x => x.Status == Shared.Enums.Order.OrderStatus.Fulfilled),
             TotalRevenue = totalRevenue,
             AverageOrderValue = avgOrderValue
         };
+    }
+
+    public async Task<List<Ordering.Application.Common.Models.DailyRevenueDto>> GetDailyRevenueAsync(int days = 30)
+    {
+        var endDate = DateTime.UtcNow.Date;
+        var startDate = endDate.AddDays(-days + 1);
+
+        var orders = await FindByCondition(x => 
+            x.CreatedDate >= startDate &&
+            x.CreatedDate <= endDate &&
+            x.Status != Shared.Enums.Order.OrderStatus.Cancelled)
+            .ToListAsync();
+
+        var dailyRevenue = orders
+            .GroupBy(o => o.CreatedDate.Date)
+            .Select(g => new { Date = g.Key, Revenue = g.Sum(o => o.TotalPrice) })
+            .ToDictionary(x => x.Date, x => x.Revenue);
+
+        var result = new List<Ordering.Application.Common.Models.DailyRevenueDto>();
+        for (int i = 0; i < days; i++)
+        {
+            var date = startDate.AddDays(i);
+            result.Add(new Ordering.Application.Common.Models.DailyRevenueDto
+            {
+                Date = date.ToString("dd/MM"),
+                Revenue = dailyRevenue.GetValueOrDefault(date, 0)
+            });
+        }
+
+        return result;
+    }
+
+    public async Task<List<Ordering.Application.Common.Models.RevenueByStatusDto>> GetRevenueByStatusAsync()
+    {
+        var allOrders = await FindAll().ToListAsync();
+
+        var result = allOrders
+            .GroupBy(o => o.Status)
+            .Select(g => new Ordering.Application.Common.Models.RevenueByStatusDto
+            {
+                StatusName = g.Key.ToString(),
+                Revenue = g.Sum(o => o.TotalPrice),
+                Count = g.Count()
+            })
+            .OrderByDescending(x => x.Revenue)
+            .ToList();
+
+        return result;
+    }
+
+    public async Task<List<Ordering.Application.Common.Models.AverageOrderValueDto>> GetAverageOrderValueAsync(int days = 30)
+    {
+        var endDate = DateTime.UtcNow.Date;
+        var startDate = endDate.AddDays(-days + 1);
+
+        var orders = await FindByCondition(x =>
+            x.CreatedDate >= startDate &&
+            x.CreatedDate <= endDate &&
+            x.Status != Shared.Enums.Order.OrderStatus.Cancelled)
+            .ToListAsync();
+
+        var dailyAvg = orders
+            .GroupBy(o => o.CreatedDate.Date)
+            .Select(g => new { Date = g.Key, AvgValue = g.Count() > 0 ? g.Average(o => o.TotalPrice) : 0 })
+            .ToDictionary(x => x.Date, x => x.AvgValue);
+
+        var result = new List<Ordering.Application.Common.Models.AverageOrderValueDto>();
+        for (int i = 0; i < days; i++)
+        {
+            var date = startDate.AddDays(i);
+            result.Add(new Ordering.Application.Common.Models.AverageOrderValueDto
+            {
+                Date = date.ToString("dd/MM"),
+                AverageValue = dailyAvg.GetValueOrDefault(date, 0)
+            });
+        }
+
+        return result;
     }
 }
