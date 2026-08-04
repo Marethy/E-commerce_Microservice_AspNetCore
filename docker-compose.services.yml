@@ -29,7 +29,7 @@ services:
       - "SMTPEmailSetting__UseSsl=true"
       - "SMTPEmailSetting__Port=587"
       - "SMTPEmailSetting__Username=***REDACTED***"
-      - "SMTPEmailSetting__Password=***REDACTED***"
+      - "SMTPEmailSetting__Password=${SMTP_PASSWORD}"
     ports:
       - "6001:80"
     restart: always
@@ -143,7 +143,7 @@ services:
       - "ElasticConfiguration__Username=${ELASTIC_USERNAME}"
       - "ElasticConfiguration__Password=${ELASTIC_PASSWORD}"
       - "EmailSettings__FromAddress=***REDACTED***"
-      - "EmailSettings__ApiKey=***REDACTED***"
+      - "EmailSettings__ApiKey=${SENDINBLUE_API_KEY}"
       - "EmailSettings__FromName=E-commerce Microservice"
     ports:
       - "6005:80"
