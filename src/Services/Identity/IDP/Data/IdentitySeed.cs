@@ -25,7 +25,7 @@ public static class IdentitySeed
         {
             if (!context.Clients.Any())
             {
-                foreach (var client in Config.Clients)
+                foreach (var client in Config.GetClients(configuration))
                 {
                     context.Clients.Add(client.ToEntity());
                 }

@@ -30,6 +30,7 @@ services:
       - "SMTPEmailSetting__Port=587"
       - "SMTPEmailSetting__Username=***REDACTED***"
       - "SMTPEmailSetting__Password=${SMTP_PASSWORD}"
+      - "ClientSecrets__PostmanSecret=${IDP_POSTMAN_CLIENT_SECRET}"
     ports:
       - "6001:80"
     restart: always
