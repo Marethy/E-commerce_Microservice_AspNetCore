@@ -33,3 +33,6 @@
 - Start shared library consolidation only after all top-level apps are upgraded.
 - Run build/test validation gates after each completed task before moving forward.
 - Maintain commit cadence after each task unless user changes commit strategy.
+
+## Build Tool Decisions
+- **microservice.sln**: dotnet build (SDK-style modern .NET solution baseline validated)

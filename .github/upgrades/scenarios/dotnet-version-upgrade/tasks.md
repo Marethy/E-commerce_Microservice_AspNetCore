@@ -2,11 +2,11 @@
 
 ## Overview
 
-This scenario upgrades the microservice solution from .NET 8 to .NET 10 using a top-down, application-first strategy. Application entry points are migrated first, then shared libraries are consolidated, followed by compatibility/security closure and final validation.
+**Progress**: 1/8 tasks complete <progress value="12" max="100"></progress> 12%
 **Progress**: 0/8 tasks complete <progress value="0" max="100"></progress> 0%
 **Progress**: 0/8 tasks complete <progress value="0" max="100"></progress> 0%
 
-## Tasks
+- ✅ 01-prerequisites-tooling: Validate SDK and baseline upgrade settings ([Content](tasks/01-prerequisites-tooling/task.md), [Progress](tasks/01-prerequisites-tooling/progress-details.md))
 - 🔄 01-prerequisites-tooling: Validate SDK and baseline upgrade settings ([Content](tasks/01-prerequisites-tooling/task.md))
 - 🔲 01-prerequisites-tooling: Validate SDK and baseline upgrade settings
 - 🔲 02-upgrade-identity-and-edge-apps: Upgrade identity, gateway, and orchestration entry points
