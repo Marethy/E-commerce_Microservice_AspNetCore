@@ -61,17 +61,12 @@ namespace Infrastructure.Identity
                             };
                         }
 
-                        // Logging events
+                        // JWT event hooks (no token logging for security)
                         options.Events = new JwtBearerEvents
                         {
                             OnAuthenticationFailed = ctx =>
                             {
                                 Console.WriteLine($"[Jwt] Auth failed: {ctx.Exception.Message}");
-                                return Task.CompletedTask;
-                            },
-                            OnMessageReceived = ctx =>
-                            {
-                                Console.WriteLine($"[Jwt] Token received: {ctx.Request.Headers["Authorization"]}");
                                 return Task.CompletedTask;
                             },
                             OnTokenValidated = ctx =>

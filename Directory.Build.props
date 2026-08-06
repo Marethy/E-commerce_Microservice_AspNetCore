@@ -1,0 +1,8 @@
+<Project>
+  <PropertyGroup>
+    <!-- Only audit direct packages, not transitive dependencies -->
+    <NuGetAuditMode>direct</NuGetAuditMode>
+    <!-- Suppress NU1608: Npgsql.EntityFrameworkCore.PostgreSQL has no stable EF Core 10 version yet -->
+    <NoWarn>$(NoWarn);NU1608</NoWarn>
+  </PropertyGroup>
+</Project>

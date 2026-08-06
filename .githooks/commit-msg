@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+# ============================================================
+# Commit Message Validator — Conventional Commits Enforcement
+# ============================================================
+#
+# Rules:
+#   1. Format: <type>: <description>
+#   2. Type must be: feat|fix|refactor|docs|test|chore|perf|style|ci
+#   3. Description must be under 10 words
+#   4. NO Co-Authored-By / Signed-off-by / Claude / AI attribution
+#   5. English only (ASCII printable)
+#
+# Install: git config core.hooksPath .githooks
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+
+# Read the commit message (skip comments, blank lines)
+COMMIT_MSG=$(grep -v '^#' "$COMMIT_MSG_FILE" | sed '/^$/d')
+
+# Skip merge commits
+if echo "$COMMIT_MSG" | head -1 | grep -qE '^Merge '; then
+    exit 0
+fi
+
+FIRST_LINE=$(echo "$COMMIT_MSG" | head -1)
+
+# --------------------------------------------------
+# Rule 1: FORMAT — <type>: <description>
+# --------------------------------------------------
+VALID_TYPES="feat|fix|refactor|docs|test|chore|perf|style|ci"
+
+if ! echo "$FIRST_LINE" | grep -qE "^($VALID_TYPES)(\([a-z0-9_-]+\))?: "; then
+    echo ""
+    echo "❌ INVALID COMMIT FORMAT"
+    echo ""
+    echo "   Your commit:  \"$FIRST_LINE\""
+    echo ""
+    echo "   Required format: <type>: <description>"
+    echo "   Allowed types: feat, fix, refactor, docs, test, chore, perf, style, ci"
+    echo ""
+    echo "   Examples:"
+    echo "     feat: add JWT authentication"
+    echo "     fix: resolve null reference in payment"
+    echo "     chore: update NuGet packages"
+    echo "     refactor: extract domain validation"
+    echo ""
+    exit 1
+fi
+
+# --------------------------------------------------
+# Rule 2: MAX 10 WORDS in description
+# --------------------------------------------------
+DESCRIPTION=$(echo "$FIRST_LINE" | sed 's/^[^:]*: //')
+WORD_COUNT=$(echo "$DESCRIPTION" | wc -w)
+
+if [ "$WORD_COUNT" -gt 10 ]; then
+    echo ""
+    echo "❌ COMMIT DESCRIPTION TOO LONG"
+    echo ""
+    echo "   Your description: \"$DESCRIPTION\""
+    echo "   Word count: $WORD_COUNT (max is 10)"
+    echo ""
+    echo "   Keep it short and imperative: under 10 words."
+    echo ""
+    exit 1
+fi
+
+# --------------------------------------------------
+# Rule 3: NO AI/CLAUDE ATTRIBUTION
+# --------------------------------------------------
+BLOCKED_TERMS="Co-Authored-By|Co-authored-by|co-authored-by|Claude|Claude Code|Anthropic|AI-generated|Signed-off-by"
+
+if echo "$COMMIT_MSG" | grep -qiE "$BLOCKED_TERMS"; then
+    echo ""
+    echo "❌ FORBIDDEN ATTRIBUTION DETECTED"
+    echo ""
+    echo "   Your commit contains: Co-Authored-By, Claude, or AI attribution."
+    echo "   This is STRICTLY forbidden in this repository."
+    echo "   Remove the attribution and try again."
+    echo ""
+    exit 1
+fi
+
+# --------------------------------------------------
+# Rule 4: ENGLISH ONLY (printable ASCII)
+# --------------------------------------------------
+if ! echo "$COMMIT_MSG" | grep -qP '^[\x20-\x7E\u00C0-\u024F\u1E00-\u1EFF]*$' 2>/dev/null; then
+    # Fallback: check for non-ASCII
+    if echo "$COMMIT_MSG" | grep -qP '[^\x00-\x7F]' 2>/dev/null; then
+        echo ""
+        echo "⚠️  WARNING: Non-ASCII characters detected."
+        echo "   Prefer writing commit messages in English."
+        echo ""
+    fi
+fi
+
+echo "✅ Commit message OK: $FIRST_LINE"
+exit 0

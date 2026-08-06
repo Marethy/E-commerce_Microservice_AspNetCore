@@ -1,13 +1,16 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Payment.API.Services.Interfaces;
 using Shared.DTOs.Payment;
 using Shared.SeedWork.ApiResult;
 using System.Net;
+using System.Security.Claims;
 
 namespace Payment.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PaymentsController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
@@ -25,10 +28,21 @@ namespace Payment.API.Controllers
         [HttpPost("process")]
         [ProducesResponseType(typeof(ApiResult<PaymentResponse>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentRequest request)
         {
             try
             {
+                // Ownership check: authenticated user must match the payment request username
+                var currentUsername = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                                   ?? User.FindFirst("sub")?.Value;
+                if (string.IsNullOrEmpty(currentUsername) || currentUsername != request.Username)
+                {
+                    _logger.LogWarning("Ownership check failed: token user '{TokenUser}' != request user '{RequestUser}'",
+                        currentUsername, request.Username);
+                    return Forbid();
+                }
+
                 _logger.LogInformation("API: Processing payment for order {OrderId}", request.OrderId);
                 var result = await _paymentService.ProcessPaymentAsync(request);
                 return Ok(new ApiSuccessResult<PaymentResponse>(result));

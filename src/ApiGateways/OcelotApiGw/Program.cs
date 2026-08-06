@@ -29,7 +29,7 @@ try
 
     builder.Services.ConfigureOcelot(builder.Configuration);
     builder.Services.ConfigureCors(builder.Configuration);
-  //  builder.Services.ConfigureAuthenticationHandler();
+  //  builder.Services.ConfigureAuthenticationHandler(); // Gateway uses AddJwtAuthentication() in ConfigureOcelot() instead
 
     var app = builder.Build();
 
@@ -43,10 +43,9 @@ try
     app.UseCors("CorsPolicy");
 
     app.UseMiddleware<ErrorWrappingMiddleware>();
-    //app.UseAuthentication();
     app.UseRouting();
-    //app.UseHttpsRedirection();
-   // app.UseAuthorization();
+    app.UseAuthentication();
+    app.UseAuthorization();
     app.UseEndpoints(endpoints =>
     {
         endpoints.MapGet("/", context =>

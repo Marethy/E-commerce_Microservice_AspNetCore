@@ -45,7 +45,7 @@ internal static class HostingExtensions
             config.Filters.Add(new ProducesAttribute("application/json", "text/plain", "text/json"));
         });
 
-        builder.Services.AddAutoMapper(typeof(Program));
+        builder.Services.AddAutoMapper(cfg => { }, typeof(Program).Assembly);
 
         builder.Services.AddScoped<IEmailSender, SmtpMailService>();
         builder.Services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
@@ -82,6 +82,7 @@ internal static class HostingExtensions
         app.UseRouting();
         app.UseMiddleware<ErrorWrappingMiddleware>();
         app.UseCookiePolicy();
+        app.UseAuthentication();
         app.UseIdentityServer();
 
         app.UseAuthorization();
