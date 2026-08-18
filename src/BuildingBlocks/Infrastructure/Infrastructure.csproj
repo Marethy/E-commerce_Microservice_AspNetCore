@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" />
+    <PackageReference Include="Mapster" />
     <PackageReference Include="Cnblogs.IdentityServer4.AccessTokenValidation" />
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="Hangfire.AspNetCore" />

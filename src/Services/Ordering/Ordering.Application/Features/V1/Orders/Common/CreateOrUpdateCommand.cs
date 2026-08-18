@@ -1,10 +1,6 @@
-﻿using AutoMapper;
-using Ordering.Application.Common.Mappings;
-using Ordering.Domain.Entities;
+﻿namespace Ordering.Application.Features.V1.Orders;
 
-namespace Ordering.Application.Features.V1.Orders;
-
-public class CreateOrUpdateCommand : IMapFrom<Order>
+public class CreateOrUpdateCommand
 {
     public decimal TotalPrice { get; set; }
 
@@ -22,10 +18,5 @@ public class CreateOrUpdateCommand : IMapFrom<Order>
     {
         get => _invoiceAddress;
         set => _invoiceAddress = value ?? ShippingAddress;
-    }
-
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<CreateOrUpdateCommand, Order>();
     }
 }

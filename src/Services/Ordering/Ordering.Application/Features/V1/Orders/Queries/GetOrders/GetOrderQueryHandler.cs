@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Common.Interfaces;
@@ -11,13 +11,11 @@ namespace Ordering.Application.Features.V1.Orders.Queries.GetOrders
     public class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, ApiResult<List<OrderDto>>>
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IMapper _mapper;
         private readonly ILogger<GetOrderQueryHandler> _logger;
 
-        public GetOrderQueryHandler(IOrderRepository orderRepository, IMapper mapper, ILogger<GetOrderQueryHandler> logger)
+        public GetOrderQueryHandler(IOrderRepository orderRepository, ILogger<GetOrderQueryHandler> logger)
         {
             _orderRepository = orderRepository;
-            _mapper = mapper;
             _logger = logger;
         }
 
@@ -32,7 +30,7 @@ namespace Ordering.Application.Features.V1.Orders.Queries.GetOrders
                 return new ApiErrorResult<List<OrderDto>>("No orders found");
             }
 
-            var orderDtos = _mapper.Map<List<OrderDto>>(orders);
+            var orderDtos = orders.Adapt<List<OrderDto>>();
 
             _logger.LogInformation($"END {nameof(GetOrderQueryHandler.Handle)}");
 

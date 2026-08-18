@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using Infrastructure.Identity.Authorization;
+﻿using Infrastructure.Identity.Authorization;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,6 @@ public class ProductsController : ControllerBase
     private readonly IBrandRepository _brandRepository;
     private readonly ISellerRepository _sellerRepository;
     private readonly IClipSearchService _clipSearchService;
-    private readonly IMapper _mapper;
     private readonly Persistence.ProductContext _context;
 
     public ProductsController(
@@ -32,14 +31,12 @@ public class ProductsController : ControllerBase
         IBrandRepository brandRepository,
         ISellerRepository sellerRepository,
         IClipSearchService clipSearchService,
-        IMapper mapper,
         Persistence.ProductContext context)
     {
         _repository = repository;
         _brandRepository = brandRepository;
         _sellerRepository = sellerRepository;
         _clipSearchService = clipSearchService;
-        _mapper = mapper;
         _context = context;
     }
 
@@ -52,7 +49,7 @@ public class ProductsController : ControllerBase
             ? await _repository.GetProductsByCategory(categoryId.Value)
             : await _repository.GetProducts();
 
- var result = _mapper.Map<List<ProductDto>>(products);
+ var result = products.Adapt<List<ProductDto>>();
         return Ok(new ApiSuccessResult<List<ProductDto>>(result));
     }
 
@@ -100,7 +97,7 @@ public class ProductsController : ControllerBase
                 .Where(p => p != null)
                 .ToList();
             
-            var productDtos = _mapper.Map<List<ProductDto>>(orderedProducts);
+            var productDtos = orderedProducts.Adapt<List<ProductDto>>();
             
             var response = new PagedProductResponse
             {
@@ -119,7 +116,7 @@ public class ProductsController : ControllerBase
         }
         
         var (allProducts, total) = await _repository.SearchProducts(filter, page, size);
-        var allProductDtos = _mapper.Map<List<ProductDto>>(allProducts);
+        var allProductDtos = allProducts.Adapt<List<ProductDto>>();
         
         var responseNoQuery = new PagedProductResponse
         {
@@ -182,7 +179,7 @@ public class ProductsController : ControllerBase
                 .Where(p => p != null)
                 .ToList();
             
-            var productDtos = _mapper.Map<List<ProductDto>>(orderedProducts);
+            var productDtos = orderedProducts.Adapt<List<ProductDto>>();
             
             var response = new PagedProductResponse
             {
@@ -202,7 +199,7 @@ public class ProductsController : ControllerBase
         
         // No query or image, use regular filter search
         var (allProducts, total) = await _repository.SearchProducts(filter, page, size);
-        var allProductDtos = _mapper.Map<List<ProductDto>>(allProducts);
+        var allProductDtos = allProducts.Adapt<List<ProductDto>>();
         
         var responseNoQuery = new PagedProductResponse
         {
@@ -232,7 +229,7 @@ public class ProductsController : ControllerBase
         filter.SortDirection = "desc";
         
         var (products, total) = await _repository.SearchProducts(filter, page, size);
-        var productDtos = _mapper.Map<List<ProductDto>>(products);
+        var productDtos = products.Adapt<List<ProductDto>>();
         
         var response = new PagedProductResponse
         {
@@ -262,7 +259,7 @@ public class ProductsController : ControllerBase
         filter.SortDirection = "desc";
         
         var (products, total) = await _repository.SearchProducts(filter, page, size);
-        var productDtos = _mapper.Map<List<ProductDto>>(products);
+        var productDtos = products.Adapt<List<ProductDto>>();
         
         var response = new PagedProductResponse
         {
@@ -292,7 +289,7 @@ public class ProductsController : ControllerBase
         filter.SortDirection = "desc";
         
         var (products, total) = await _repository.SearchProducts(filter, page, size);
-        var productDtos = _mapper.Map<List<ProductDto>>(products);
+        var productDtos = products.Adapt<List<ProductDto>>();
         
         var response = new PagedProductResponse
         {
@@ -319,7 +316,7 @@ public class ProductsController : ControllerBase
  ? await _repository.GetProductsByCategory(categoryId.Value)
     : await _repository.GetProducts();
 
-        var result = _mapper.Map<List<ProductSummaryDto>>(products);
+        var result = products.Adapt<List<ProductSummaryDto>>();
         return Ok(new ApiSuccessResult<List<ProductSummaryDto>>(result));
     }
 
@@ -354,7 +351,7 @@ public class ProductsController : ControllerBase
 if (product == null)
      return NotFound(new ApiErrorResult<ProductDto>($"Product with ID {id} not found"));
 
-   var result = _mapper.Map<ProductDto>(product);
+   var result = product.Adapt<ProductDto>();
         return Ok(new ApiSuccessResult<ProductDto>(result));
   }
 
@@ -368,7 +365,7 @@ if (product == null)
 if (product == null)
       return NotFound(new ApiErrorResult<ProductDto>($"Product No '{productNo}' not found"));
 
-        var result = _mapper.Map<ProductDto>(product);
+        var result = product.Adapt<ProductDto>();
         return Ok(new ApiSuccessResult<ProductDto>(result));
     }
 
@@ -382,7 +379,7 @@ if (product == null)
         if (product == null)
             return NotFound(new ApiErrorResult<ProductDto>($"Product with slug '{slug}' not found"));
 
-        var result = _mapper.Map<ProductDto>(product);
+        var result = product.Adapt<ProductDto>();
         return Ok(new ApiSuccessResult<ProductDto>(result));
     }
 
@@ -397,7 +394,7 @@ if (product == null)
             return NotFound(new ApiErrorResult<List<ProductImageDto>>($"Product with ID {id} not found"));
 
         var images = await _repository.GetProductImages(id);
-        var result = _mapper.Map<List<ProductImageDto>>(images);
+        var result = images.Adapt<List<ProductImageDto>>();
         return Ok(new ApiSuccessResult<List<ProductImageDto>>(result));
     }
 
@@ -407,7 +404,7 @@ if (product == null)
     public async Task<ActionResult<ApiResult<List<ProductDto>>>> GetProductsByCategory([Required] Guid categoryId)
     {
         var products = await _repository.GetProductsByCategory(categoryId);
-        var result = _mapper.Map<List<ProductDto>>(products);
+        var result = products.Adapt<List<ProductDto>>();
         return Ok(new ApiSuccessResult<List<ProductDto>>(result));
     }
 
@@ -440,10 +437,10 @@ if (!sellerExists)
               return BadRequest(new ApiErrorResult<ProductDto>($"Seller ID {productDto.SellerId} not found"));
    }
 
-        var product = _mapper.Map<CatalogProduct>(productDto);
+        var product = productDto.Adapt<CatalogProduct>();
         var productId = await _repository.CreateAsync(product);
 
-        var result = _mapper.Map<ProductDto>(product);
+        var result = product.Adapt<ProductDto>();
         return CreatedAtAction(nameof(GetProductById), new { id = productId }, new ApiSuccessResult<ProductDto>(result));
   }
 
@@ -479,10 +476,10 @@ if (!sellerExists)
    return BadRequest(new ApiErrorResult<ProductDto>($"Seller ID {productDto.SellerId} not found"));
      }
 
-        _mapper.Map(productDto, product);
+        productDto.Adapt(product);
         await _repository.UpdateAsync(product);
 
-        var result = _mapper.Map<ProductDto>(product);
+        var result = product.Adapt<ProductDto>();
         return Ok(new ApiSuccessResult<ProductDto>(result));
     }
 

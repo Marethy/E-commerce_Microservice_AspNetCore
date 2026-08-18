@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
 using IDP.Infrastructure.Domains.Interfaces;
@@ -13,20 +12,17 @@ public class RepositoryManager : IRepositoryManager
     private readonly IUnitOfWork _unitOfWork;
     private readonly TeduIdentityContext _dbContext;
     private readonly Lazy<IPermissionRepository> _permissionRepository;
-    private readonly IMapper _mapper;
 
     public RepositoryManager(IUnitOfWork unitOfWork,
                              TeduIdentityContext dbContext,
                              UserManager<User> userManager,
-                             RoleManager<IdentityRole> roleManager,
-                             IMapper mapper)
+                             RoleManager<IdentityRole> roleManager)
     {
         _unitOfWork = unitOfWork;
         _dbContext = dbContext;
         UserManager = userManager;
         RoleManager = roleManager;
-        _mapper = mapper;
-        _permissionRepository = new Lazy<IPermissionRepository>(() => new PermissionRepository(_dbContext, _unitOfWork, UserManager, RoleManager, _mapper));
+        _permissionRepository = new Lazy<IPermissionRepository>(() => new PermissionRepository(_dbContext, _unitOfWork, UserManager, RoleManager));
     }
 
     public UserManager<User> UserManager { get; }

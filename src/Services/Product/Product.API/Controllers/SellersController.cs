@@ -1,5 +1,5 @@
-using AutoMapper;
 using Infrastructure.Identity.Authorization;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +18,10 @@ namespace Product.API.Controllers
     public class SellersController : ControllerBase
     {
         private readonly ISellerRepository _repository;
-        private readonly IMapper _mapper;
 
-        public SellersController(ISellerRepository repository, IMapper mapper)
+        public SellersController(ISellerRepository repository)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -35,7 +33,7 @@ namespace Product.API.Controllers
                 ? await _repository.GetOfficialSellersAsync()
                 : await _repository.GetSellersAsync();
 
-            var result = _mapper.Map<List<SellerDto>>(sellers);
+            var result = sellers.Adapt<List<SellerDto>>();
             return Ok(new ApiSuccessResult<List<SellerDto>>(result));
         }
 
@@ -49,7 +47,7 @@ namespace Product.API.Controllers
             if (seller == null)
                 return NotFound(new ApiErrorResult<SellerDto>($"Seller with ID {id} not found"));
 
-            var result = _mapper.Map<SellerDto>(seller);
+            var result = seller.Adapt<SellerDto>();
             return Ok(new ApiSuccessResult<SellerDto>(result));
         }
 
@@ -64,13 +62,13 @@ namespace Product.API.Controllers
             if (existingSeller != null)
                 return Conflict(new ApiErrorResult<SellerDto>($"Seller name '{sellerDto.Name}' already exists"));
 
-            var seller = _mapper.Map<Entities.Seller>(sellerDto);
+            var seller = sellerDto.Adapt<Entities.Seller>();
             seller.Rating = 0;
             seller.TotalSales = 0;
 
             var sellerId = await _repository.CreateAsync(seller);
 
-            var result = _mapper.Map<SellerDto>(seller);
+            var result = seller.Adapt<SellerDto>();
             return CreatedAtAction(nameof(GetSellerById), new { id = sellerId }, new ApiSuccessResult<SellerDto>(result));
         }
 
@@ -93,10 +91,10 @@ namespace Product.API.Controllers
                     return Conflict(new ApiErrorResult<SellerDto>($"Seller name '{sellerDto.Name}' already exists"));
             }
 
-            _mapper.Map(sellerDto, seller);
+            sellerDto.Adapt(seller);
             await _repository.UpdateAsync(seller);
 
-            var result = _mapper.Map<SellerDto>(seller);
+            var result = seller.Adapt<SellerDto>();
             return Ok(new ApiSuccessResult<SellerDto>(result));
         }
 

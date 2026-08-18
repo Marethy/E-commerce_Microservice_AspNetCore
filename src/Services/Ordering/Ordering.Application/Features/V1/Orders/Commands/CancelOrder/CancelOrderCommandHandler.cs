@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using MediatR;
 using Ordering.Application.Common.Interfaces;
 using Ordering.Application.Common.Models;
@@ -9,12 +9,10 @@ namespace Ordering.Application.Features.V1.Orders;
 public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand, ApiResult<OrderDto>>
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly IMapper _mapper;
 
-    public CancelOrderCommandHandler(IOrderRepository orderRepository, IMapper mapper)
+    public CancelOrderCommandHandler(IOrderRepository orderRepository)
     {
         _orderRepository = orderRepository;
-        _mapper = mapper;
     }
 
     public async Task<ApiResult<OrderDto>> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
@@ -28,7 +26,7 @@ public class CancelOrderCommandHandler : IRequestHandler<CancelOrderCommand, Api
             return new ApiErrorResult<OrderDto>("Cannot cancel order - only Pending or Confirmed orders can be cancelled");
 
         order = await _orderRepository.GetByIdAsync(request.Id);
-        var result = _mapper.Map<OrderDto>(order);
+        var result = order.Adapt<OrderDto>();
         return new ApiSuccessResult<OrderDto>(result);
     }
 }

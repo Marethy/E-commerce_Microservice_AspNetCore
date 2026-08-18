@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Ordering.Application.Common.Interfaces;
@@ -11,16 +11,13 @@ namespace Ordering.Application.Features.V1.Orders
     public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, ApiResult<long>>
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IMapper _mapper;
         private readonly ILogger<CreateOrderCommandHandler> _logger;
 
         public CreateOrderCommandHandler(
             IOrderRepository orderRepository,
-            IMapper mapper,
             ILogger<CreateOrderCommandHandler> logger)
         {
             _orderRepository = orderRepository ?? throw new ArgumentNullException(nameof(orderRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
@@ -31,7 +28,7 @@ namespace Ordering.Application.Features.V1.Orders
 
             try
             {
-                var order = _mapper.Map<Order>(request);
+                var order = request.Adapt<Order>();
                 order.CreatedDate = DateTime.UtcNow;
 
                 _orderRepository.CreateOrder(order);

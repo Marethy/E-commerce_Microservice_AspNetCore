@@ -1,5 +1,5 @@
-﻿using AutoMapper;
-using Contracts.Sagas.OrderManager;
+﻿using Contracts.Sagas.OrderManager;
+using Mapster;
 using Saga.Orchestrator.HttpRepository.Interfaces;
 using Shared.DTOs.Basket;
 using Shared.DTOs.Inventory;
@@ -9,17 +9,14 @@ namespace Saga.Orchestrator.OrderManager;
 
 public class SagaOrderManager : ISagaOrderManager<BasketCheckoutDto, OrderResponse>
 {
-    private readonly IMapper _mapper;
     private readonly IOrderHttpRepository _orderHttpRepository;
     private readonly IBasketHttpRepository _basketHttpRepository;
     private readonly IInventoryHttpRepository _inventoryHttpRepository;
 
-    public SagaOrderManager(IMapper mapper,
-                            IOrderHttpRepository orderHttpRepository,
+    public SagaOrderManager(IOrderHttpRepository orderHttpRepository,
                             IBasketHttpRepository basketHttpRepository,
                             IInventoryHttpRepository inventoryHttpRepository)
     {
-        _mapper = mapper;
         _orderHttpRepository = orderHttpRepository;
         _basketHttpRepository = basketHttpRepository;
         _inventoryHttpRepository = inventoryHttpRepository;
@@ -46,7 +43,7 @@ public class SagaOrderManager : ISagaOrderManager<BasketCheckoutDto, OrderRespon
         orderStateMachine.Configure(EOrderTransactionState.BasketGot)
             .PermitDynamic(EOrderAction.CreateOrder, () =>
             {
-                var order = _mapper.Map<CreateOrderDto>(input);
+                var order = input.Adapt<CreateOrderDto>();
                 order.TotalPrice = cart.TotalPrice;
                 orderId = _orderHttpRepository.CreateOrderAsync(order).Result;
                 return orderId > 0 ? EOrderTransactionState.OrderCreated : EOrderTransactionState.OrderCreateFailed;
@@ -69,7 +66,7 @@ public class SagaOrderManager : ISagaOrderManager<BasketCheckoutDto, OrderRespon
                 var salesOrder = new SalesOrderDto()
                 {
                     OrderNo = addedOrder.DocumentNo,
-                    SaleItems = _mapper.Map<List<SaleItemDto>>(cart.Items)
+                    SaleItems = cart.Items.Adapt<List<SaleItemDto>>()
                 };
                 inventoryDocumentNo = _inventoryHttpRepository.CreateSalesOrderAsync(salesOrder).Result;
                 return inventoryDocumentNo != null ? EOrderTransactionState.InventoryUpdated : EOrderTransactionState.InventoryUpdateFailed;

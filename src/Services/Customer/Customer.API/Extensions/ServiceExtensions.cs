@@ -34,7 +34,6 @@ namespace Customer.API.Extensions
             services.AddInfrastructureServices();
             services.ConfigureAuthenticationHandler();
             services.ConfigureHealthChecks();
-            services.AddAutoMapper(cfg => cfg.AddProfile(new CustomerMappingProfile()));
 
             return services;
         }

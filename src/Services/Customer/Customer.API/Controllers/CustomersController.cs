@@ -1,6 +1,6 @@
-using AutoMapper;
 using Customer.API.Persistence;
 using Customer.API.Repositories.Interfaces;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +17,11 @@ namespace Customer.API.Controllers;
 public class CustomersController : ControllerBase
 {
     private readonly ICustomerRepository _repository;
-    private readonly IMapper _mapper;
     private readonly CustomerContext _context;
 
-    public CustomersController(ICustomerRepository repository, IMapper mapper, CustomerContext context)
+    public CustomersController(ICustomerRepository repository, CustomerContext context)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
@@ -102,7 +100,7 @@ public class CustomersController : ControllerBase
                 await _context.SaveChangesAsync();
             }
 
-            var result = _mapper.Map<CustomerProfileDto>(customer);
+            var result = customer.Adapt<CustomerProfileDto>();
             return Ok(new ApiSuccessResult<CustomerProfileDto>(result));
         }
         catch (Exception ex)
@@ -116,7 +114,7 @@ public class CustomersController : ControllerBase
     public async Task<ActionResult<ApiResult<List<CustomerDto>>>> GetCustomers()
     {
     var customers = await _repository.GetCustomersAsync();
-      var result = _mapper.Map<List<CustomerDto>>(customers);
+      var result = customers.Adapt<List<CustomerDto>>();
         return Ok(new ApiSuccessResult<List<CustomerDto>>(result));
     }
 
@@ -132,7 +130,7 @@ public class CustomersController : ControllerBase
         if (customer == null)
   return NotFound(new ApiErrorResult<CustomerDto>($"Customer with username '{username}' not found"));
 
-        var result = _mapper.Map<CustomerDto>(customer);
+        var result = customer.Adapt<CustomerDto>();
       return Ok(new ApiSuccessResult<CustomerDto>(result));
     }
 
@@ -148,7 +146,7 @@ public class CustomersController : ControllerBase
    if (customer == null)
   return NotFound(new ApiErrorResult<CustomerDto>($"Customer with ID {id} not found"));
 
-        var result = _mapper.Map<CustomerDto>(customer);
+        var result = customer.Adapt<CustomerDto>();
         return Ok(new ApiSuccessResult<CustomerDto>(result));
     }
 }

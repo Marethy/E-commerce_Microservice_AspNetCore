@@ -1,4 +1,3 @@
-using AutoMapper;
 using Infrastructure.Identity.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -21,18 +20,15 @@ public class WishlistController : ControllerBase
 {
     private readonly IWishlistRepository _wishlistRepository;
     private readonly IProductRepository _productRepository;
-    private readonly IMapper _mapper;
     private readonly ILogger<WishlistController> _logger;
 
     public WishlistController(
         IWishlistRepository wishlistRepository,
         IProductRepository productRepository,
-        IMapper mapper,
         ILogger<WishlistController> logger)
     {
         _wishlistRepository = wishlistRepository;
         _productRepository = productRepository;
-        _mapper = mapper;
         _logger = logger;
     }
 

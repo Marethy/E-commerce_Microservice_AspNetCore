@@ -1,74 +1,47 @@
-﻿using AutoMapper;
-using Infrastructure.Mappings;
+using Mapster;
 using Product.API.Entities;
 using Shared.DTOs.Product;
 
 namespace Product.API
 {
-    public class MappingProfile : Profile
+    public class MappingRegister : IRegister
     {
-        public MappingProfile()
+        public void Register(TypeAdapterConfig config)
         {
-            // Global type converter for DateTimeOffset -> DateTime
-            CreateMap<DateTimeOffset, DateTime>().ConvertUsing(src => src.DateTime);
-            CreateMap<DateTimeOffset?, DateTime?>().ConvertUsing(src => src.HasValue ? src.Value.DateTime : null);
-            
-            // Product mappings
-            CreateMap<CatalogProduct, ProductDto>()
-                .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.Summary))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
-                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : null))
-                .ForMember(dest => dest.SellerName, opt => opt.MapFrom(src => src.Seller != null ? src.Seller.Name : null))
-                .ForMember(dest => dest.IsSellerOfficial, opt => opt.MapFrom(src => src.Seller != null ? src.Seller.IsOfficial : (bool?)null))
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
-                .ForMember(dest => dest.Specifications, opt => opt.MapFrom(src => src.Specifications));
+            // Global type converters for DateTimeOffset -> DateTime
+            config.NewConfig<DateTimeOffset, DateTime>()
+                .MapWith(src => src.DateTime);
+            config.NewConfig<DateTimeOffset?, DateTime?>()
+                .MapWith(src => src.HasValue ? src.Value.DateTime : (DateTime?)null);
 
-            CreateMap<CatalogProduct, ProductSummaryDto>()
-                .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src.Summary))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null))
-                .ForMember(dest => dest.BrandName, opt => opt.MapFrom(src => src.Brand != null ? src.Brand.Name : null))
-                .ForMember(dest => dest.IsSellerOfficial, opt => opt.MapFrom(src => src.Seller != null ? src.Seller.IsOfficial : (bool?)null))
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
-                .ForMember(dest => dest.PrimaryImageUrl, opt => opt.MapFrom(src => 
-                    src.Images.OrderBy(i => i.Position).FirstOrDefault(i => i.IsPrimary) != null 
-                        ? src.Images.OrderBy(i => i.Position).FirstOrDefault(i => i.IsPrimary)!.Url 
-                        : src.Images.OrderBy(i => i.Position).FirstOrDefault() != null 
-                            ? src.Images.OrderBy(i => i.Position).FirstOrDefault()!.Url 
-                            : null));
+            // CatalogProduct -> ProductDto
+            config.NewConfig<CatalogProduct, ProductDto>()
+                .Map(dest => dest.ShortDescription, src => src.Summary)
+                .Map(dest => dest.CategoryName, src => src.Category.Name)
+                .Map(dest => dest.BrandName, src => src.Brand != null ? src.Brand.Name : null)
+                .Map(dest => dest.SellerName, src => src.Seller != null ? src.Seller.Name : null)
+                .Map(dest => dest.IsSellerOfficial, src => src.Seller != null ? src.Seller.IsOfficial : (bool?)null);
 
-            CreateMap<CreateProductDto, CatalogProduct>()
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
-                .ForMember(dest => dest.Specifications, opt => opt.MapFrom(src => src.Specifications));
+            // CatalogProduct -> ProductSummaryDto
+            config.NewConfig<CatalogProduct, ProductSummaryDto>()
+                .Map(dest => dest.ShortDescription, src => src.Summary)
+                .Map(dest => dest.CategoryName, src => src.Category != null ? src.Category.Name : null)
+                .Map(dest => dest.BrandName, src => src.Brand != null ? src.Brand.Name : null)
+                .Map(dest => dest.IsSellerOfficial, src => src.Seller != null ? src.Seller.IsOfficial : (bool?)null)
+                .Map(dest => dest.PrimaryImageUrl, src => GetPrimaryImageUrl(src.Images));
 
-            CreateMap<UpdateProductDto, CatalogProduct>().IgnoreAllNonExisting();
+            // CreateProductReviewDto -> ProductReview (defaults for computed fields)
+            config.NewConfig<CreateProductReviewDto, ProductReview>()
+                .Map(dest => dest.ReviewDate, src => DateTimeOffset.UtcNow)
+                .Map(dest => dest.HelpfulVotes, src => 0);
+        }
 
-            // Category mappings
-            CreateMap<Category, CategoryDto>();
-            CreateMap<CreateCategoryDto, Category>();
-            CreateMap<UpdateCategoryDto, Category>().IgnoreAllNonExisting();
-
-            // ProductReview mappings
-            CreateMap<ProductReview, ProductReviewDto>();
-            CreateMap<CreateProductReviewDto, ProductReview>()
-                .ForMember(dest => dest.ReviewDate, opt => opt.MapFrom(src => DateTimeOffset.UtcNow))
-                .ForMember(dest => dest.HelpfulVotes, opt => opt.MapFrom(src => 0));
-            CreateMap<UpdateProductReviewDto, ProductReview>().IgnoreAllNonExisting();
-
-            // Brand mappings
-            CreateMap<Brand, BrandDto>();
-            CreateMap<CreateBrandDto, Brand>();
-
-            // Seller mappings
-            CreateMap<Seller, SellerDto>();
-            CreateMap<CreateSellerDto, Seller>();
-
-            // ProductImage mappings
-            CreateMap<ProductImage, ProductImageDto>();
-            CreateMap<CreateProductImageDto, ProductImage>();
-
-            // ProductSpecification mappings
-            CreateMap<ProductSpecification, ProductSpecificationDto>();
-            CreateMap<CreateProductSpecificationDto, ProductSpecification>();
+        private static string? GetPrimaryImageUrl(ICollection<ProductImage>? images)
+        {
+            if (images == null || images.Count == 0) return null;
+            var ordered = images.OrderBy(i => i.Position).ToList();
+            var primary = ordered.FirstOrDefault(i => i.IsPrimary) ?? ordered.FirstOrDefault();
+            return primary?.Url;
         }
     }
 }

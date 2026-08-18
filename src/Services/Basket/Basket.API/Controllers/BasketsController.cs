@@ -1,10 +1,10 @@
-﻿using AutoMapper;
-using Basket.API.Entities;
+﻿using Basket.API.Entities;
 using Basket.API.GrpcServices;
 using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Events;
 using Contracts.Services;
 using EventBus.MessageComponents.Consumers.Basket;
+using Mapster;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -19,22 +19,19 @@ namespace Basket.API.Controllers
     {
         private readonly IBasketRepository _repository;
         private readonly ILogger<BasketsController> _logger;
-        private readonly IMapper _mapper;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly StockItemGrpcService _stockItemGrpcService;
         private readonly IUserActivityService _userActivityService;
 
         public BasketsController(
-            IBasketRepository repository, 
-            ILogger<BasketsController> logger, 
-            IMapper mapper, 
-            IPublishEndpoint publishEndpoint, 
+            IBasketRepository repository,
+            ILogger<BasketsController> logger,
+            IPublishEndpoint publishEndpoint,
             StockItemGrpcService stockItemGrpcService,
             IUserActivityService userActivityService)
         {
             _repository = repository;
             _logger = logger;
-            _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _stockItemGrpcService = stockItemGrpcService;
             _userActivityService = userActivityService;
@@ -140,7 +137,7 @@ namespace Basket.API.Controllers
             if (basket == null)
                 return NotFound(new ApiErrorResult<object>("Basket not found"));
 
-            var eventMessage = _mapper.Map<BasketCheckoutEvent>(basketCheckout);
+            var eventMessage = basketCheckout.Adapt<BasketCheckoutEvent>();
             eventMessage.TotalPrice = basket.TotalPrice;
 
             // Publish event to RabbitMQ

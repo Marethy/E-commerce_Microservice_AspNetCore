@@ -1,5 +1,5 @@
-using AutoMapper;
 using Dapper;
+using Mapster;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
 using IDP.Infrastructure.Domains;
@@ -15,17 +15,14 @@ public class PermissionRepository : RepositoryBase<Permission, long>, IPermissio
 {
     private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IMapper _mapper;
 
     public PermissionRepository(TeduIdentityContext dbContext,
                                 IUnitOfWork unitOfWork,
                                 UserManager<User> userManager,
-                                RoleManager<IdentityRole> roleManager,
-                                IMapper mapper) : base(dbContext, unitOfWork)
+                                RoleManager<IdentityRole> roleManager) : base(dbContext, unitOfWork)
     {
         _userManager = userManager;
         _roleManager = roleManager;
-        _mapper = mapper;
     }
 
     public async Task<IReadOnlyList<PermissionViewModel>> GetPermissionsByRole(string roleId)
@@ -110,6 +107,6 @@ public class PermissionRepository : RepositoryBase<Permission, long>, IPermissio
             .Where(p => roleIds.Contains(p.RoleId))
             .ToList();
         
-        return _mapper.Map<IEnumerable<PermissionUserViewModel>>(permissions);
+        return permissions.Adapt<IEnumerable<PermissionUserViewModel>>();
     }
 }

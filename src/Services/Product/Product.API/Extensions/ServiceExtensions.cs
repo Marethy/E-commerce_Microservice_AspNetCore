@@ -16,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using Npgsql;
 using HealthChecks.NpgSql;
+using Mapster;
+using Product.API;
 
 namespace Product.API.Extensions
 {
@@ -31,8 +33,9 @@ namespace Product.API.Extensions
             services.AddConfigurationSettings(configuration);
             services.ConfigureProductDbContext(configuration);
             services.AddInfrastructrueService();
-            services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-            
+
+            TypeAdapterConfig.GlobalSettings.Scan(typeof(MappingRegister).Assembly);
+
             services.ConfigureAuthenticationHandler();
             services.ConfigureHealthChecks();
         }

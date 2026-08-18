@@ -24,8 +24,6 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.

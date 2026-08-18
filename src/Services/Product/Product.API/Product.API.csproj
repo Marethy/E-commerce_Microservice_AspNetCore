@@ -16,7 +16,7 @@
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
-		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="Mapster" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">

@@ -1,5 +1,5 @@
-using AutoMapper;
 using Infrastructure.Identity.Authorization;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,14 +22,12 @@ public class CategoriesController : ControllerBase
     private readonly ICategoryRepository _repository;
     private readonly IProductRepository _productRepository;
     private readonly IClipSearchService _clipSearchService;
-    private readonly IMapper _mapper;
 
-    public CategoriesController(ICategoryRepository repository, IProductRepository productRepository, IClipSearchService clipSearchService, IMapper mapper)
+    public CategoriesController(ICategoryRepository repository, IProductRepository productRepository, IClipSearchService clipSearchService)
     {
         _repository = repository;
         _productRepository = productRepository;
         _clipSearchService = clipSearchService;
-        _mapper = mapper;
     }
 
     [HttpGet]
@@ -38,7 +36,7 @@ public class CategoriesController : ControllerBase
     public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategories()
     {
         var categories = await _repository.GetCategories();
-        var result = _mapper.Map<List<CategoryDto>>(categories);
+        var result = categories.Adapt<List<CategoryDto>>();
         return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
     }
 
@@ -53,7 +51,7 @@ public class CategoriesController : ControllerBase
         if (category == null)
             return NotFound(new ApiErrorResult<CategoryDto>($"Category with ID {id} not found"));
 
-        var result = _mapper.Map<CategoryDto>(category);
+        var result = category.Adapt<CategoryDto>();
         
         // Add hasChildren flag for each subcategory
         if (result.Children != null)
@@ -77,7 +75,7 @@ public class CategoriesController : ControllerBase
         if (category == null)
             return NotFound(new ApiErrorResult<CategoryDto>($"Category '{name}' not found"));
 
-        var result = _mapper.Map<CategoryDto>(category);
+        var result = category.Adapt<CategoryDto>();
         return Ok(new ApiSuccessResult<CategoryDto>(result));
     }
 
@@ -92,10 +90,10 @@ public class CategoriesController : ControllerBase
         if (existingCategory != null)
             return Conflict(new ApiErrorResult<CategoryDto>($"Category '{categoryDto.Name}' already exists"));
 
-        var category = _mapper.Map<Category>(categoryDto);
+        var category = categoryDto.Adapt<Category>();
         var categoryId = await _repository.CreateAsync(category);
 
-        var result = _mapper.Map<CategoryDto>(category);
+        var result = category.Adapt<CategoryDto>();
         return CreatedAtAction(nameof(GetCategoryById), new { id = categoryId }, new ApiSuccessResult<CategoryDto>(result));
     }
 
@@ -118,10 +116,10 @@ public class CategoriesController : ControllerBase
                 return Conflict(new ApiErrorResult<CategoryDto>($"Category '{categoryDto.Name}' already exists"));
         }
 
-        _mapper.Map(categoryDto, category);
+        categoryDto.Adapt(category);
         await _repository.UpdateAsync(category);
 
-        var result = _mapper.Map<CategoryDto>(category);
+        var result = category.Adapt<CategoryDto>();
         return Ok(new ApiSuccessResult<CategoryDto>(result));
     }
 
@@ -150,7 +148,7 @@ public class CategoriesController : ControllerBase
     public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategoryHierarchy()
     {
         var categories = await _repository.GetFullHierarchyAsync();
-        var result = _mapper.Map<List<CategoryDto>>(categories);
+        var result = categories.Adapt<List<CategoryDto>>();
         return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
     }
 
@@ -163,7 +161,7 @@ public class CategoriesController : ControllerBase
     public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetRootCategories()
     {
         var categories = await _repository.GetRootCategoriesAsync();
-        var result = _mapper.Map<List<CategoryDto>>(categories);
+        var result = categories.Adapt<List<CategoryDto>>();
         
         // Add hasChildren flag
         foreach (var cat in result)
@@ -199,7 +197,7 @@ public class CategoriesController : ControllerBase
             return NotFound(new ApiErrorResult<List<CategoryDto>>($"Category with ID {parentId} not found"));
         
         var subcategories = await _repository.GetSubcategoriesAsync(parentId);
-        var result = _mapper.Map<List<CategoryDto>>(subcategories);
+        var result = subcategories.Adapt<List<CategoryDto>>();
         
         // Add hasChildren flag
         foreach (var cat in result)
@@ -224,7 +222,7 @@ public class CategoriesController : ControllerBase
             return NotFound(new ApiErrorResult<List<CategoryDto>>($"Category with ID {categoryId} not found"));
         
         var path = await _repository.GetCategoryPathAsync(categoryId);
-        var result = _mapper.Map<List<CategoryDto>>(path);
+        var result = path.Adapt<List<CategoryDto>>();
         return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
     }
 
@@ -241,7 +239,7 @@ public class CategoriesController : ControllerBase
         if (category == null)
             return NotFound(new ApiErrorResult<CategoryDto>($"Category with ID {categoryId} not found"));
         
-        var result = _mapper.Map<CategoryDto>(category);
+        var result = category.Adapt<CategoryDto>();
         return Ok(new ApiSuccessResult<CategoryDto>(result));
     }
 
@@ -271,7 +269,7 @@ public class CategoriesController : ControllerBase
     public async Task<ActionResult<ApiResult<List<CategoryDto>>>> GetCategoriesByProduct([Required] Guid productId)
     {
         var categories = await _repository.GetCategoriesByProductIdAsync(productId);
-        var result = _mapper.Map<List<CategoryDto>>(categories);
+        var result = categories.Adapt<List<CategoryDto>>();
         return Ok(new ApiSuccessResult<List<CategoryDto>>(result));
     }
 
@@ -326,7 +324,7 @@ public class CategoriesController : ControllerBase
                 .Where(p => p != null)
                 .ToList();
             
-            var productDtos = _mapper.Map<List<ProductDto>>(orderedProducts);
+            var productDtos = orderedProducts.Adapt<List<ProductDto>>();
             
             var response = new PagedProductResponse
             {
@@ -345,7 +343,7 @@ public class CategoriesController : ControllerBase
         }
 
         var (allProducts, total) = await _productRepository.SearchProducts(filter, page, size);
-        var allProductDtos = _mapper.Map<List<ProductDto>>(allProducts);
+        var allProductDtos = allProducts.Adapt<List<ProductDto>>();
         
         var responseNoQuery = new PagedProductResponse
         {

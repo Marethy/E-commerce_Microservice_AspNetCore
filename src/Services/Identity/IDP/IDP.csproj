@@ -12,6 +12,7 @@
  <PackageReference Include="Duende.IdentityServer" />
  <PackageReference Include="Duende.IdentityServer.EntityFramework" />
  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+ <PackageReference Include="Mapster" />
  <PackageReference Include="Swashbuckle.AspNetCore" />
  <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
  <PackageReference Include="Serilog.AspNetCore" />

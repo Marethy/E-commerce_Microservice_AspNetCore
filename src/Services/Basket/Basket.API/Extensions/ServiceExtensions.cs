@@ -30,7 +30,6 @@ public static class ServiceExtensions
             services.AddAuthorization();
      services.AddLogging();
 
-services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
             services.AddScoped<IBasketRepository, BasketRepository>()
            .AddTransient<ISerializeService, SerializeService>()
  .AddScoped<IEmailTemplateService, EmailTemplateService>()

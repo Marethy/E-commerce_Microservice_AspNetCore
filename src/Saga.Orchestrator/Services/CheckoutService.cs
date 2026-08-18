@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using Mapster;
 using Saga.Orchestrator.HttpRepository.Interfaces;
 using Saga.Orchestrator.Services.Interfaces;
 using Shared.DTOs.Basket;
@@ -9,7 +9,6 @@ using ILogger = Serilog.ILogger;
 namespace Saga.Orchestrator.Services;
 
 public class CheckoutService(ILogger logger,
-                       IMapper mapper,
                        IBasketHttpRepository basketHttpRepository,
                        IOrderHttpRepository orderHttpRepository,
                        IInventoryHttpRepository inventoryHttpRepository) : ICheckoutService
@@ -26,7 +25,7 @@ public class CheckoutService(ILogger logger,
         // 2. Create Order from OrderHttpRepository
         logger.Information($"Start: Create Order");
 
-        var order = mapper.Map<CreateOrderDto>(basketCheckout);
+        var order = basketCheckout.Adapt<CreateOrderDto>();
         order.TotalPrice = cart.TotalPrice;
         var orderId = await orderHttpRepository.CreateOrderAsync(order);
         if (orderId < 0) return false;

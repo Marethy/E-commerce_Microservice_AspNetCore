@@ -1,16 +1,16 @@
-﻿using AutoMapper;
-using Infrastructure.Common;
+﻿using Infrastructure.Common;
 using Inventory.Product.API.Entities;
 using Inventory.Product.API.Extensions;
 using Inventory.Product.API.Repositories;
 using Inventory.Product.API.Services.Interfaces;
+using Mapster;
 using MongoDB.Driver;
 using Shared.Configurations;
 using Shared.DTOs.Inventory;
 
 namespace Inventory.Product.API.Services;
 
-public class InventoryService(IMongoClient client, MongoDbSettings settings, IMapper mapper) : MongoDbRepository<InventoryEntry>(client, settings), IInventoryService
+public class InventoryService(IMongoClient client, MongoDbSettings settings) : MongoDbRepository<InventoryEntry>(client, settings), IInventoryService
 {
 
     public async Task<IEnumerable<InventoryEntryDto>> GetAllByItemNoAsync(string itemNo)
@@ -18,7 +18,7 @@ public class InventoryService(IMongoClient client, MongoDbSettings settings, IMa
         var entities = await FindAll()
             .Find(x => x.ItemNo.Equals(itemNo))
             .ToListAsync();
-        var result = mapper.Map<IEnumerable<InventoryEntryDto>>(entities);
+        var result = entities.Adapt<IEnumerable<InventoryEntryDto>>();
 
         return result;
     }
@@ -36,7 +36,7 @@ public class InventoryService(IMongoClient client, MongoDbSettings settings, IMa
         var andFilter = filterItemNo & filterSearchTerm;
 
         var pagedList = await PagedList<InventoryEntry>.ToPagedList(Collection, andFilter, query.PageIndex, query.PageSize);
-        var items = mapper.Map<IEnumerable<InventoryEntryDto>>(pagedList);
+        var items = pagedList.Adapt<IEnumerable<InventoryEntryDto>>();
         var result = new PagedList<InventoryEntryDto>(items, pagedList.GetMetaData().TotalItems, query.PageIndex, query.PageSize);
         return result;
     }
@@ -46,7 +46,7 @@ public class InventoryService(IMongoClient client, MongoDbSettings settings, IMa
         var entity = await FindAll()
             .Find(x => x.Id.Equals(id))
             .FirstOrDefaultAsync();
-        var result = mapper.Map<InventoryEntryDto>(entity);
+        var result = entity.Adapt<InventoryEntryDto>();
 
         return result;
     }
@@ -60,7 +60,7 @@ public class InventoryService(IMongoClient client, MongoDbSettings settings, IMa
             DocumentType = model.DocumentType
         };
         await CreateAsync(itemToAdd);
-        var result = mapper.Map<InventoryEntryDto>(itemToAdd);
+        var result = itemToAdd.Adapt<InventoryEntryDto>();
         return result;
     }
 
@@ -75,7 +75,7 @@ public class InventoryService(IMongoClient client, MongoDbSettings settings, IMa
 
         };
         await CreateAsync(itemToAdd);
-        var result = mapper.Map<InventoryEntryDto>(itemToAdd);
+        var result = itemToAdd.Adapt<InventoryEntryDto>();
         return result;
     }
 

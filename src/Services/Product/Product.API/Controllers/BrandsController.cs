@@ -1,5 +1,5 @@
-using AutoMapper;
 using Infrastructure.Identity.Authorization;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +18,10 @@ namespace Product.API.Controllers
     public class BrandsController : ControllerBase
     {
         private readonly IBrandRepository _repository;
-        private readonly IMapper _mapper;
 
-        public BrandsController(IBrandRepository repository, IMapper mapper)
+        public BrandsController(IBrandRepository repository)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
         [HttpGet]
@@ -32,7 +30,7 @@ namespace Product.API.Controllers
         public async Task<ActionResult<ApiResult<List<BrandDto>>>> GetBrands()
         {
             var brands = await _repository.GetBrandsAsync();
-            var result = _mapper.Map<List<BrandDto>>(brands);
+            var result = brands.Adapt<List<BrandDto>>();
             return Ok(new ApiSuccessResult<List<BrandDto>>(result));
         }
 
@@ -46,7 +44,7 @@ namespace Product.API.Controllers
             if (brand == null)
                 return NotFound(new ApiErrorResult<BrandDto>($"Brand with ID {id} not found"));
 
-            var result = _mapper.Map<BrandDto>(brand);
+            var result = brand.Adapt<BrandDto>();
             return Ok(new ApiSuccessResult<BrandDto>(result));
         }
 
@@ -60,7 +58,7 @@ namespace Product.API.Controllers
             if (brand == null)
                 return NotFound(new ApiErrorResult<BrandDto>($"Brand with slug '{slug}' not found"));
 
-            var result = _mapper.Map<BrandDto>(brand);
+            var result = brand.Adapt<BrandDto>();
             return Ok(new ApiSuccessResult<BrandDto>(result));
         }
 
@@ -78,10 +76,10 @@ namespace Product.API.Controllers
             if (existingSlug != null)
                 return Conflict(new ApiErrorResult<BrandDto>($"Brand slug '{brandDto.Slug}' already exists"));
 
-            var brand = _mapper.Map<Entities.Brand>(brandDto);
+            var brand = brandDto.Adapt<Entities.Brand>();
             var brandId = await _repository.CreateAsync(brand);
 
-            var result = _mapper.Map<BrandDto>(brand);
+            var result = brand.Adapt<BrandDto>();
             return CreatedAtAction(nameof(GetBrandById), new { id = brandId }, new ApiSuccessResult<BrandDto>(result));
         }
 
@@ -110,10 +108,10 @@ namespace Product.API.Controllers
                     return Conflict(new ApiErrorResult<BrandDto>($"Brand slug '{brandDto.Slug}' already exists"));
             }
 
-            _mapper.Map(brandDto, brand);
+            brandDto.Adapt(brand);
             await _repository.UpdateAsync(brand);
 
-            var result = _mapper.Map<BrandDto>(brand);
+            var result = brand.Adapt<BrandDto>();
             return Ok(new ApiSuccessResult<BrandDto>(result));
         }
 

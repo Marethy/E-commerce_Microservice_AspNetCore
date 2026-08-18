@@ -26,6 +26,7 @@
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
 		<PackageReference Include="Npgsql" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+		<PackageReference Include="Mapster" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
 
 	</ItemGroup>

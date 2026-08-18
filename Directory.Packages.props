@@ -76,8 +76,8 @@
     <PackageVersion Include="Duende.IdentityServer" Version="7.0.8" />
     <PackageVersion Include="Duende.IdentityServer.EntityFramework" Version="7.0.8" />
     <PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.0.8" />
-    <!-- AutoMapper & FluentValidation -->
-    <PackageVersion Include="AutoMapper" Version="16.2.0" />
+    <!-- Mapster & FluentValidation -->
+    <PackageVersion Include="Mapster" Version="10.0.10" />
     <PackageVersion Include="FluentValidation" Version="11.11.0" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <!-- Data Access -->

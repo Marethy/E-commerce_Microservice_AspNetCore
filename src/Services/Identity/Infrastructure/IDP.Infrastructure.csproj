@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" />
+    <PackageReference Include="Mapster" />
     <PackageReference Include="Dapper" />
     <PackageReference Include="Duende.IdentityServer.AspNetIdentity" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />

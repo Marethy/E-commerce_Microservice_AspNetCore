@@ -1,5 +1,5 @@
-using AutoMapper;
 using Infrastructure.Identity.Authorization;
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,18 +23,15 @@ public class ProductReviewsController : ControllerBase
     private readonly IProductReviewRepository _repository;
     private readonly IProductRepository _productRepository;
     private readonly IProductStatsService _statsService;
-    private readonly IMapper _mapper;
 
     public ProductReviewsController(
         IProductReviewRepository repository,
   IProductRepository productRepository,
-    IProductStatsService statsService,
-   IMapper mapper)
+    IProductStatsService statsService)
     {
     _repository = repository;
         _productRepository = productRepository;
         _statsService = statsService;
-     _mapper = mapper;
     }
 
     [HttpGet]
@@ -43,7 +40,7 @@ public class ProductReviewsController : ControllerBase
     public async Task<ActionResult<ApiResult<List<ProductReviewDto>>>> GetAllReviews()
     {
         var reviews = await _repository.GetAllReviewsAsync();
-        var result = _mapper.Map<List<ProductReviewDto>>(reviews);
+        var result = reviews.Adapt<List<ProductReviewDto>>();
         return Ok(new ApiSuccessResult<List<ProductReviewDto>>(result));
     }
 
@@ -105,7 +102,7 @@ public class ProductReviewsController : ControllerBase
             .Take(size)
             .ToList();
 
-        var reviewDtos = _mapper.Map<List<ProductReviewDto>>(paginatedReviews);
+        var reviewDtos = paginatedReviews.Adapt<List<ProductReviewDto>>();
 
         var result = new
         {
@@ -126,7 +123,7 @@ public class ProductReviewsController : ControllerBase
     public async Task<ActionResult<ApiResult<List<ProductReviewDto>>>> GetReviewsByUser([Required] string userId)
     {
         var reviews = await _repository.GetReviewsByUser(userId);
-   var result = _mapper.Map<List<ProductReviewDto>>(reviews);
+   var result = reviews.Adapt<List<ProductReviewDto>>();
         return Ok(new ApiSuccessResult<List<ProductReviewDto>>(result));
     }
 
@@ -140,7 +137,7 @@ public class ProductReviewsController : ControllerBase
         if (review == null)
          return NotFound(new ApiErrorResult<ProductReviewDto>($"Review with ID {id} not found"));
 
-        var result = _mapper.Map<ProductReviewDto>(review);
+        var result = review.Adapt<ProductReviewDto>();
         return Ok(new ApiSuccessResult<ProductReviewDto>(result));
     }
 
@@ -188,12 +185,12 @@ public class ProductReviewsController : ControllerBase
         if (hasReviewed)
  return Conflict(new ApiErrorResult<ProductReviewDto>("User has already reviewed this product"));
 
-        var review = _mapper.Map<ProductReview>(reviewDto);
+        var review = reviewDto.Adapt<ProductReview>();
         var reviewId = await _repository.CreateAsync(review);
 
         await _statsService.UpdateProductRatingAsync(reviewDto.ProductId);
 
-        var result = _mapper.Map<ProductReviewDto>(review);
+        var result = review.Adapt<ProductReviewDto>();
         return CreatedAtAction(nameof(GetReviewById), new { id = reviewId }, new ApiSuccessResult<ProductReviewDto>(result));
  }
 
@@ -209,12 +206,12 @@ public class ProductReviewsController : ControllerBase
 
         var productId = review.ProductId;
 
-     _mapper.Map(reviewDto, review);
+     reviewDto.Adapt(review);
         await _repository.UpdateAsync(review);
 
         await _statsService.UpdateProductRatingAsync(productId);
 
-        var result = _mapper.Map<ProductReviewDto>(review);
+        var result = review.Adapt<ProductReviewDto>();
    return Ok(new ApiSuccessResult<ProductReviewDto>(result));
     }
 
@@ -267,7 +264,7 @@ public class ProductReviewsController : ControllerBase
             return NotFound(new ApiErrorResult<object>($"Review with ID {reviewId} not found"));
 
         var (replies, totalCount) = await _repository.GetReviewRepliesAsync(reviewId, page, size);
-        var replyDtos = _mapper.Map<List<ProductReviewDto>>(replies);
+        var replyDtos = replies.Adapt<List<ProductReviewDto>>();
 
         var result = new
         {
