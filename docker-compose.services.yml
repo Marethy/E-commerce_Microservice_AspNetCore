@@ -242,7 +242,24 @@ services:
     restart: always
     networks:
       - microservices-network
-  
+
+  payment-api:
+    image: ${DOCKER_REGISTRY-}payment-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Payment/Payment.API/Dockerfile
+    container_name: payment-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings__RedisConnectionString=basketdb:6379"
+      - "EventBusSettings__HostAddress=amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@rabbitmq:5672"
+    ports:
+      - "6009:80"
+    restart: always
+    networks:
+      - microservices-network
+
   webstatus:
     image: ${DOCKER_REGISTRY-}webstatus:${PLATFORM:-linux}-${TAG:-latest}
     build:
